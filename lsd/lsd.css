@@ -1,0 +1,257 @@
+/* LSD CSS. see lsd.js */
+
+#backgroundHolder {
+	position: absolute;
+	top: 0;
+	left:0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	background-color: #999;
+	z-index: 1;
+}
+#realbody {
+	/*position: absolute;
+	top: 0;
+	width: 100%;
+	overflow: auto;
+	max-height: 100%;*/
+	z-index: 100;
+}
+#backgroundCanvas {
+	width: 100%;
+	height: 100%;
+}
+#backgroundCanvasControls {
+	opacity: 0.7;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	margin:5px;
+	padding:0 5px;
+	border: inset 2px #fff;
+	color: #fff;
+	background-color: #000;
+	z-index:1000;
+	width:150px;
+	min-height:20px;
+	font-size: 10px;
+	text-align:right;
+	
+}
+#backgroundCanvasControls.maximized {
+	width: 187px;
+}
+#backgroundCanvasControls:hover {
+	opacity: .85;
+}
+
+/* buttons */
+#backgroundCanvasControls .button {
+	cursor: pointer;
+}
+#backgroundCanvasControls .disabled 
+{
+	opacity: 0.3;
+}
+#backgroundCanvasControls .ui-state-default,
+#backgroundCanvasControls .ui-state-hover.disabled {
+	background: #333;
+}
+#backgroundCanvasControls .ui-state-hover {
+	background: url("../_js/jquery-ui/css/vader/images/ui-bg_highlight-soft_60_dddddd_1x100.png") repeat-x scroll 50% 50% #DDDDDD;
+}
+#backgroundCanvasControls .ui-state-default .ui-icon,
+#backgroundCanvasControls .ui-state-hover.disabled .ui-icon {
+	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_aaaaaa_256x240.png")
+}
+#backgroundCanvasControls .ui-state-hover .ui-icon {
+	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_cd0a0a_256x240.png")
+}
+
+#buttonHelp { display:none; }
+
+
+/* controls */
+
+#backgroundCanvasControls .controlPanel,
+#backgroundCanvasControls .aboutBox,
+#backgroundCanvasControls .clipThumbs,
+#backgroundCanvasControls .section {
+	clear:both;
+	/*border-top: solid 1px #ccc;*/
+	padding-top: 10px;
+}
+
+#backgroundCanvasControls .controlPanel,
+#backgroundCanvasControls .aboutBox
+{
+	display:none;
+}
+#backgroundCanvasControls .controlPanel {
+	text-align: center;
+}
+.clear, 
+#backgroundCanvasControls .aboutBox {
+	clear:both;
+}
+#backgroundCanvasControls h1 {
+	float:left;
+	font-size: 12px;
+	margin-right: 10px;
+}
+#backgroundCanvasControls h1 a,
+#backgroundCanvasControls h1 a:hover,
+#backgroundCanvasControls h1 a:visited,
+#backgroundCanvasControls h1 a:active {
+	color: #fff;
+	text-decoration: none;
+}
+#backgroundCanvasControls h2 {
+	margin-top: 0;
+}
+#backgroundCanvasControls h4 {
+/*	text-align:left;*/
+}
+
+/* clip slider */
+#backgroundCanvasControls .clipThumbs .next,
+#backgroundCanvasControls .clipThumbs .previous {
+	float: left;
+	margin: -29px 5px 0;
+}
+#backgroundCanvasControls .clipThumbs .next {
+	float:right;
+}
+
+/*clip thumbnails */
+#backgroundCanvasControls .clipThumbs ul {
+	padding: 0px;
+	margin: 0px;
+	height: 184px;
+	width: 184px;
+	float:left;
+}
+#backgroundCanvasControls .clipThumbs li.clipThumb {
+	position: relative; 
+	list-style: none;
+}
+body #backgroundCanvasControls div .clipThumb {
+	margin: 5px; 
+	padding: 2px; 
+	cursor: pointer; 
+	float: left;
+	overflow: hidden;
+	text-shadow: 1px 2px 2px #000;
+	background-color: #000;
+}
+#backgroundCanvasControls .clipThumb,
+#backgroundCanvasControls .layerControl.current,
+#backgroundCanvasControls .sharedControls {
+	border: 1px solid #333;
+	background-color: #500;
+	border-radius: 5px;	
+	-moz-border-radius: 5px;
+}
+#backgroundCanvasControls .clipThumb:hover {
+	border: 1px solid #666;
+	background-color: #000;
+}
+#backgroundCanvasControls .layerControl:hover {
+	border: 1px solid #333;
+	background-color: #500;
+}
+#backgroundCanvasControls .clipThumb,
+#backgroundCanvasControls .clipThumb img {
+	width: 45px;
+	height: 45px;
+}
+
+#backgroundCanvasControls .sharedControls {
+	clear: both;
+	z-index: 30;
+	border-top: none;
+	padding-top:10px;
+	margin-bottom: 5px;
+	
+	border-top-right-radius: 0px;	
+	-moz-border-top-right-radius: 0px;
+	border-top-left-radius: 0px;	
+	-moz-border-top-left-radius: 0px;	
+}
+
+
+/* layer thumb buttons */
+#backgroundCanvasControls .layerControl .clipThumb {
+	z-index: 5;
+}
+#backgroundCanvasControls .layerControl .clipThumb .button {
+	z-index: 10; 
+	width: 45px; 
+	position: absolute; 
+	height: 10px; 
+	margin: -12px -2px;
+	padding: 2px;
+	border: none;
+	opacity: 0.5;
+}
+#backgroundCanvasControls.sharedOpen .layerControl.current .clipThumb .ui-icon {
+	background-position: 0 -16px; /*change to ui-icon-triangle-1-n */
+}
+#backgroundCanvasControls .layerControl .clipThumb .button.ui-state-hover {
+	opacity: .88;
+}
+
+#backgroundCanvasControls .layerControl .clipThumb .button .ui-icon {
+	margin: -2px auto;
+}
+
+/* layer controls */
+#backgroundCanvasControls .layerControl {
+	border: none;
+	float: left;
+	width: 32%;
+	padding: 1px;
+	border-bottom: 1px solid #333;
+	
+	border-radius: 5px 5px 0 0 ;	
+	-moz-border-radius: 5px 5px 0 0 ;	
+}
+#backgroundCanvasControls .layerControl.current,
+#backgroundCanvasControls .layerControl:hover{
+	padding: 0px 0 1px 0;
+	border-bottom-color: #500; /* make transparent and overlap */!
+	background-color: #500;
+	z-index: 40;
+	
+	border-bottom-right-radius: 0px;	
+	-moz-border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;	
+	-moz-border-bottom-left-radius: 0px;	
+}
+
+#backgroundCanvasControls .layerSliders .slider {
+	margin:15px auto 5px;
+}
+
+
+/****************** Sliding Panel *******************/
+
+#backgroundCanvasControls .slidingPanel 
+{	
+	width: 19000px;
+}
+
+#backgroundCanvasControls .panelHolder 
+{
+	width: 185px;	
+	overflow: hidden;
+}
+
+
+/* jQuery UI */
+
+
+#backgroundCanvasControls ul.icons {margin: 0; padding: 4px 0; float:right;}
+#backgroundCanvasControls ul.icons li {margin: 2px; position: relative; padding: 1px; cursor: pointer; float: left;  list-style: none;}
+#backgroundCanvasControls ul.icons span.ui-icon {float: left;}
