@@ -64,6 +64,7 @@ const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMo
 
 const CLIP_PAGE_SIZE = 9
 
+var isDebug = (/debug=true/).test(window.location.href);
 
 function limitNum(min, num, max) {
 	return Math.max(min, Math.min(max, num));
@@ -127,6 +128,15 @@ function VidLayer(clip) {
 
 		var canvas = document.getElementById('backgroundCanvas');
 		if (canvas.getContext){
+			//disable scrolling on touch devices
+			document.ontouchmove = function(e){
+            	e.preventDefault();
+            	return false;
+			};
+
+		
+		
+		
 			var ctx = canvas.getContext('2d');
 			
 			var compositeIndex = 0;

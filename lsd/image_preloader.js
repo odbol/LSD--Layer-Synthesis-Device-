@@ -8,7 +8,7 @@
 */
 
 //set to true once all the browsers get their events in order.
-const USE_MEDIA_OBJECT_EVENTS = true;
+var USE_MEDIA_OBJECT_EVENTS = true;
 
 VidSource.prototype.url = "";
 VidSource.prototype.mimetype = "";
@@ -63,26 +63,50 @@ ImagePreloader.prototype.preload = function(image)
 	//test if video or image
 	//if (image.test(imgExtensionRegEx)) {
 	if (typeof(image) == "string") {
-		// create new Image object and add to array
-		var oImage = new Image;
-		this.aImages.push(oImage);
 		
-		// set up event handlers for the Image object
-		oImage.onload = ImagePreloader.prototype.onload;
-		oImage.onerror = ImagePreloader.prototype.onerror;
-		oImage.onabort = ImagePreloader.prototype.onabort;
-		
-		// assign pointer back to this.
-		oImage.oImagePreloader = this;
-		//oImage.bLoaded = false;
-		
-		// assign the .src property of the Image object
-		oImage.src = image;
+			// create new Image object and add to array
+			var oImage = new Image;
+			this.aImages.push(oImage);
+			
+			// set up event handlers for the Image object
+			oImage.onload = ImagePreloader.prototype.onload;
+			oImage.onerror = ImagePreloader.prototype.onerror;
+			oImage.onabort = ImagePreloader.prototype.onabort;
+			
+			// assign pointer back to this.
+			oImage.oImagePreloader = this;
+			//oImage.bLoaded = false;
+			
+			// assign the .src property of the Image object
+			oImage.src = image;
+
+			//this doesn't work in safari/webkit for animated gifs
+			//so must have image being shown
+			var tagId = "vidPreload_" + getUniqueNumber();
+			var vidTag = "<img id='" + tagId + "'";
+			if (isDebug) {
+				vidTag += " style='position:absolute;z-index:100000;'";
+			}
+			else {
+				vidTag += " style='position:absolute;z-index:-1;'"; //display:none'";
+			}
+			vidTag += " src='" + image + "' />"
+
+			$("body").append(vidTag);
+			//var vid = document.getElementById(tagId);
 	}	
 	else {
 	 	//video: do some wacky HTML5 stuff here.
 	 	var tagId = "vidPreload_" + getUniqueNumber();
-		var vidTag = "<video style='display:none' id='" + tagId + "' autoplay='true' loop='true'>"
+		var vidTag = "<video";
+		if (isDebug) {
+			vidTag += " style='position:absolute;z-index:100000;' controls";
+		}
+		else {
+			vidTag += " style='position:absolute;z-index:-1;'"; //display:none'";
+		}
+		
+		vidTag += " id='" + tagId + "' autoplay='true' loop='true'>"
 		
 		for (i in image) {
 			vidTag += "<source src='" + image[i].url + "'";
@@ -192,7 +216,7 @@ function ImagePreloader(images, callback)
    this.nImages = images.length;
    
    //mobile browser workarounds
-   this.isAndroidWebkit = (/android 2.+webkit/i).test(navigator.userAgent);
+   this.isAndroidWebkit = (/android 2.+webkit/i).test(navigator.userAgent) || (/iOS/).test(navigator.platform);
  
    // for each image, call preload()
    for ( var i = 0; i < images.length; i++ )
