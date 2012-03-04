@@ -265,6 +265,9 @@ body #backgroundCanvasControls div .clipThumb {
 	bottom: 0px;
 	right: 0px;
 	z-index:900;
+	
+	max-height:90px;
+	overflow: auto;
 }
 
 /*'OFFLINE'*/
