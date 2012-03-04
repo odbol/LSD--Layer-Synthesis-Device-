@@ -132,6 +132,8 @@ echo "var userId = 'vj" . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 
 
 ?>
+
+
 		//just use my favorites!
 			var compositeTypes = ['lighter','darker', 'xor', 'source-over', 'destination-over'];
 

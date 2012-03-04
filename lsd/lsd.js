@@ -147,7 +147,15 @@ function VidLayer(clip, id) {
             	return false;
 			};
 
-		
+			//get user id
+			var lsdUserId = window.localStorage.getItem("lsdUserId");
+			if ( !lsdUserId )
+				lsdUserId = prompt("Please enter your VJ name:", userId);
+	
+			if ( lsdUserId ) {
+				userId = lsdUserId;
+				window.localStorage.setItem("lsdUserId", userId);
+			}
 			
 			//INITIATE CROWD CONTROL
 			var fireBaseRoot = 'http://angelhack.firebase.com/gif_jockey';

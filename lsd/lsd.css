@@ -286,10 +286,13 @@ body #backgroundCanvasControls div .clipThumb {
 }
 
 #userList .self {
-	color: #900;
+	color: #fff;
+	text-shadow: 0 0 7px #fc0, 0 0 7px #fc0, 0 0 7px #fc0;
 }
 
-
+#userList ul {margin: 0; padding: 4px 0; }
+#userList ul li 
+{margin: 2px; position: relative; padding: 1px;  list-style: none;}
 
 
 
