@@ -239,7 +239,20 @@ body #backgroundCanvasControls div .clipThumb {
 	margin:15px auto 5px;
 }
 
-
+#backgroundCanvasControls .layerSliders input.slider {
+	-webkit-appearance: slider-vertical;
+    width: 20px;
+    height: 100px;
+}
+/*
+#backgroundCanvasControls .layerSliders input.slider::-webkit-slider-thumb {
+     -webkit-appearance: none;
+    background-color: #666;
+    opacity: 0.5;
+    width: 10px;
+    height: 26px;
+}​
+*/
 /****************** User list *******************/
 
 
@@ -250,7 +263,7 @@ body #backgroundCanvasControls div .clipThumb {
 /*'OFFLINE'*/
 #userList .status_0 {
 	color: #333;
-	text-decoration: strikethrough;
+	text-decoration: line-through;
 }
 /*'WAITING'*/
 #userList .status_1 {

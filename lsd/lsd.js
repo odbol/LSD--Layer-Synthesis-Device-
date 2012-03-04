@@ -65,14 +65,17 @@ const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMo
 const CLIP_PAGE_SIZE = 9
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
-var enableBlendEffectOnClick = false;
+var enableBlendEffectOnClick = !isMobile;
+
+//range input sliders don't work in firefox.
+//jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN THAT SHIT
+var enableHTML5Range = isMobile;
 
 var isDebug = (/debug=true/).test(window.location.href);
 
 function limitNum(min, num, max) {
 	return Math.max(min, Math.min(max, num));
 }
-  
 
 //////////////////////////////
 // 	VidLayer CLASS
@@ -144,14 +147,12 @@ function VidLayer(clip, id) {
 		
 			
 			//INITIATE CROWD CONTROL
-			//TODO: ADD screen id
 			var fireBaseRoot = 'http://angelhack.firebase.com/gif_jockey';
-			var screenId = null;
 			
+			var screenId = null;
 			var screenIdMatch = (/screen=([^&]+)/).exec(window.location.href);
 			if (screenIdMatch && screenIdMatch.length > 1)
 				screenId = screenIdMatch[1];
-				
 			if (!screenId)
 				screenId = 'lounge';
 			fireBaseRoot += '/' + screenId;
@@ -295,8 +296,15 @@ function VidLayer(clip, id) {
 			
 			
 			sliderHTML += "<div class='layerSliders'>";
-			for (i in layers) 
-				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'><div class='slider'></div><div class='clipThumb'></div></div>";
+			for (i in layers) {
+				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
+				if (enableHTML5Range)
+					sliderHTML += "<input type='range' class='slider' />"
+				else
+					sliderHTML += "<div class='slider'></div>";
+				
+				sliderHTML += "<div class='clipThumb'></div></div>";
+			}
 			//sliderHTML += "</div>";
 			
 			sliderHTML += "<div class='sharedControls'>" + compHTML;
@@ -550,33 +558,66 @@ function VidLayer(clip, id) {
 	
 				//OPACITY SLIDERS
 				var interactiveOff = function () { //turn interactive off if they try to change manually
-								$("#interactiveToggle input").attr("checked", false).change();
-							}
+					$("#interactiveToggle input").attr("checked", false).change();
+				};
 				$("#backgroundCanvasControls .layerSliders .slider").each(function (i, e) {
-					var onSlide = function (event, ui) {
-									var $this = $(this);
-									
-									$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
-							};
-					
-					var slideOpts = {
-							slide: onSlide,
-							change: onSlide,
-							animate: 'fast',
-							min: 0.0,
-							max: 1.0,
-							step: 0.1,
-							orientation: 'vertical',
-							value: layers[i].opacity
+					if (enableHTML5Range) {
+						var onSlide = function (event, ui) {
+							var $this = $(this);
+							
+							$this.data("vidLayer").opacity = parseFloat($this.val());
+							
+							interactiveOff(); //turn interactive off if they try to change manually
 						};
 						
-					if (i > 0) //turn interactive off if they try to change manually
-						slideOpts["start"] = interactiveOff;
-					
-					$(this)
-						.data("vidLayer", layers[i])
-						.slider(slideOpts);
+						var slideOpts = {
+								slide: onSlide,
+								change: onSlide,
+								animate: 'fast',
+								min: 0.0,
+								max: 1.0,
+								step: 0.1,
+								orientation: 'vertical',
+								value: layers[i].opacity
+							};
+							
+							/*
+						if (i > 0) 
+							slideOpts["start"] = interactiveOff;
+						*/
+						$(this)
+							.data("vidLayer", layers[i])
+							.attr("value", layers[i].opacity)
+							.attr("min", 0.0)
+							.attr("max", 1.0)
+							.attr("step", 0.1)
+							.change(onSlide);
+					}
+					else { //using jquery slider UI
+						var onSlide = function (event, ui) {
+							var $this = $(this);
+							
+							$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
+						};
 						
+						var slideOpts = {
+								slide: onSlide,
+								change: onSlide,
+								animate: 'fast',
+								min: 0.0,
+								max: 1.0,
+								step: 0.1,
+								orientation: 'vertical',
+								value: layers[i].opacity
+							};
+							
+						if (i > 0) //turn interactive off if they try to change manually
+							slideOpts["start"] = interactiveOff;
+						
+						$(this)
+							.data("vidLayer", layers[i])
+							.slider(slideOpts);
+					}
 				});
 
 				

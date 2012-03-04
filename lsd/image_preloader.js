@@ -43,7 +43,12 @@ VidClip.prototype.load = function (callback) {
 }
 function VidClip(mediaSource, thumbnail) {
 	this.thumbnail = thumbnail;
-	this.src = mediaSource;
+	
+	//mobile can't handle videos, so just load the thumb as placeholder
+	if ( isMobile && typeof(mediaSource) !== "string" )
+		this.src = thumbnail;
+	else
+		this.src = mediaSource;
 	
 	this.id = thumbnail; //TODO: use something else?
 	
@@ -221,7 +226,7 @@ function ImagePreloader(images, callback)
    this.nImages = images.length;
    
    //mobile browser workarounds
-   this.isAndroidWebkit = (/android 2.+webkit/i).test(navigator.userAgent) || (/iOS/).test(navigator.platform);
+   this.isAndroidWebkit = isMobile;
  
    // for each image, call preload()
    for ( var i = 0; i < images.length; i++ )
