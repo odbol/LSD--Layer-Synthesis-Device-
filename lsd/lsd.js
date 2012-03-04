@@ -93,6 +93,9 @@ VidLayer.prototype.load = function (clip) {
 	//this.image = null; 
 	var parentLayer = this;
 	clip.load(function (loadedImage) {
+		if (clip != parentLayer.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
+			return;
+	
 		if (parentLayer.image != null && parentLayer.image.pause) //stop last video, if it is
 			parentLayer.image.pause();
 			
@@ -258,7 +261,18 @@ function VidLayer(clip, id) {
 					}
 				});
 			};
-		
+			
+			var makeOnLayerChange = function (layerId) {
+				//CROWD: receive layer opacity change events
+				var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/opacity');
+				clipRef.on('value', function(snapshot) {
+					var val = snapshot.val();
+					if (val >= 0) {
+						layers[layerId].opacity = val; //parseFloat(snapshot.val());
+					}
+				});
+			};
+			
 		
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(vidClips[i], i); //the clip thumbs will be added to GUI later, during clip initialization
@@ -267,6 +281,7 @@ function VidLayer(clip, id) {
 					layers[i].opacity = 0.7;
 					
 				makeOnClipChange(i);
+				makeOnLayerChange(i);
 			}
 				
 			 //GLOBALS!
@@ -458,7 +473,7 @@ function VidLayer(clip, id) {
 						
 						
 						//CROWD: send event
-						console.log('changing clip on layer ' + fireBaseRoot + '/layers/' + currentLayer.id + '/clip' + " to " + $this.data("vidClip").id );
+						//console.log('changing clip on layer ' + fireBaseRoot + '/layers/' + currentLayer.id + '/clip' + " to " + $this.data("vidClip").id );
 						var clipRef = new Firebase(fireBaseRoot + '/layers/' + currentLayer.id + '/clip');
 						clipRef.set( $this.data("vidClip").id );
 					}
@@ -557,6 +572,13 @@ function VidLayer(clip, id) {
 	
 	
 				//OPACITY SLIDERS
+				//CROWD: receive layer change events
+				var changeOpacity = function(layerId, opacity) {
+					var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/opacity');
+					clipRef.set( opacity );
+				};
+				
+				
 				var interactiveOff = function () { //turn interactive off if they try to change manually
 					$("#interactiveToggle input").attr("checked", false).change();
 				};
@@ -565,9 +587,13 @@ function VidLayer(clip, id) {
 						var onSlide = function (event, ui) {
 							var $this = $(this);
 							
-							$this.data("vidLayer").opacity = parseFloat($this.val());
+							//now done in crowd
+							//$this.data("vidLayer").opacity = parseFloat($this.val());
 							
 							interactiveOff(); //turn interactive off if they try to change manually
+							
+							//CROWD
+							changeOpacity(i, parseFloat($this.val()));
 						};
 						
 						var slideOpts = {
@@ -587,17 +613,19 @@ function VidLayer(clip, id) {
 						*/
 						$(this)
 							.data("vidLayer", layers[i])
-							.attr("value", layers[i].opacity)
 							.attr("min", 0.0)
 							.attr("max", 1.0)
 							.attr("step", 0.1)
+							.attr("value", layers[i].opacity)
 							.change(onSlide);
 					}
 					else { //using jquery slider UI
 						var onSlide = function (event, ui) {
 							var $this = $(this);
 							
-							$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
+							//$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
+							
+							changeOpacity(i, parseFloat($this.slider("option", "value")) );
 						};
 						
 						var slideOpts = {
@@ -619,7 +647,6 @@ function VidLayer(clip, id) {
 							.slider(slideOpts);
 					}
 				});
-
 				
 				//TODO: ("implement media.playbackRate!!!!");
 				//RATE SLIDER
