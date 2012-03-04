@@ -26,6 +26,8 @@ VidClip.prototype.src; //either a string (image) or array of VidSource objects (
 //loads a new VidSource object and plays as soon as it's available
 VidClip.prototype.thumbnail = ""; //url of a thumbnail image
 VidClip.prototype.image = null; //stores the loaded media for caching
+VidClip.prototype.id = "empty"; //identifies by index
+VidClip.prototype.element = null; //the gui element associated with this clip (not the actual image src!)
 VidClip.prototype.load = function (callback) {
 	var parentClip = this;
 	
@@ -42,6 +44,9 @@ VidClip.prototype.load = function (callback) {
 function VidClip(mediaSource, thumbnail) {
 	this.thumbnail = thumbnail;
 	this.src = mediaSource;
+	
+	this.id = thumbnail; //TODO: use something else?
+	
 	return this;
 }
 

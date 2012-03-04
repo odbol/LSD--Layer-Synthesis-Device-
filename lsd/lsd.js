@@ -64,6 +64,9 @@ const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMo
 
 const CLIP_PAGE_SIZE = 9
 
+//if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
+var enableBlendEffectOnClick = false;
+
 var isDebug = (/debug=true/).test(window.location.href);
 
 function limitNum(min, num, max) {
@@ -81,6 +84,7 @@ VidLayer.prototype.clip; //holds a VidClip
 VidLayer.prototype.image = null; //holds an Image or Video tag source
 //loads a new VidSource object and plays as soon as it's available
 VidLayer.prototype.opacity = 1.0;
+VidLayer.prototype.id = 0;
 VidLayer.prototype.load = function (clip) {
 	this.clip = clip;
 	//this.image = null; 
@@ -103,9 +107,11 @@ VidLayer.prototype.draw = function (ctx, x1, y1, x2, y2) {
 		ctx.drawImage(this.image, x1, y1, x2, y2);
 	}
 }
-function VidLayer(clip) {
+function VidLayer(clip, id) {
 	if (clip)
 		this.load(clip);
+		
+	this.id = id;
 	return this;
 }  
 
@@ -117,7 +123,8 @@ function VidLayer(clip) {
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
-   $.fn.takeLSD = function(vidClips, compositeTypes, numLayers) {
+	//  userId			-	NOT optional id of user - alphanumeric only.
+   $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
 		//move whole page into holder so we can cover it/ put the background behind it.
 		$("body")
 			.append("<div id='realbody'><div>Loading LSD...</div></div>")
@@ -135,6 +142,75 @@ function VidLayer(clip) {
 			};
 
 		
+			
+			//INITIATE CROWD CONTROL
+			//TODO: ADD screen id
+			var fireBaseRoot = 'http://angelhack.firebase.com/gif_jockey';
+			var screenId = null;
+			
+			var screenIdMatch = (/screen=([^&]+)/).exec(window.location.href);
+			if (screenIdMatch && screenIdMatch.length > 1)
+				screenId = screenIdMatch[1];
+				
+			if (!screenId)
+				screenId = 'lounge';
+			fireBaseRoot += '/' + screenId;
+		
+			var userStatus = QUEUE_STATUS.OFFLINE;
+			//var fireRef = new Firebase('http://angelhack.firebase.com/gif_jockey');
+			var presenceRef = new Firebase(fireBaseRoot + '/queue/' + userId + '/online');
+			
+			//Make sure if I lose my connection I am marked as offline.
+			presenceRef.setOnDisconnect(QUEUE_STATUS.OFFLINE);
+			//Now, mark myself as online.
+			presenceRef.setWithPriority(QUEUE_STATUS.WAITING, QUEUE_STATUS.WAITING);
+		
+			//keep track of status in queue
+			presenceRef.on('value', function(snapshot) {
+			  if(snapshot.val() === null) {
+				console.log('User does not exist.');
+				userStatus = QUEUE_STATUS.OFFLINE;
+			  } else {
+				userStatus = snapshot.val();
+			  }
+			});
+		
+			//immediately start
+			if ((/master=true/).test(window.location.href)) //TODO: check other users in queue if you're first
+				presenceRef.setWithPriority(QUEUE_STATUS.MASTER, QUEUE_STATUS.MASTER);
+			else
+				presenceRef.setWithPriority(QUEUE_STATUS.PLAYING, QUEUE_STATUS.PLAYING);
+			
+			
+			//make users list
+			$("body").append("<div id='userList' class='dialogControls'><h1>VJs Online</h1><br class='clear' /><ul></ul></div>");
+
+			var usersRef = new Firebase(fireBaseRoot + '/queue/');
+			usersRef.on('value', function(snapshot) {
+			  var users = snapshot.val();
+			  var userHTML = "";
+			  
+			  if(users) {
+				$.each(users, function (i, u) {
+					var liHTML = "<li class='status_" + u.online;
+					if (i == userId)
+						liHTML += " self"; 
+					liHTML += "'>" + i + "</li>";
+					
+					//build list in reverse
+					userHTML = liHTML + userHTML;
+				});
+			  }
+			  
+			  $("#userList ul").eq(0).html(userHTML);
+			});
+		
+			
+		
+		
+		
+		
+		
 		
 		
 			var ctx = canvas.getContext('2d');
@@ -145,24 +221,58 @@ function VidLayer(clip) {
 				  'source-over','source-in','source-out','source-atop',
 				  'destination-over','destination-in','destination-out','destination-atop'
 				];
+				
+				
+			//changes the clip in the given layer. TODO: this could be better	
+			var changeClip = function (currentLayer, currentLayerControl, clip) {
+				currentLayer.load(clip);
+				currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+			};
+			
 			
 			if (!(numLayers > 0))
 				numLayers = 3;
 			
 			//fill the layers array with our media sources 
 			var layers = new Array(numLayers);
+			
+			var makeOnClipChange = function (layerId) {
+				//CROWD: receive layer change events
+				var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/clip');
+				clipRef.on('value', function(snapshot) {
+					//var layerId = parseInt(clipRef.parent().name());
+					var clipId = snapshot.val();
+					
+					//find clip and see if it's changed
+					if (clipId) {
+						var clip = null;
+						for (var j in vidClips) {
+							if ( vidClips[j].id == clipId ) {
+								var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
+								changeClip( layers[layerId], layerControl, vidClips[j] );	
+								
+								break;
+							}
+						}
+					}
+				});
+			};
+		
+		
 			for (var i = 0; i < numLayers; i++) {
-				layers[i] = new VidLayer(vidClips[i]); //the clip thumbs will be added to GUI later, during clip initialization
+				layers[i] = new VidLayer(vidClips[i], i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
+					
+				makeOnClipChange(i);
 			}
 				
 			 //GLOBALS!
 			var currentLayer = null;
 			var currentLayerControl = null; //should be initialized once control panel behaviour(!) is initialized
 			
-			var isInteractiveMode = INTERACTIVE_MODE.ON; //indicates if the mouse should control sliders automatically
+			var isInteractiveMode = INTERACTIVE_MODE.OFF; //indicates if the mouse should control sliders automatically
 			
 			//////////////////////////////
 			//BUILD HTML CONTROLS
@@ -215,7 +325,7 @@ function VidLayer(clip) {
 		
 			sliderHTML += "</div></div>"; //end sharedCOntrols, layerSliders
 			
-			$("body").append("<div id='backgroundCanvasControls' class='ui-corner-all'>" + iconsHTML +
+			$("body").append("<div id='backgroundCanvasControls' class='dialogControls ui-corner-all'>" + iconsHTML +
 				"<div class='aboutBox'>" + ABOUT_HTML + "</div>" +
 				"<div class='controlPanel'>" + sliderHTML + "</div></div>");
 		
@@ -322,20 +432,27 @@ function VidLayer(clip) {
 					toggleSharedControls(e);
 					setCurrentLayer($(this).parent());
 				});
-					
-			
+
 			//CLIP THUMBS
 			$("#backgroundCanvasControls .clipThumbs .clipThumb")
 				.each(function (i, el) {	//add linkback data from tags to objects
 					$(this).data("vidClip", vidClips[i]); //assumes they're in the same order as the array. risky....
+					vidClips[i].element = this;
+					//$(this).data("vidClipIdx", i); //assumes they're in the same order as the array. risky....
 				})
 				.click(function () { 		//load clip's video into current layer
 					if (currentLayer) {
 						var $this = $(this);
-						currentLayer.load($this.data("vidClip"));
-						currentLayerControl.find(".clipThumb").html($this.html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+						
+						//changeClip(currentLayer, currentLayerControl, $this.data("vidClip") );
 						
 						hideSharedControls();
+						
+						
+						//CROWD: send event
+						console.log('changing clip on layer ' + fireBaseRoot + '/layers/' + currentLayer.id + '/clip' + " to " + $this.data("vidClip").id );
+						var clipRef = new Firebase(fireBaseRoot + '/layers/' + currentLayer.id + '/clip');
+						clipRef.set( $this.data("vidClip").id );
 					}
 				})
 				.slice(0, 3) //add the thumbs for the first three already-loaded clips into the layers
@@ -343,8 +460,12 @@ function VidLayer(clip) {
 						$("#layerControl_" + i).find(".clipThumb").html($(this).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
 					});
 			
+			
+			
+			
+			
 			//clip thumb scrolling
-			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(vidClips.length / 9.0 / 3.0), ".clipThumb")
+			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(vidClips.length / 9.0 / 3.0) + 1, ".clipThumb")
 			
 			
 			//BUTTONS
@@ -546,10 +667,12 @@ function VidLayer(clip) {
 				};
 				drawFrameIntervalId = setInterval(drawFrame, DRAW_FRAMERATE);
 				
-				$(canvas).bind("mousedown.lsd", function () {
-					compositeIndex = (compositeIndex + 1) % compositeTypes.length;
-					$("#compositionSelector").val(compositeIndex);
-				});
+				if (enableBlendEffectOnClick) {
+					$(canvas).bind("mousedown.lsd", function () {
+						compositeIndex = (compositeIndex + 1) % compositeTypes.length;
+						$("#compositionSelector").val(compositeIndex);
+					});
+				}
 				
 			//});
 		}

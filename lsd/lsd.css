@@ -20,10 +20,12 @@
 	width: 100%;
 	height: 100%;
 }
-#backgroundCanvasControls {
+
+
+#backgroundCanvasControls,
+.dialogControls {
 	opacity: 0.7;
 	position: absolute;
-	top: 0px;
 	right: 0px;
 	margin:5px;
 	padding:0 5px;
@@ -37,6 +39,11 @@
 	text-align:right;
 	
 }
+
+#backgroundCanvasControls {
+	top: 0px;
+}
+
 #backgroundCanvasControls.maximized {
 	width: 187px;
 }
@@ -93,22 +100,22 @@
 #backgroundCanvasControls .aboutBox {
 	clear:both;
 }
-#backgroundCanvasControls h1 {
+.dialogControls h1 {
 	float:left;
 	font-size: 12px;
 	margin-right: 10px;
 }
-#backgroundCanvasControls h1 a,
-#backgroundCanvasControls h1 a:hover,
-#backgroundCanvasControls h1 a:visited,
-#backgroundCanvasControls h1 a:active {
+.dialogControls h1 a,
+.dialogControls h1 a:hover,
+.dialogControls h1 a:visited,
+.dialogControls h1 a:active {
 	color: #fff;
 	text-decoration: none;
 }
-#backgroundCanvasControls h2 {
+.dialogControls h2 {
 	margin-top: 0;
 }
-#backgroundCanvasControls h4 {
+.dialogControls h4 {
 /*	text-align:left;*/
 }
 
@@ -231,6 +238,40 @@ body #backgroundCanvasControls div .clipThumb {
 #backgroundCanvasControls .layerSliders .slider {
 	margin:15px auto 5px;
 }
+
+
+/****************** User list *******************/
+
+
+#userList {
+	bottom: 0px;
+}
+
+/*'OFFLINE'*/
+#userList .status_0 {
+	color: #333;
+	text-decoration: strikethrough;
+}
+/*'WAITING'*/
+#userList .status_1 {
+	color: #666;
+	font-style: italic;
+}
+/*'PLAYING'*/
+#userList .status_2 {
+
+}
+/*'MASTER'*/
+#userList .status_3 {
+	font-weight: bold;
+}
+
+#userList .self {
+	color: #900;
+}
+
+
+
 
 
 /****************** Sliding Panel *******************/
