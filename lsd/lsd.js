@@ -314,7 +314,7 @@ function VidLayer(clip, id) {
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
 				if (enableHTML5Range)
-					sliderHTML += "<input type='range' class='slider' />"
+					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />"
 				else
 					sliderHTML += "<div class='slider'></div>";
 				
@@ -596,28 +596,34 @@ function VidLayer(clip, id) {
 							changeOpacity(i, parseFloat($this.val()));
 						};
 						
-						var slideOpts = {
-								slide: onSlide,
-								change: onSlide,
-								animate: 'fast',
-								min: 0.0,
-								max: 1.0,
-								step: 0.1,
-								orientation: 'vertical',
-								value: layers[i].opacity
-							};
-							
 							/*
 						if (i > 0) 
 							slideOpts["start"] = interactiveOff;
 						*/
 						$(this)
 							.data("vidLayer", layers[i])
-							.attr("min", 0.0)
+							/*.attr("min", 0.0)
 							.attr("max", 1.0)
-							.attr("step", 0.1)
+							.attr("step", 0.1)*/
 							.attr("value", layers[i].opacity)
 							.change(onSlide);
+							
+						fdSlider.createSlider({
+						  // Associate the slider with the form element 
+						  inp:this,
+						  // Use the "tween to click point" animation
+						  //animation:"tween",
+						  // A minimum value of 5
+						  min:0.0,
+						  // A maximum value of 15
+						  max:1.0,
+						  // A step/increment of 0.2
+						  step:0.1,
+						  hideInput: true,
+						  // Create a vertical slider
+        				  vertical:true
+						});
+						/**/
 					}
 					else { //using jquery slider UI
 						var onSlide = function (event, ui) {
@@ -741,6 +747,9 @@ function VidLayer(clip, id) {
 						$("#compositionSelector").val(compositeIndex);
 					});
 				}
+				
+				
+				minimizeControls();
 				
 			//});
 		}

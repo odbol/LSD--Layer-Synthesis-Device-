@@ -244,6 +244,11 @@ body #backgroundCanvasControls div .clipThumb {
     width: 20px;
     height: 100px;
 }
+
+.fd-slider-vertical {
+    height: 100px;
+}
+
 /*
 #backgroundCanvasControls .layerSliders input.slider::-webkit-slider-thumb {
      -webkit-appearance: none;
@@ -258,6 +263,7 @@ body #backgroundCanvasControls div .clipThumb {
 
 #userList {
 	bottom: 0px;
+	z-index:900;
 }
 
 /*'OFFLINE'*/
