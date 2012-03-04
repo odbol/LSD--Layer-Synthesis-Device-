@@ -26,7 +26,6 @@
 .dialogControls {
 	opacity: 0.7;
 	position: absolute;
-	right: 0px;
 	margin:5px;
 	padding:0 5px;
 	border: inset 2px #fff;
@@ -42,6 +41,7 @@
 
 #backgroundCanvasControls {
 	top: 0px;
+	right: 0px;
 }
 
 #backgroundCanvasControls.maximized {
@@ -263,6 +263,7 @@ body #backgroundCanvasControls div .clipThumb {
 
 #userList {
 	bottom: 0px;
+	right: 0px;
 	z-index:900;
 }
 
@@ -293,6 +294,55 @@ body #backgroundCanvasControls div .clipThumb {
 #userList ul {margin: 0; padding: 4px 0; }
 #userList ul li 
 {margin: 2px; position: relative; padding: 1px;  list-style: none;}
+
+
+
+#shareOverlay {
+	z-index:1100;
+	position:absolute;
+	/*top:auto;
+	bottom: auto;
+	right: auto;
+	left: auto;
+	*/
+	margin:2% 30%;
+	min-width: 300px;
+	min-height: 310px;
+	padding: 20px;
+	text-align: center;
+	
+	max-width: 600px;
+	width: auto;
+	height: 85%;
+	
+	opacity: 1.0;
+	
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#shareOverlay h1 {
+	float: none;
+	font-size: 28px;
+	margin: 0 0 20px 0;
+	padding: 0;
+}
+
+#shareOverlay .shareButtons {
+	position: absolute;
+	right: 8px;
+	top: 28px;
+}
+
+
+#shareOverlay img {
+	height: 90%;
+	clear:both;
+}
+
+/* hide close button for now */
+#buttonStop {
+	display: none;
+}
 
 
 

@@ -71,6 +71,10 @@ var enableBlendEffectOnClick = !isMobile;
 //jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN THAT SHIT
 var enableHTML5Range = isMobile;
 
+//set to true if you want your computer to hate you.
+var enablePreloading = false;
+
+
 var isDebug = (/debug=true/).test(window.location.href);
 
 function limitNum(min, num, max) {
@@ -302,6 +306,7 @@ function VidLayer(clip, id) {
 			//BUILD HTML CONTROLS
 			//////////////////////////////
 			var iconsHTML = "<h1><a href='http://odbol.com/lsd' title='Click to take LSD'>LSD Visuals</a></h1><ul class='icons buttons ui-widget ui-helper-clearfix'>" +
+				"<li id='buttonShare' title='Share Screen' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-link'></span></li>" +
 				"<li id='buttonHelp' title='Help/About' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-help'></span></li>" +		
 				"<li id='buttonFullscreen' title='Fullscreen Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-arrow-4-diag'></span></li>" +		
 				"<li id='buttonStop' title='Stop Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-closethick'></span></li>" +
@@ -551,6 +556,27 @@ function VidLayer(clip, id) {
 					//$("#backgroundCanvasControls .controlPanel").show('fast');
 				});		
 			
+			$("#buttonShare").toggle(function (e) {
+					var shareUrl = "http://odbol.com/gif_jockey.php?screen=" + screenId;
+					$("<div id='shareOverlay' class='dialogControls'>" + 
+						"<h1>Join Me on LSD</h1>" + 
+						"<div class='shareButtons'>" + 
+							'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
+						"</div>" +
+						"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
+						
+						"</div>")
+						.appendTo("body")
+						.click(function () {
+							$("#shareOverlay").remove();
+						});
+				}, 
+				function (e) {
+					$("#shareOverlay").remove();
+				});		
+			
+			
+			
 			//hover states on the buttons
 			$('#backgroundCanvasControls .button').hover(
 				function() { $(this).addClass('ui-state-hover'); }, 
@@ -757,8 +783,22 @@ function VidLayer(clip, id) {
 				}
 				
 				
-				minimizeControls();
+				$("#buttonFullscreen").click();
 				
+				
+				//preload ALL the things!
+				if (enablePreloading && userStatus == QUEUE_STATUS.MASTER) {
+					var curPreloadedClip = 0; //one at a time, please!
+					var preloadClips = function () {
+						vidClips[curPreloadedClip++].load(preloadClips);
+					};
+					preloadClips();
+					//for (i in vidClips) {
+					//	if (vidClips[i]) {
+							//vidClips.load
+					//	}
+					//}
+				}
 			//});
 		}
 		else { //HTML5 fail!
