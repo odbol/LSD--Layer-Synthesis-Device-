@@ -281,6 +281,8 @@ function VidLayer(clip, id) {
 					var val = snapshot.val();
 					if (val >= 0) {
 						layers[layerId].opacity = val; //parseFloat(snapshot.val());
+						
+						//TODO: update slider val!
 					}
 				});
 			};
@@ -385,10 +387,22 @@ function VidLayer(clip, id) {
 			
 			$("#compositionSelector")
 				.change(function () {
-					compositeIndex = parseInt($(this).val());
+					compositeIndex = this.value;
+					
+					//CROWD: receive layer change events
+					var clipRef = new Firebase(fireBaseRoot + '/composition');
+					clipRef.set( this.value );
 				});
 				
-				
+			//CROWD: receive layer change events
+			var compRef = new Firebase(fireBaseRoot + '/composition');	
+			compRef.on('value', function(snapshot) {
+					var val = snapshot.val();
+					if (val >= 0) {
+						compositeIndex = val;
+						$("#compositionSelector").val(compositeIndex);
+					}
+			});
 			
 			//layer controls
 			var setCurrentLayer = function (layerControlElement) { 	

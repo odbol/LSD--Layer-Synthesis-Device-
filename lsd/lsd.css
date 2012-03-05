@@ -308,14 +308,14 @@ body #backgroundCanvasControls div .clipThumb {
 	right: auto;
 	left: auto;
 	*/
-	margin:2% 30%;
+	margin:2% 15%;
 	min-width: 300px;
 	min-height: 310px;
 	padding: 20px;
 	text-align: center;
 	
-	max-width: 600px;
-	width: auto;
+	
+	width: 60%;
 	height: 85%;
 	
 	opacity: 1.0;
@@ -339,6 +339,7 @@ body #backgroundCanvasControls div .clipThumb {
 
 #shareOverlay img {
 	height: 90%;
+	max-width: 100%;
 	clear:both;
 }
 
