@@ -669,7 +669,20 @@ function VidLayer(clip, id) {
 						  step:0.1,
 						  hideInput: true,
 						  // Create a vertical slider
-        				  vertical:true
+        				  vertical:true,
+        				  
+        				  callbacks: {
+        				  	'change': [function (data) {
+
+								//now done in crowd
+								//$this.data("vidLayer").opacity = parseFloat($this.val());
+								
+								interactiveOff(); //turn interactive off if they try to change manually
+								
+								//CROWD
+								changeOpacity(i, parseFloat(data.value) );
+							}]
+        				  }
 						});
 						/**/
 					}
