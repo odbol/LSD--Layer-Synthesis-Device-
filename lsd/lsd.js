@@ -8,6 +8,7 @@
 		jQuery UI with slider and tabs
 		image_preloader.js
 		imageSlider.js
+		fd-slider
 		HTML5
 	
 	Copyright 2010 Tyler Freeman
@@ -162,7 +163,7 @@ function VidLayer(clip, id) {
 			}
 			
 			//INITIATE CROWD CONTROL
-			var fireBaseRoot = 'http://angelhack.firebase.com/gif_jockey';
+			var fireBaseRoot = 'http://gamma.firebase.com/gif_jockey';
 			
 			var screenId = null;
 			var screenIdMatch = (/screen=([^&]+)/).exec(window.location.href);
