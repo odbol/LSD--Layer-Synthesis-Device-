@@ -223,10 +223,17 @@ function VidLayer(clip, id) {
 			});
 		
 			
-		
-		
-		
-		
+			//if master sharer is on mobile, don't allow anyone to use videos - only GIFs
+			//remove all videos from clips list
+			if ( /mobileOnly=true/.test(window.location.href) ) {
+				var newVidClips = [];
+				for (var i in vidClips) {
+					if ( !vidClips[i].isVideo() ) {
+						newVidClips.push( vidClips[i] );
+					}
+				}
+				vidClips = newVidClips;
+			}
 		
 		
 		
@@ -589,7 +596,9 @@ function VidLayer(clip, id) {
 				});		
 			
 			$("#buttonShare").toggle(function (e) {
-					var shareUrl = "http://odbol.com/gif_jockey.php?screen=" + screenId;
+					var shareUrl = "http://odbol.com/gif_jockey.php?screen=" + screenId + 
+						/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
+						(isMobile || /mobileOnly=true/.test(window.location.href) ? "&mobileOnly=true" : "");
 					$("<div id='shareOverlay' class='dialogControls'>" + 
 						"<h1>Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
@@ -756,15 +765,20 @@ function VidLayer(clip, id) {
 					}
 					
 					if (isInteractiveMode) {
-						var layerAlpha = 1.0 - (e.clientY / $(canvas).height() * 0.7); //don't let them turn it all the way down
-						$("#backgroundCanvasControls .layerSliders .slider").eq(2)
-							.slider("option", "value", layerAlpha);
-							
-						layerAlpha = (e.clientX / $(canvas).width() * 0.7) + 0.3; //don't let them turn it all the way down
-						$("#backgroundCanvasControls .layerSliders .slider").eq(1)
-							.slider("option", "value", layerAlpha);
-							
-						//$msg.html("alpha: " + layerAlpha);
+						if (enableHTML5Range) {
+							//TODO
+						}
+						else {
+							var layerAlpha = 1.0 - (e.clientY / $(canvas).height() * 0.7); //don't let them turn it all the way down
+							$("#backgroundCanvasControls .layerSliders .slider").eq(2)
+								.slider("option", "value", layerAlpha);
+								
+							layerAlpha = (e.clientX / $(canvas).width() * 0.7) + 0.3; //don't let them turn it all the way down
+							$("#backgroundCanvasControls .layerSliders .slider").eq(1)
+								.slider("option", "value", layerAlpha);
+								
+							//$msg.html("alpha: " + layerAlpha);
+						}
 					}
 				});
 				

@@ -40,7 +40,10 @@ VidClip.prototype.load = function (callback) {
 			callback(parentClip.image);
 		});
 	}
-}
+};
+VidClip.prototype.isVideo = function () {
+	return ( typeof(this.src) !== "string" );
+};
 function VidClip(mediaSource, thumbnail) {
 	this.thumbnail = thumbnail;
 	
