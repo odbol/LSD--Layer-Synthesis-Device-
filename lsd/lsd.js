@@ -70,7 +70,7 @@ var enableBlendEffectOnClick = !isMobile;
 
 //range input sliders don't work in firefox.
 //jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN THAT SHIT
-var enableHTML5Range = isMobile;
+var enableHTML5Range = true || isMobile;
 
 //set to true if you want your computer to hate you.
 var enablePreloading = false;
@@ -253,6 +253,9 @@ function VidLayer(clip, id) {
 			//fill the layers array with our media sources 
 			var layers = new Array(numLayers);
 			
+			
+			//CROWD CONTROL
+			
 			var makeOnClipChange = function (layerId) {
 				//CROWD: receive layer change events
 				var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/clip');
@@ -288,6 +291,8 @@ function VidLayer(clip, id) {
 				});
 			};
 			
+		
+		
 		
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(vidClips[i], i); //the clip thumbs will be added to GUI later, during clip initialization
@@ -521,7 +526,7 @@ function VidLayer(clip, id) {
 			
 			//BUTTONS
 			var hideControls = function () {
-				$("#backgroundCanvasControls .controlPanel, #buttonHelp, #backgroundCanvasControls .aboutBox").hide('fast');
+				$("#backgroundCanvasControls .controlPanel, #buttonHelp, #buttonStop, #backgroundCanvasControls .aboutBox").hide('fast');
 					
 				//$("#backgroundCanvasControls").switchClass("maximized", "minimized", 500);
 				$("#backgroundCanvasControls").animate({width:"150px"}, 100);		
@@ -545,13 +550,24 @@ function VidLayer(clip, id) {
 				}
 				else {
 					minimizeControls();
-					$("#backgroundCanvasControls .controlPanel, #buttonHelp").show('fast');
+					$("#backgroundCanvasControls .controlPanel, #buttonHelp, #buttonStop").show('fast');
 					$("#backgroundHolder").css("zIndex", 500);
 				}
 				isFullscreen = !isFullscreen;
 			});
 			var drawFrameIntervalId = 0;
 			$("#buttonStop").click(function (e) {
+				$(".dialogControls").fadeOut();
+				
+				var reviveUI = function () {
+					$(canvas).unbind("mousedown.lsdUIHide");
+				
+					$(".dialogControls").fadeIn();
+				}
+				
+				$(canvas).bind("mousedown.lsdUIHide", reviveUI);
+			
+				/* don't quit, just hide the UI
 				if (drawFrameIntervalId > 0) {
 					clearInterval(drawFrameIntervalId);
 					drawFrameIntervalId = 0;
@@ -560,6 +576,7 @@ function VidLayer(clip, id) {
 					//TODO: garbage collection! yeah right!
 					$("#backgroundHolder, #backgroundCanvasControls").hide(); //get rid of the evidence!
 				}
+				*/
 			});
 			$("#buttonHelp").toggle(function (e) {
 					//$("#backgroundCanvasControls .controlPanel").hide('fast');
