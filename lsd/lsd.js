@@ -206,6 +206,7 @@ function VidLayer(clip, id) {
 			usersRef.on('value', function(snapshot) {
 			  var users = snapshot.val();
 			  var userHTML = "";
+			  var offlineUserHTML = "";
 			  
 			  if(users) {
 				$.each(users, function (i, u) {
@@ -215,11 +216,15 @@ function VidLayer(clip, id) {
 					liHTML += "'>" + i + "</li>";
 					
 					//build list in reverse
-					userHTML = liHTML + userHTML;
+					if (u.online == QUEUE_STATUS.OFFLINE)
+						offlineUserHTML = liHTML + offlineUserHTML;
+					else
+						userHTML = liHTML + userHTML;
 				});
 			  }
 			  
-			  $("#userList ul").eq(0).html(userHTML);
+			  //keep offline users last (since priorty sort doesn't really work that well)
+			  $("#userList ul").eq(0).html(userHTML + offlineUserHTML);
 			});
 		
 			
@@ -432,7 +437,7 @@ function VidLayer(clip, id) {
 			}
 			$("#backgroundCanvasControls .layerControl")
 				.each(function (i, el) {	//add linkback data from tags to objects
-					$(this).data("vidLayer", layers[i]); //assumes their in the same order as the array. risky....
+					$(this).data("vidLayer", layers[i]); //assumes they're in the same order as the array. risky....
 				})
 				.click(function () { 	
 					setCurrentLayer($(this));
