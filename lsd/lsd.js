@@ -101,10 +101,16 @@ VidLayer.prototype.load = function (clip) {
 		if (clip != parentLayer.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
 			return;
 	
-		if (parentLayer.image != null && parentLayer.image.pause) //stop last video, if it is
-			parentLayer.image.pause();
+		if (parentLayer.image != null) { //unload (hide) last vid, for performance (don't want a billion GIFs running at once)
+			parentLayer.image.style.display = 'none';
 			
+			if (parentLayer.image.pause) //stop last video, if it is
+				parentLayer.image.pause();
+		}
+		
 		parentLayer.image = loadedImage;
+		
+		loadedImage.style.display = 'block'; //make sure the image is now shown again if it was hidden before
 		
 		if (loadedImage.play) //if video, resume playing
 			loadedImage.play();

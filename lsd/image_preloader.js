@@ -79,7 +79,7 @@ ImagePreloader.prototype.preload = function(image)
 		
 			// create new Image object and add to array
 			var oImage = new Image;
-			this.aImages.push(oImage);
+			//this.aImages.push(oImage);
 			
 			// set up event handlers for the Image object
 			oImage.onload = ImagePreloader.prototype.onload;
@@ -107,6 +107,7 @@ ImagePreloader.prototype.preload = function(image)
 
 			$("body").append(vidTag);
 			//var vid = document.getElementById(tagId);
+			this.aImages.push( document.getElementById(tagId) );
 	}	
 	else {
 	 	//video: do some wacky HTML5 stuff here.
