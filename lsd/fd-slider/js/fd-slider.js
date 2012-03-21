@@ -173,7 +173,7 @@ var fdSlider = (function() {
                 
                 destroySingleSlider(options.inp.id);
                 sliders[options.inp.id] = new fdRange(options);
-                return true;
+                return sliders[options.inp.id];
         };  
         
         var getAttribute = function(elem, att) {
@@ -299,7 +299,7 @@ var fdSlider = (function() {
                     inpHeight   = html5Shim && vertical && ("inpHeight" in options) ? options.inpHeight : false,                   
                     ariaFormat  = !html5Shim && options.ariaFormat ? options.ariaFormat : false,
                     timer       = null,
-                    kbEnabled   = true,
+                    kbEnabled   = (options.kbEnabled === false) || true,
                     initialVal  = tagName == "select" ? inp.selectedIndex : inp.value,                                    
                     sliderH     = 0,
                     sliderW     = 0, 
@@ -726,7 +726,9 @@ var fdSlider = (function() {
                                 // Immediate jump to click point 
                                 } else {
                                         pixelsToValue(posx);
-                                        //addEvent(document, touchEvents ? 'touchend' : 'mouseup', onMouseUp);                                                      
+                                        //addEvent(document, touchEvents ? 'touchend' : 'mouseup', onMouseUp);
+                                        
+                                        callback("jump");
                                 };                                                                                   
                         };
 
@@ -831,6 +833,72 @@ var fdSlider = (function() {
                         };
                 };
 
+
+
+				//VALUE TWEENER
+				//added by Tyler Freeman 
+				//use this to tween between values instead of pixels.  
+				var tweenDest = 0, 
+					tweenCurVal = 0,
+					TWEEN_RATE = 0.35;
+
+				var tweenValue = function(){
+ 						frame++;
+                        var c = tweenC,
+                            d = 20,
+                            t = frame;       
+                        
+                        if (tweenCurVal != tweenDest)
+                        	tweenCurVal = tweenCurVal + ( (tweenDest - tweenCurVal) * TWEEN_RATE );
+                        else
+                        	t = d;
+//console.log("tweening: " + tweenCurVal + " to " + tweenDest);                    
+                        valueToPixels(t == d ? tweenDest : tweenCurVal);
+
+                        
+                        
+                        if(t!=d) {
+                                // Call the "move" callback on each animation increment
+                                callback("move");
+                                timer = setTimeout(tweenValue, 20);
+                        } else {
+                                clearTimeout(timer);
+                                timer     = null;
+                                kbEnabled = true;
+                                                                
+                                removeClass(innerWrapper, "fd-slider-focused"); 
+                                removeClass(innerWrapper, "fd-slider-active");  
+                                
+                                // Call the "finalise" callback whenever the animation is complete
+                                callback("finalise");
+                        };
+                };
+
+                function tweenValueTo(tx, rate){
+                		//don't tween if we're already there!
+                		if (getWorkingValueFromInput() == tx)
+                			return;
+                    
+                		tweenDest = parseFloat(tx, 10);
+                		tweenCurVal = getWorkingValueFromInput();
+                		
+                		if (rate)
+                			TWEEN_RATE = Math.min(Math.abs(rate), 1);
+                		else
+                			TWEEN_RATE = 0.35;
+                		
+ 
+//console.log("start tween: " + tweenCurVal + " to " + tweenDest);     
+
+                        kbEnabled = false;
+
+                        if(!timer) { 
+							frame = 0;
+                            timer = setTimeout(tweenValue, 20);
+                        };
+                };
+
+
                 var tween = function(){
                         frame++;
                         var c = tweenC,
@@ -839,7 +907,7 @@ var fdSlider = (function() {
                             b = tweenB,
                             x = Math.ceil((t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b);
 
-                        pixelsToValue(t == d ? tweenX : x);
+						pixelsToValue(t == d ? tweenX : x);             
                         
                         if(t!=d) {
                                 // Call the "move" callback on each animation increment
@@ -1261,7 +1329,9 @@ var fdSlider = (function() {
                         setRange:       function(mi, mx) { setSliderRange(mi, mx); },
                         getValueSet:    function() { return !!userSet; },
                         setValueSet:    function(tf) { valueSet(tf); },
-                        checkValue:     function() { if(varSetRules.onvalue) { userSet = true; checkValue(tagName == "input" ? parseFloat(inp.value) : inp.selectedIndex); }; updateAriaValues(); redraw(); }
+                        checkValue:     function() { if(varSetRules.onvalue) { userSet = true; checkValue(tagName == "input" ? parseFloat(inp.value) : inp.selectedIndex); }; updateAriaValues(); redraw(); },
+                		
+                		tweenTo:		tweenValueTo
                 };
         }; 
                

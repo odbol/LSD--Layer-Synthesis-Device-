@@ -265,6 +265,8 @@ function VidLayer(clip, id) {
 			//fill the layers array with our media sources 
 			var layers = new Array(numLayers);
 			
+			var sliders = new Array(numLayers);
+			
 			
 			//CROWD CONTROL
 			
@@ -296,9 +298,10 @@ function VidLayer(clip, id) {
 				clipRef.on('value', function(snapshot) {
 					var val = snapshot.val();
 					if (val >= 0) {
-						layers[layerId].opacity = val; //parseFloat(snapshot.val());
+						//layers[layerId].opacity = val; //parseFloat(snapshot.val());
 						
 						//TODO: update slider val!
+						sliders[layerId].tweenTo(val);
 					}
 				});
 			};
@@ -653,7 +656,7 @@ function VidLayer(clip, id) {
 	
 				//OPACITY SLIDERS
 				//CROWD: receive layer change events
-				var changeOpacity = function(layerId, opacity) {
+				var sendChangeOpacity = function(layerId, opacity) {
 					var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/opacity');
 					clipRef.set( opacity );
 				};
@@ -664,16 +667,11 @@ function VidLayer(clip, id) {
 				};
 				$("#backgroundCanvasControls .layerSliders .slider").each(function (i, e) {
 					if (enableHTML5Range) {
-						var onSlide = function (event, ui) {
-							var $this = $(this);
-							
-							//now done in crowd
-							//$this.data("vidLayer").opacity = parseFloat($this.val());
+						var onSlide = function (data) {
+							//change local immediately, and only send final value to crowd
+							layers[i].opacity = parseFloat(data.value);
 							
 							interactiveOff(); //turn interactive off if they try to change manually
-							
-							//CROWD
-							changeOpacity(i, parseFloat($this.val()));
 						};
 						
 							/*
@@ -686,9 +684,9 @@ function VidLayer(clip, id) {
 							.attr("max", 1.0)
 							.attr("step", 0.1)*/
 							.attr("value", layers[i].opacity)
-							.change(onSlide);
+							;//.change(onSlide);
 							
-						fdSlider.createSlider({
+						sliders[i] = fdSlider.createSlider({
 						  // Associate the slider with the form element 
 						  inp:this,
 						  // Use the "tween to click point" animation
@@ -703,16 +701,15 @@ function VidLayer(clip, id) {
 						  // Create a vertical slider
         				  vertical:true,
         				  
+        				  //only allow mouse changes so we can capture the dragend event
+        				  kbEnabled: false,
+        				  
         				  callbacks: {
-        				  	'change': [function (data) {
-
-								//now done in crowd
-								//$this.data("vidLayer").opacity = parseFloat($this.val());
-								
-								interactiveOff(); //turn interactive off if they try to change manually
-								
+        				  	'change': [onSlide], //capture tween animations too!
+							'dragend': [function (data) {
+								//change local immediately, and only send final value to crowd so the rest can tween
 								//CROWD
-								changeOpacity(i, parseFloat(data.value) );
+								sendChangeOpacity(i, parseFloat(data.value) );
 							}]
         				  }
 						});
@@ -724,7 +721,7 @@ function VidLayer(clip, id) {
 							
 							//$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
 							
-							changeOpacity(i, parseFloat($this.slider("option", "value")) );
+							sendChangeOpacity(i, parseFloat($this.slider("option", "value")) );
 						};
 						
 						var slideOpts = {
