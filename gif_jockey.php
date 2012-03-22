@@ -28,6 +28,8 @@ include("header_head.php");
 <!-- used for LSD -->
 
 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
 	<link rel="stylesheet" type="text/css" media="screen, projection" href="gif_jockey/fd-slider/fd-slider.min.css" />   
     <script src="gif_jockey/fd-slider/js/fd-slider.js"></script>
     
@@ -60,6 +62,13 @@ body {
 	padding: 0;
 }
 
+body .element {
+	width: 90%;
+	max-width: 600px;
+	min-width: 300px;
+}
+
+
 .content {
 	z-index: 100;
 }
@@ -72,8 +81,20 @@ body {
     <!-- facebook share tags (screw the like button! I want my thumbnail in the news feed! -->
     <meta property="og:title" content="Take LSD!" />
 	<meta property="og:description" content="Take LSD directly from your browser! LSD (Layer Synthesis Device) allows you to VJ live video on the web using HTML5. Choose video clips and images and blend them together using the mixer controls or the interactive mouse mode. Create your customized hallucination and share with your friends!" />
-	<meta property="og:image" content="http://odbol.com/gif_jockey/lsd_thumb.jpg" />
+	<meta property="og:image" content="http://odbol.com/gif_jockey/icons/stamp-lsd-114.png" />
 	<!-- end facebook share tags -->
+	
+	
+	
+	<!-- iphone app icons -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="apple-touch-icon" href="/gif_jockey/icons/stamp-lsd-57.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="/gif_jockey/icons/stamp-lsd-72.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="/gif_jockey/icons/stamp-lsd-114.png" />
+	<link rel="apple-touch-startup-image" href="/gif_jockey/icons/stamp-lsd-startup.png">
+	
+	<!-- END iphone app icons -->	
 	
     <!-- END used for LSD -->
 
@@ -88,6 +109,8 @@ body {
 		
 		<p><strong>LSD should take effect in a moment...</strong></p>
 		
+		
+		<div class='waitingDesc'>
 		<p>Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls
 		or the interactive mouse mode. Create your customized hallucination directly in your browser and share with your friends!</p>
 		
@@ -99,6 +122,8 @@ body {
 		<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>
 		<p>Code and content copyright <a href="http://odbol.com">odbol</a>, 2010<br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</p>
+		</div>
+		
 		<noscript>
 			<p>Please enable Javascript for LSD to take effect.</p>
 		</noscript>
