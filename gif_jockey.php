@@ -1,5 +1,5 @@
 <?php 
-$pageTitle = "tim leary meets tim berners-lee";
+$pageTitle = "LSD - tim leary meets tim berners-lee";
 $navSection = "home";
 include("header_head.php"); 
 ?>
@@ -89,9 +89,9 @@ body .element {
 	<!-- iphone app icons -->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<link rel="apple-touch-icon" href="/gif_jockey/icons/stamp-lsd-57.png" />
-	<link rel="apple-touch-icon" sizes="72x72" href="/gif_jockey/icons/stamp-lsd-72.png" />
-	<link rel="apple-touch-icon" sizes="114x114" href="/gif_jockey/icons/stamp-lsd-114.png" />
+	<link rel="apple-touch-icon-precomposed" href="/gif_jockey/icons/stamp-lsd-57.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/gif_jockey/icons/stamp-lsd-72.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/gif_jockey/icons/stamp-lsd-114.png" />
 	<link rel="apple-touch-startup-image" href="/gif_jockey/icons/stamp-lsd-startup.png">
 	
 	<!-- END iphone app icons -->	
