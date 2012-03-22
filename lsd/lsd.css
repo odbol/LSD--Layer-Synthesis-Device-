@@ -370,3 +370,16 @@ body #backgroundCanvasControls div .clipThumb {
 #backgroundCanvasControls ul.icons {margin: 0; padding: 4px 0; float:right;}
 #backgroundCanvasControls ul.icons li {margin: 2px; position: relative; padding: 1px; cursor: pointer; float: left;  list-style: none;}
 #backgroundCanvasControls ul.icons span.ui-icon {float: left;}
+
+
+
+
+/*** mobile screens ***/
+
+/* keep clips selector in the screen */
+@media all and (max-height: 460px) {
+  #backgroundCanvasControls .sharedControls {
+  	position: absolute;
+  	top:0;
+  }
+}
