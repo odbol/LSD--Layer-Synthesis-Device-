@@ -84,7 +84,7 @@ body .element {
 	<meta property="og:image" content="http://odbol.com/gif_jockey/icons/stamp-lsd-114.png" />
 	<!-- end facebook share tags -->
 	
-	
+	<link rel="icon" type="image/png" href="/gif_jockey/icons/stamp-lsd-16.png" />
 	
 	<!-- iphone app icons -->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
