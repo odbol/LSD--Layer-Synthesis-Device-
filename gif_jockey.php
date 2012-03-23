@@ -120,8 +120,9 @@ body .element {
 		(You can even VJ on your phone! Come on, this must be the future already!)</p>
 		
 		<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>
-		<p>Code and content copyright <a href="http://odbol.com">odbol</a>, 2010<br />
+		<p>Code and video content copyright <a href="http://odbol.com">odbol</a>, 2010<br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</p>
+		<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
 		</div>
 		
 		<noscript>
@@ -277,7 +278,26 @@ new VidClip("images/mixer/gif/torus_of_arms.gif", "images/mixer/gif/thumb/torus_
 new VidClip("images/mixer/gif/tumblrlbfo7jbvr91qzpwi0.gif", "images/mixer/gif/thumb/tumblrlbfo7jbvr91qzpwi0.jpg"),
 new VidClip("images/mixer/gif/us_takeover.gif", "images/mixer/gif/thumb/us_takeover.jpg"),
 new VidClip("images/mixer/gif/walkin1.gif", "images/mixer/gif/thumb/walkin1.jpg"),
-new VidClip("images/mixer/gif/xray_body-mri.gif", "images/mixer/gif/thumb/xray_body-mri.jpg") 
+new VidClip("images/mixer/gif/xray_body-mri.gif", "images/mixer/gif/thumb/xray_body-mri.jpg"),
+
+
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/acidy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/acidy.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/angley.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/angley.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/clustery.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/clustery.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/evil_binoculars.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/evil_binoculars.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/implodey.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/implodey.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/mosaicy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/mosaicy.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/rippley.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/rippley.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/shroomy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/shroomy.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/snakey.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/snakey.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/spherey.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/spherey.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/spinny.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/spinny.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/triangley.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/triangley.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/tunnely.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/tunnely.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/vortexy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/vortexy.jpg"),
+new VidClip("images/mixer/gif/trippy-some_by_dvdp/wavy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/wavy.jpg")
+
+ 
 
 				]); //copy array and add more!
 	

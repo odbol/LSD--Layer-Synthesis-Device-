@@ -46,7 +46,7 @@ const ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>
 			"Move the mouse right to exacerbate the top layer's seizures, move it left to give the poor guy a rest (Sheesh!).</p>" +
 			"<h4>About</h4>" +
 			REQUIREMENTS_HTML + 
-			"<p>Code and content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "</p>"
+			"<p>Code and video content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.</p>"
 const ERROR_MSG_HTML_START = 
 '		<div class="ui-widget">' +
 '			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> ' +
@@ -545,7 +545,7 @@ function VidLayer(clip, id) {
 			
 			
 			//clip thumb scrolling
-			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(vidClips.length / 9.0 / 3.0) + 1, ".clipThumb")
+			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(vidClips.length / 9.0), ".clipThumb")
 			
 			
 			//BUTTONS
