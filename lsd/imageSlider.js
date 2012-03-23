@@ -62,14 +62,23 @@ function ImageSlider(el, imagesPerSlide, maxPages, thumbClass, thumbWidth) {
 	el.data("maxPages", Math.max(maxPages, 0));
 	el.data("curImage", 0);
 	var closure = this;
-	el.find(".previous").click(function(e) {
+	
+	var onPrev = function(e) {
 		var el = closure.getSlider(this);
 		return closure.moveRight(el);
-	});
-	el.find(".next").click(function(e) {
+	};
+	
+	var onNext = function(e) {
 		var el = closure.getSlider(this);
 		return closure.moveLeft(el);
-	});
+	};
+	
+	el.find(".previous").click(onPrev);
+	el.find(".next").click(onNext);
+	
+	//add swipe support
+	//el.bind('swipe', onNext);
+	//el.bind('rightSwipe', onPrev);	
 	
 	this.refreshArrows(el);
 	

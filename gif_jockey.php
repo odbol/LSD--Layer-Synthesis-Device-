@@ -39,7 +39,7 @@ include("header_head.php");
 	<link type="text/css" href="_js/jquery-ui/css/vader/jquery-ui-1.8.5.custom.css" rel='stylesheet' />	
 	<script type="text/javascript" src="_js/jquery-ui/js/jquery-ui.js"></script>
 
-
+	<!-- script src="/gif_jockey/jqswipe.js" type="text/javascript"></script-->
 
 <!--
 <script type='text/javascript'>	
