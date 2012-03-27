@@ -101,7 +101,7 @@ ImagePreloader.prototype.preload = function(image)
 				vidTag += " style='position:absolute;z-index:100000;'";
 			}
 			else {
-				vidTag += " style='position:absolute;z-index:-1;'"; //display:none'";
+				vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
 			}
 			vidTag += " src='" + image + "' />"
 
@@ -117,7 +117,7 @@ ImagePreloader.prototype.preload = function(image)
 			vidTag += " style='position:absolute;z-index:100000;' controls";
 		}
 		else {
-			vidTag += " style='position:absolute;z-index:-1;'"; //display:none'";
+			vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
 		}
 		
 		vidTag += " id='" + tagId + "' autoplay='true' loop='true'>"
