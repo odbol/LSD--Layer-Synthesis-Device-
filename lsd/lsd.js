@@ -58,7 +58,17 @@ const ERROR_MSG_HTML_END = '</p>' +
 '		</div>	'
 
 const CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>'
-			
+		
+		
+const INTRO_HTML = '<div id="intro" class="dialogControls">' +
+		'<h2>You are on LSD</h2>' +
+		'<p>LSD is a collaborative VJ app. Everyone controls the same screen!</p>' +
+		'<p class="tips">Use the red sliders to the right to mix videos.<br />' +
+		'Click the thumbnails to change the videos.</p>' +
+		//'<p><label for="e">Your Name:</label> <input type="text" id="vjName" name="vjName" value="VJ Default" /></p>' +
+		'<a class="button buttonClose" href="#">Join this screen</a><br />' +
+		'<a class="button buttonNew" href="#">Start your own screen</a><br />' +
+		'</div>';
 					
 const DRAW_FRAMERATE = 33;
 const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
@@ -142,6 +152,16 @@ function VidLayer(clip, id) {
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	NOT optional id of user - alphanumeric only.
    $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
+		
+		//returns the proper URL for the given screen ID.
+		//if forceMobile is true, or if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
+		var getShareURL = function(screenId, forceMobile) {
+			return "http://odbol.com/gif_jockey.php?screen=" + screenId + 
+					/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
+					(isMobile || forceMobile ? "&mobileOnly=true" : "");
+		};
+
+
 		//make the page smaller so there's no scrolling
 		$(".waitingDesc").hide();
 		
@@ -612,10 +632,9 @@ function VidLayer(clip, id) {
 					//$("#backgroundCanvasControls .controlPanel").show('fast');
 				});		
 			
+			
 			$("#buttonShare").toggle(function (e) {
-					var shareUrl = "http://odbol.com/gif_jockey.php?screen=" + screenId + 
-						/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
-						(isMobile || /mobileOnly=true/.test(window.location.href) ? "&mobileOnly=true" : "");
+					var shareUrl = getShareURL(screenId, /mobileOnly=true/.test(window.location.href) );
 					$("<div id='shareOverlay' class='dialogControls'>" + 
 						"<h1>Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
@@ -869,6 +888,26 @@ function VidLayer(clip, id) {
 					*/
 				}
 				
+				
+				//show intro screen
+				if (! /skipIntro=true/.test(window.location.href) ) {
+					var closeIntro = function() {
+						$("#intro").remove();
+					};
+					$(INTRO_HTML).appendTo('body')
+						.click(closeIntro)
+						.find('.buttonNew')
+							.click(function() {
+								var newScreen = prompt("Choose a name for your screen:", screenId);
+								if (newScreen && newScreen.length > 0)
+									window.location.href = getShareURL(newScreen) + "&skipIntro=true";
+								
+								return false;
+							})
+						.end()
+						.find('.buttonClose')
+							.click(closeIntro);
+				}
 				
 				//preload ALL the things!
 				if (enablePreloading && userStatus == QUEUE_STATUS.MASTER) {
