@@ -39,11 +39,11 @@ const ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>
 			"<h4>Layers</h4>" + 
 			"<p>You can control the mixing of the layers with the sliders below.<br />" +
 			"Click the layer's thumbnail to choose a different video and blend mode.</p>" +
-			"<h4>Interactive Mouse Mode</h4>" + 
-			"<p><em>Hold shift to temporarily activate interactive mouse mode, or check the box.</em><br />" + 
-			"Click the mouse to change the blend mode.<br />" +
-			"Move the mouse up and down to control opacity of the top two layers.<br />" + 
-			"Move the mouse right to exacerbate the top layer's seizures, move it left to give the poor guy a rest (Sheesh!).</p>" +
+			"<h4>Keyboard Controls</h4>" + 
+			"<p><strong>S or Space</strong>: Show the QR code for screen sharing.<br />" +
+			"<strong>C or Esc</strong>: Hide all controls and windows.<br />" + 
+			"<strong>SHIFT (hold)</strong>: temporarily activate interactive mouse mode.<br />" + 
+			"Click the mouse to change the blend mode.</p>" +
 			"<h4>About</h4>" +
 			REQUIREMENTS_HTML + 
 			"<p>Code and video content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.</p>"
@@ -61,7 +61,7 @@ const CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom">
 		
 		
 const INTRO_HTML = '<div id="intro" class="dialogControls">' +
-		'<h2>You are on LSD</h2>' +
+		'<h2>You are now on LSD</h2>' +
 		'<p>LSD is a collaborative VJ app. Everyone controls the same screen!</p>' +
 		'<p class="tips">Use the red sliders on the right to mix videos.<br />' +
 		'Click the thumbnails to change the videos.</p>' +
@@ -600,14 +600,14 @@ function VidLayer(clip, id) {
 				isFullscreen = !isFullscreen;
 			});
 			var drawFrameIntervalId = 0;
-			$("#buttonStop").click(function (e) {
+			
+			var reviveUI = function () {
+				$(canvas).unbind("mousedown.lsdUIHide");
+			
+				$(".dialogControls").fadeIn();
+			};
+			var hideUI = function (e) {
 				$(".dialogControls").fadeOut();
-				
-				var reviveUI = function () {
-					$(canvas).unbind("mousedown.lsdUIHide");
-				
-					$(".dialogControls").fadeIn();
-				}
 				
 				$(canvas).bind("mousedown.lsdUIHide", reviveUI);
 			
@@ -621,7 +621,16 @@ function VidLayer(clip, id) {
 					$("#backgroundHolder, #backgroundCanvasControls").hide(); //get rid of the evidence!
 				}
 				*/
-			});
+			};
+			var toggleUI = function () {
+				if ($(".dialogControls").eq(0).css('display') == 'none') {
+					reviveUI();
+				}
+				else {
+					hideUI();
+				}
+			};
+			$("#buttonStop").click(hideUI);
 			$("#buttonHelp").toggle(function (e) {
 					//$("#backgroundCanvasControls .controlPanel").hide('fast');
 					maximizeControls();
@@ -636,7 +645,7 @@ function VidLayer(clip, id) {
 			$("#buttonShare").toggle(function (e) {
 					var shareUrl = getShareURL(screenId, /mobileOnly=true/.test(window.location.href) );
 					$("<div id='shareOverlay' class='dialogControls'>" + 
-						"<h1>Join Me on LSD</h1>" + 
+						"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
 							'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
 						"</div>" +
@@ -651,6 +660,22 @@ function VidLayer(clip, id) {
 				function (e) {
 					$("#shareOverlay").remove();
 				});		
+			
+			
+			//enable keyboard control
+			$(document).keyup(function (e) {
+				switch(e.which) {
+					case 83: //S
+					case 13: //enter
+					case 32: //space
+						$("#buttonShare").click();
+						break;
+					case 27: //Esc
+					case 67: //C
+						toggleUI();
+						break;				
+				}
+			});
 			
 			
 			
