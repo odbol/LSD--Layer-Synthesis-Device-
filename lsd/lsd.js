@@ -666,7 +666,7 @@ function VidLayer(clip, id) {
 			$(document).keyup(function (e) {
 				switch(e.which) {
 					case 83: //S
-					case 13: //enter
+					//case 13: //enter
 					case 32: //space
 						$("#buttonShare").click();
 						break;
