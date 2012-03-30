@@ -59,11 +59,11 @@
 	opacity: 1;
 }
 #intro .button {
-	background-image: -webkit-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%)
-	background-image: -moz-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%)
-	background-image: -ms-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%)
-	background-image: -o-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%)
-	background-image: linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%)
+	background-image: -webkit-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%);
+	background-image: -moz-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%);
+	background-image: -ms-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%);
+	background-image: -o-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%);
+	background-image: linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(0,0,0,.05) 85%);
 }
 #intro a.button,
 #intro a.button:link,

@@ -63,7 +63,7 @@ const CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom">
 const INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<h2>You are on LSD</h2>' +
 		'<p>LSD is a collaborative VJ app. Everyone controls the same screen!</p>' +
-		'<p class="tips">Use the red sliders to the right to mix videos.<br />' +
+		'<p class="tips">Use the red sliders on the right to mix videos.<br />' +
 		'Click the thumbnails to change the videos.</p>' +
 		//'<p><label for="e">Your Name:</label> <input type="text" id="vjName" name="vjName" value="VJ Default" /></p>' +
 		'<a class="button buttonClose" href="#">Join this screen</a><br />' +
