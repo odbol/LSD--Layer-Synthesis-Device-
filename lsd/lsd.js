@@ -146,6 +146,11 @@ function VidLayer(clip, id) {
 (function( $ ){
 //$(function(){
 
+	//sanitizes any text for insertion as HTML
+	function htmlEncode(value){
+	  return $('<div/>').text(value).html();
+	}
+
 	//installs and runs LSD in the background of your page content
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
@@ -239,13 +244,13 @@ function VidLayer(clip, id) {
 			  
 			  if(users) {
 				$.each(users, function (i, u) {
-					var liHTML = "<li class='status_" + u.online;
+					var liHTML = "<li class='status_" + escape(u.online);
 					if (i == userId)
 						liHTML += " self"; 
-					liHTML += "'>" + i + "</li>";
+					liHTML += "'>" + htmlEncode(i) + "</li>";
 					
 					//build list in reverse
-					if (u.online == QUEUE_STATUS.OFFLINE)
+					if (u.online == QUEUE_STATUS.OFFLINE || parseInt(u.online) == QUEUE_STATUS.OFFLINE)
 						offlineUserHTML = liHTML + offlineUserHTML;
 					else
 						userHTML = liHTML + userHTML;
