@@ -161,7 +161,7 @@ function VidLayer(clip, id) {
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
 		var getShareURL = function(screenId, forceMobile) {
-			return "http://odbol.com/gif_jockey.php?screen=" + screenId + 
+			return "http://odbol.com/lsd.php?screen=" + screenId + 
 					/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
 					(isMobile || forceMobile ? "&mobileOnly=true" : "");
 		};
@@ -923,6 +923,7 @@ function VidLayer(clip, id) {
 				if (! /skipIntro=true/.test(window.location.href) ) {
 					var closeIntro = function() {
 						$("#intro").remove();
+						return false;
 					};
 					$(INTRO_HTML).appendTo('body')
 						.click(closeIntro)
