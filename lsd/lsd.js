@@ -66,20 +66,30 @@ const INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<p class="tips">Use the red sliders on the right to mix videos.<br />' +
 		'Click the thumbnails to change the videos.</p>' +
 		//'<p><label for="e">Your Name:</label> <input type="text" id="vjName" name="vjName" value="VJ Default" /></p>' +
-		'<a class="button buttonClose" href="#">Join this screen</a><br />' +
-		'<a class="button buttonNew" href="#">Start your own screen</a><br />' +
+		'<a class="dialogButton buttonClose" href="#">Join this screen</a><br />' +
+		'<a class="dialogButton buttonFind" href="#">Control a nearby screen</a><br />' +
+		'<a class="dialogButton buttonNew" href="#">Start your own screen</a><br />' +
+		'</div>';
+		
+const SCREEN_LIST_HTML = '<div id="screenList" class="dialogControls">' +
+		'<h2>Choose a Screen to Control</h2>' +
+		'<ul><li>Loading...</li></ul>' +
+		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 					
 const DRAW_FRAMERATE = 33;
 const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
-const CLIP_PAGE_SIZE = 9
+const CLIP_PAGE_SIZE = 9;
+
+const FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
 var enableBlendEffectOnClick = !isMobile;
 
 //range input sliders don't work in firefox.
-//jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN THAT SHIT
+//jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN IT
+//on second thought, just use the fdSliders exclusively, since the jQuery sliders no longer tween or any fancy stuff
 var enableHTML5Range = true || isMobile;
 
 //set to true if you want your computer to hate you.
@@ -159,11 +169,15 @@ function VidLayer(clip, id) {
    $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
 		
 		//returns the proper URL for the given screen ID.
-		//if forceMobile is true, or if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
-		var getShareURL = function(screenId, forceMobile) {
-			return "http://odbol.com/lsd.php?screen=" + screenId + 
+		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
+		var getShareURL = function(screenId, skipIntro, forceMobile) {
+			//sanitize screenId 
+			screenId = screenId.replace(/^\d+|\W/g, '');
+		
+			return "http://odbol.com/lsd.php?screen=" + encodeURIComponent(screenId) + 
 					/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
-					(isMobile || forceMobile ? "&mobileOnly=true" : "");
+					((isMobile && forceMobile !== false) || forceMobile ? "&mobileOnly=true" : "") +
+					(skipIntro ? "&skipIntro=true" : "");
 		};
 
 
@@ -197,10 +211,10 @@ function VidLayer(clip, id) {
 			}
 			
 			//INITIATE CROWD CONTROL
-			var fireBaseRoot = 'http://gamma.firebase.com/gif_jockey';
+			var fireBaseRoot = FIREBASE_ROOT_BASE;
 			
 			var screenId = null;
-			var screenIdMatch = (/screen=([^&]+)/).exec(window.location.href);
+			var screenIdMatch = (/screen=([^&#]+)/).exec(window.location.href);
 			if (screenIdMatch && screenIdMatch.length > 1)
 				screenId = screenIdMatch[1];
 			if (!screenId)
@@ -243,7 +257,10 @@ function VidLayer(clip, id) {
 			  var offlineUserHTML = "";
 			  
 			  if(users) {
-				$.each(users, function (i, u) {
+				snapshot.forEach(function (userSnap) {
+					var u = userSnap.val();
+					var i = userSnap.name();
+					
 					var liHTML = "<li class='status_" + escape(u.online);
 					if (i == userId)
 						liHTML += " self"; 
@@ -648,7 +665,7 @@ function VidLayer(clip, id) {
 			
 			
 			$("#buttonShare").toggle(function (e) {
-					var shareUrl = getShareURL(screenId, /mobileOnly=true/.test(window.location.href) );
+					var shareUrl = getShareURL(screenId, false, /mobileOnly=true/.test(window.location.href) );
 					$("<div id='shareOverlay' class='dialogControls'>" + 
 						"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
@@ -931,14 +948,78 @@ function VidLayer(clip, id) {
 							.click(function() {
 								var newScreen = prompt("Choose a name for your screen:", screenId);
 								if (newScreen && newScreen.length > 0)
-									window.location.href = getShareURL(newScreen) + "&skipIntro=true";
+									window.location.href = getShareURL(newScreen, true) + "&master=true";
 								
 								return false;
 							})
 						.end()
+						.find('.buttonFind')
+							.click(function() {
+								//CROWD
+								//make list of currently active screens
+								var closeScreenList = function() {
+									$("#screenList").remove();
+									return false;
+								};
+								$(SCREEN_LIST_HTML).appendTo('body')
+									//.click(closeScreenList)
+									.find('.buttonClose')
+										.click(closeScreenList);
+									
+								//get list of currently active screens
+								var yesterday = Math.round((new Date()).getTime() / 1000) - 24 * 60 * 60;
+								var screensRef = new Firebase(FIREBASE_ROOT_BASE);
+								screensRef.limit(10);
+								screensRef.once('value', function(snapshot) {
+									var listHTML = "";
+								  	snapshot.forEach(function(screenSnap) {
+										var screenName = screenSnap.name();
+										var screen = screenSnap.val();
+										var numUsers = 0;
+										if (screen.queue)
+											numUsers = screen.queue.length;
+											
+										//don't show really old screens
+										if (parseInt(screen.activeSince) < yesterday)
+											return;
+										
+										//TODO: figure out if screen is mobile or not.
+										
+										listHTML += "<li><a href='" + getShareURL(screenName, true, false) + "'>" +
+											htmlEncode(screenName) + 
+											"</a> (" + numUsers + " users)</li>";
+									
+									});	
+								
+									$("#screenList ul")
+										.html(listHTML);
+								});
+
+								return false;
+							})
+						.end()						
 						.find('.buttonClose')
 							.click(closeIntro);
+							
+					//hide joining the default screen		
+					if (screenId == 'lounge') {
+						$("#intro .buttonClose").hide();
+					}
 				}
+				
+				//CROWD
+				//alert firebase that this screen is still active
+				if (userStatus == QUEUE_STATUS.MASTER) {
+					var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
+					//Make sure if I lose my connection the screen is marked as offline.
+					presenceRef.setOnDisconnect(0);
+					
+					setInterval(30000, function () {
+						var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
+						presenceRef.setPriority(Math.round((new Date()).getTime() / 1000));
+					});
+				}
+				
 				
 				//preload ALL the things!
 				if (enablePreloading && userStatus == QUEUE_STATUS.MASTER) {
