@@ -31,9 +31,9 @@
 
 */  
 
-const LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
-const REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>"
-const ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
+var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
+var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>"
+var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
 			"<p>Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls " +
 			"or the interactive mouse mode. Create your customized hallucination directly in your browser and share with your friends!</p>" +		
 			"<h4>Layers</h4>" + 
@@ -47,20 +47,20 @@ const ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>
 			"<h4>About</h4>" +
 			REQUIREMENTS_HTML + 
 			"<p>Code and video content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.</p>"
-const ERROR_MSG_HTML_START = 
+var ERROR_MSG_HTML_START = 
 '		<div class="ui-widget">' +
 '			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> ' +
 '				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> ' +
 '				<strong>Error:</strong> '
 
-const ERROR_MSG_HTML_END = '</p>' +
+var ERROR_MSG_HTML_END = '</p>' +
 '			</div>' +
 '		</div>	'
 
-const CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>'
+var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>'
 		
 		
-const INTRO_HTML = '<div id="intro" class="dialogControls">' +
+var INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<h2>You are now on LSD</h2>' +
 		'<p>LSD is a collaborative VJ app. Everyone controls the same screen!</p>' +
 		'<p class="tips">Use the red sliders on the right to mix videos.<br />' +
@@ -71,20 +71,20 @@ const INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<a class="dialogButton buttonNew" href="#">Start your own screen</a><br />' +
 		'</div>';
 		
-const SCREEN_LIST_HTML = '<div id="screenList"><h2 class="chooseHeader">Choose a Screen to Control:</h2>' +
+var SCREEN_LIST_HTML = '<div id="screenList"><h2 class="chooseHeader">Choose a Screen to Control:</h2>' +
 		'<ul><li>Loading...</li></ul></div>';
 
-const SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls">';
-const SCREEN_LIST_HOLDER_END = 	
+var SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls">';
+var SCREEN_LIST_HOLDER_END = 	
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 					
-const DRAW_FRAMERATE = 33;
-const INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
+var DRAW_FRAMERATE = 33;
+var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
-const CLIP_PAGE_SIZE = 9;
+var CLIP_PAGE_SIZE = 9;
 
-const FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
+var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
 var enableBlendEffectOnClick = !isMobile;
