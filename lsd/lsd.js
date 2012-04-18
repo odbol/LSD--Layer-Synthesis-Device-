@@ -71,9 +71,11 @@ const INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<a class="dialogButton buttonNew" href="#">Start your own screen</a><br />' +
 		'</div>';
 		
-const SCREEN_LIST_HTML = '<div id="screenList" class="dialogControls">' +
-		'<h2>Choose a Screen to Control</h2>' +
-		'<ul><li>Loading...</li></ul>' +
+const SCREEN_LIST_HTML = '<h2>Choose a Screen to Control</h2>' +
+		'<ul id="screenList"><li>Loading...</li></ul>' +
+
+const SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls">';
+const SCREEN_LIST_HOLDER_END = 	
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 					
@@ -938,65 +940,72 @@ function VidLayer(clip, id) {
 				
 				//show intro screen
 				if (! /skipIntro=true/.test(window.location.href) ) {
+					var startNewScreen = function() {
+						var newScreen = prompt("Choose a name for your screen:", screenId);
+						if (newScreen && newScreen.length > 0)
+							window.location.href = getShareURL(newScreen, true) + "&master=true";
+						
+						return false;
+					};
+
+					var populateScreenList = function(limit, startAt) {
+						if ( !(limit > 0) )
+							limit = 5;
+						if ( !(startAt > 0) )
+							startAt = 1;	
+					
+						//get list of currently active screens
+						var yesterday = Math.round((new Date()).getTime() / 1000) - 24 * 60 * 60;
+						var screensRef = new Firebase(FIREBASE_ROOT_BASE);
+						screensRef.startAt(startAt).limit(limit); //only get active screens (non-active are null/0)
+						screensRef.once('value', function(snapshot) {
+							var listHTML = "";
+							snapshot.forEach(function(screenSnap) {
+								var screenName = screenSnap.name();
+								var screen = screenSnap.val();
+								var numUsers = 0;
+								if (screen.queue)
+									numUsers = screen.queue.length;
+									
+								//don't show really old screens or screens that haven't been published
+								if (!screen.activeSince || parseInt(screen.activeSince) < yesterday)
+									return;
+								
+								//TODO: figure out if screen is mobile or not.
+								
+								listHTML += "<li><a href='" + getShareURL(screenName, true, false) + "'>" +
+									htmlEncode(screenName) + 
+									"</a> (" + numUsers + " users)</li>";
+							
+							});	
+						
+							if (listHTML.length > 0) {
+								$("#screenList")
+									.html(listHTML + "<li><a class='moreScreens' href='#'>More...</a></li>")
+									.find(".moreScreens")
+										.click(function () {
+											populateScreenList(limit, startAt + limit);
+											return false;
+										});
+							}
+							else {
+								$("#screenList")
+									.html("<li>No active screens found.<br /><a class='dialogButton' href='#'>Start your own!</a></li>")
+									.find('a')
+										.click(startNewScreen);
+							}
+						});
+					};
+
+
 					var closeIntro = function() {
 						$("#intro").remove();
 						return false;
-					};
+					};					
 					$(INTRO_HTML).appendTo('body')
 						.click(closeIntro)
 						.find('.buttonNew')
-							.click(function() {
-								var newScreen = prompt("Choose a name for your screen:", screenId);
-								if (newScreen && newScreen.length > 0)
-									window.location.href = getShareURL(newScreen, true) + "&master=true";
-								
-								return false;
-							})
-						.end()
-						.find('.buttonFind')
-							.click(function() {
-								//CROWD
-								//make list of currently active screens
-								var closeScreenList = function() {
-									$("#screenList").remove();
-									return false;
-								};
-								$(SCREEN_LIST_HTML).appendTo('body')
-									//.click(closeScreenList)
-									.find('.buttonClose')
-										.click(closeScreenList);
-									
-								//get list of currently active screens
-								var yesterday = Math.round((new Date()).getTime() / 1000) - 24 * 60 * 60;
-								var screensRef = new Firebase(FIREBASE_ROOT_BASE);
-								screensRef.limit(10);
-								screensRef.once('value', function(snapshot) {
-									var listHTML = "";
-								  	snapshot.forEach(function(screenSnap) {
-										var screenName = screenSnap.name();
-										var screen = screenSnap.val();
-										var numUsers = 0;
-										if (screen.queue)
-											numUsers = screen.queue.length;
-											
-										//don't show really old screens
-										if (parseInt(screen.activeSince) < yesterday)
-											return;
-										
-										//TODO: figure out if screen is mobile or not.
-										
-										listHTML += "<li><a href='" + getShareURL(screenName, true, false) + "'>" +
-											htmlEncode(screenName) + 
-											"</a> (" + numUsers + " users)</li>";
-									
-									});	
-								
-									$("#screenList ul")
-										.html(listHTML);
-								});
-
-								return false;
-							})
+							.click(startNewScreen)
 						.end()						
 						.find('.buttonClose')
 							.click(closeIntro);
@@ -1004,6 +1013,29 @@ function VidLayer(clip, id) {
 					//hide joining the default screen		
 					if (screenId == 'lounge') {
 						$("#intro .buttonClose").hide();
+						
+						//just show them the screen list straight up
+						$('#intro .buttonFind').replaceWith(SCREEN_LIST_HTML);
+						populateScreenList();
+					}
+					else { //they came for a specific screen, hide screen list in separate dialog
+						$('#intro .buttonFind')
+							.click(function() {
+								//CROWD
+								//make list of currently active screens
+								var closeScreenList = function() {
+									$("#screenList").remove();
+									return false;
+								};
+								$(SCREEN_LIST_HOLDER_START + SCREEN_LIST_HTML + SCREEN_LIST_HOLDER_END).appendTo('body')
+									//.click(closeScreenList)
+									.find('.buttonClose')
+										.click(closeScreenList);
+									
+								populateScreenList();
+
+								return false;
+							});
 					}
 				}
 				
@@ -1011,7 +1043,7 @@ function VidLayer(clip, id) {
 				//alert firebase that this screen is still active
 				if (userStatus == QUEUE_STATUS.MASTER) {
 					var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
-					//Make sure if I lose my connection the screen is marked as offline.
+					//Make sure if master loses connection the screen is marked as offline.
 					presenceRef.setOnDisconnect(0);
 					
 					setInterval(30000, function () {
