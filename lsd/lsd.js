@@ -71,8 +71,8 @@ const INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'<a class="dialogButton buttonNew" href="#">Start your own screen</a><br />' +
 		'</div>';
 		
-const SCREEN_LIST_HTML = '<h2>Choose a Screen to Control</h2>' +
-		'<ul id="screenList"><li>Loading...</li></ul>' +
+const SCREEN_LIST_HTML = '<div id="screenList"><h2 class="chooseHeader">Choose a Screen to Control:</h2>' +
+		'<ul><li>Loading...</li></ul></div>';
 
 const SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls">';
 const SCREEN_LIST_HOLDER_END = 	
@@ -948,6 +948,8 @@ function VidLayer(clip, id) {
 						return false;
 					};
 
+					//CROWD
+					//generate list of currently active screens
 					var populateScreenList = function(limit, startAt) {
 						if ( !(limit > 0) )
 							limit = 5;
@@ -960,12 +962,16 @@ function VidLayer(clip, id) {
 						screensRef.startAt(startAt).limit(limit); //only get active screens (non-active are null/0)
 						screensRef.once('value', function(snapshot) {
 							var listHTML = "";
+							var lastPriority = startAt;
 							snapshot.forEach(function(screenSnap) {
 								var screenName = screenSnap.name();
 								var screen = screenSnap.val();
+															
 								var numUsers = 0;
-								if (screen.queue)
+								if (screen.queue && screen.queue.length)
 									numUsers = screen.queue.length;
+								
+								lastPriority = screenSnap.getPriority();
 									
 								//don't show really old screens or screens that haven't been published
 								if (!screen.activeSince || parseInt(screen.activeSince) < yesterday)
@@ -973,27 +979,37 @@ function VidLayer(clip, id) {
 								
 								//TODO: figure out if screen is mobile or not.
 								
-								listHTML += "<li><a href='" + getShareURL(screenName, true, false) + "'>" +
+								listHTML += "<li class='dialogButton'><a href='" + getShareURL(screenName, true, false) + "'>" +
 									htmlEncode(screenName) + 
 									"</a> (" + numUsers + " users)</li>";
 							
 							});	
 						
 							if (listHTML.length > 0) {
-								$("#screenList")
-									.html(listHTML + "<li><a class='moreScreens' href='#'>More...</a></li>")
+								if (lastPriority > startAt) { //only show more link if we got more last time.
+									listHTML += "<li class='dialogButton'><a class='moreScreens' href='#'>More...</a></li>";
+								}
+								$("#screenList ul")
+									.html(listHTML)
 									.find(".moreScreens")
 										.click(function () {
-											populateScreenList(limit, startAt + limit);
+											$("#screenList ul")
+												.html("<li>Loading...</li>");
+												
+											populateScreenList(limit, lastPriority + 1);
 											return false;
-										});
+										});								
 							}
 							else {
-								$("#screenList")
-									.html("<li>No active screens found.<br /><a class='dialogButton' href='#'>Start your own!</a></li>")
+								$("#screenList ul")
+									.html("<li class='dialogButton'>No active screens found. <a href='#'>Start your own!</a></li>")
 									.find('a')
 										.click(startNewScreen);
 							}
+							$("#screenList li").click(function (e) {
+								e.stopPropagation();
+								window.location.href = $(this).find('a').attr('href');
+							});
 						});
 					};
 
@@ -1021,10 +1037,11 @@ function VidLayer(clip, id) {
 					else { //they came for a specific screen, hide screen list in separate dialog
 						$('#intro .buttonFind')
 							.click(function() {
-								//CROWD
+								closeIntro();
+							
 								//make list of currently active screens
 								var closeScreenList = function() {
-									$("#screenList").remove();
+									$("#screenListDialog").remove();
 									return false;
 								};
 								$(SCREEN_LIST_HOLDER_START + SCREEN_LIST_HTML + SCREEN_LIST_HOLDER_END).appendTo('body')
@@ -1045,11 +1062,14 @@ function VidLayer(clip, id) {
 					var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
 					//Make sure if master loses connection the screen is marked as offline.
 					presenceRef.setOnDisconnect(0);
+					//TODO: need a way to set priority on disconnect
 					
-					setInterval(30000, function () {
-						var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
-						presenceRef.setPriority(Math.round((new Date()).getTime() / 1000));
-					});
+					setInterval(function () {
+						var presenceRef = new Firebase(fireBaseRoot);
+						var timestamp = Math.round((new Date()).getTime() / 1000);
+						presenceRef.setPriority(timestamp);
+						presenceRef.child('activeSince').set(timestamp);
+					}, 30000);
 				}
 				
 				

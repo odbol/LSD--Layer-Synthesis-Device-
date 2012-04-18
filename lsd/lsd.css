@@ -23,7 +23,7 @@
 
 
 #intro,
-#screenList {
+#screenListDialog {
 	text-align:center;
 	width: 320px;
 	max-width: 98%;
@@ -41,10 +41,60 @@
 		font-weight: bold;
 		color: #fff;
 	}
+
+	#intro .chooseHeader {
+		font-size: 1.2em;	
+	}
 	
-	#screenListDialog {
-		top: 10%;
-		overflow:auto;
+	#intro #screenList {
+		margin-top: -12px; /*defeat the br */
+	}
+	
+#screenListDialog {
+	top: 10%;
+	overflow:auto;
+}
+
+	#screenListDialog #screenList {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+#screenList  {
+	margin:0 15px 0; 
+	padding: 5px 0px 10px;
+	background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+	background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+	background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+	background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+	background-image: linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+	#screenList ul {
+		margin:0;
+		padding:0;
+		list-style:none;
+	}
+	
+	#screenList li {
+		display:list-item;
+		margin:0;
+		padding: 2px 5px;
+		font-size: 10px;
+		font-weight:normal;
+		
+		background-color: #500;
+		border-color: #533;
+	/*-webkit-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(85, 0, 0, .95) 90%)
+		background-image: -webkit-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
+		background-image: -moz-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
+		background-image: -ms-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
+		background-image: -o-linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
+		background-image: linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
+		*/
 	}
 
 .dialogButton {
@@ -75,7 +125,12 @@ a.dialogButton,
 a.dialogButton:link,
 a.dialogButton:hover,
 a.dialogButton:visited,
-a.dialogButton:active {
+a.dialogButton:active,
+#screenList li a,
+#screenList li a:link,
+#screenList li a:hover,
+#screenList li a:visited,
+#screenList li a:active {
 	font-weight: bold;
 	color: #fff;
 	text-decoration:none;
