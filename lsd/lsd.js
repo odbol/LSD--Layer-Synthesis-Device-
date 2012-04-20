@@ -80,7 +80,7 @@ var SCREEN_LIST_HOLDER_END =
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 		
-var SHARE_LOGO_HTML = '<div id="shareLogo">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
+var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
 					
 var DRAW_FRAMERATE = 33;
 var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
@@ -689,7 +689,15 @@ function VidLayer(clip, id) {
 				});		
 			
 			var toggleShareLogo = function () {
-				if ($("#shareLogo").remove().length <= 0) {
+				var sl = $("#shareLogo");
+				//toggle between top and bottom for misplaced projectors
+				if (sl.length > 0) {
+					if (sl.hasClass('bottom'))
+						sl.addClass('top').removeClass('bottom');
+					else
+						sl.remove();
+				}
+				else {
 					$(SHARE_LOGO_HTML).appendTo('body')
 						.click(function () {
 							toggleShareLogo();
