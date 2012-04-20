@@ -414,6 +414,7 @@ body #backgroundCanvasControls div .clipThumb {
 {margin: 2px; position: relative; padding: 1px;  list-style: none;}
 
 
+/* SHARE OVERLAYS */
 
 #shareOverlay {
 	z-index:1100;
@@ -438,31 +439,61 @@ body #backgroundCanvasControls div .clipThumb {
 	background-color: rgba(0, 0, 0, 0.7);
 }
 
-#shareOverlay h1 {
-	float: none;
-	font-size: 28px;
-	margin: 0 0 20px 0;
-	padding: 0;
-}
-
-#shareOverlay .shareButtons {
-	position: absolute;
-	right: 8px;
-	top: 28px;
-}
-
-
-#shareOverlay img {
-	height: 90%;
-	max-width: 100%;
-	clear:both;
-}
+	#shareOverlay h1 {
+		float: none;
+		font-size: 28px;
+		margin: 0 0 20px 0;
+		padding: 0;
+	}
+	
+	#shareOverlay h2 {
+		font-size: 26px;
+		margin-top: 10px;
+	}
+	
+	#shareOverlay .shareButtons {
+		position: absolute;
+		right: 8px;
+		top: 28px;
+	}
+	
+	
+	#shareOverlay img {
+		height: 80%;
+		max-width: 100%;
+		clear:both;
+	}
 
 /* hide close button for now 
 #buttonStop {
 	display: none;
 }
 */
+
+#shareLogo {
+	z-index:990;
+	position:absolute;
+	
+	width:auto;
+	bottom:5px;
+	left:5px;
+	
+	font-size:20px;
+	text-shadow: 0px 0px 5px #000; /*2px 0px 2px #000, 0px 2px 2px #000, 0px -2px 2px #000, -2px 0px 2px #000; */
+}
+
+	#shareLogo a,
+	#shareLogo a:link,
+	#shareLogo a:hover,
+	#shareLogo a:visited,
+	#shareLogo a:active {
+		font-weight: bold;
+		color: #fff;
+		text-decoration:none;
+		
+		
+		font-size:28px;
+	} 
 
 
 /****************** Sliding Panel *******************/

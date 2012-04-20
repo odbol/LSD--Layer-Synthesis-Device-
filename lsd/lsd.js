@@ -40,7 +40,8 @@ var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" 
 			"<p>You can control the mixing of the layers with the sliders below.<br />" +
 			"Click the layer's thumbnail to choose a different video and blend mode.</p>" +
 			"<h4>Keyboard Controls</h4>" + 
-			"<p><strong>S or Space</strong>: Show the QR code for screen sharing.<br />" +
+			"<p><strong>S or Enter</strong>: Show the QR code for screen sharing.<br />" +
+			"<p><strong>L or Space</strong>: Show the smaller, corner URL for screen sharing.<br />" +
 			"<strong>C or Esc</strong>: Hide all controls and windows.<br />" + 
 			"<strong>SHIFT (hold)</strong>: temporarily activate interactive mouse mode.<br />" + 
 			"Click the mouse to change the blend mode.</p>" +
@@ -78,6 +79,8 @@ var SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls
 var SCREEN_LIST_HOLDER_END = 	
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
+		
+var SHARE_LOGO_HTML = '<div id="shareLogo">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
 					
 var DRAW_FRAMERATE = 33;
 var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
@@ -674,7 +677,7 @@ function VidLayer(clip, id) {
 							'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
 						"</div>" +
 						"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
-						
+						'<h2>odbol.com/lsd</h2>' + 
 						"</div>")
 						.appendTo("body")
 						.click(function () {
@@ -685,19 +688,33 @@ function VidLayer(clip, id) {
 					$("#shareOverlay").remove();
 				});		
 			
+			var toggleShareLogo = function () {
+				if ($("#shareLogo").remove().length <= 0) {
+					$(SHARE_LOGO_HTML).appendTo('body')
+						.click(function () {
+							toggleShareLogo();
+						});
+				}
+
+				return false;
+			};
+			
 			
 			//enable keyboard control
 			$(document).keyup(function (e) {
 				switch(e.which) {
-					case 83: //S
-					//case 13: //enter
-					case 32: //space
+					case 83: //S		
+					case 13: //enter
 						$("#buttonShare").click();
 						break;
 					case 27: //Esc
 					case 67: //C
 						toggleUI();
-						break;				
+						break;
+					case 32: //space
+					case 76: //L
+						toggleShareLogo();
+						break;			
 				}
 			});
 			
