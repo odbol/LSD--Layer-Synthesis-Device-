@@ -223,7 +223,7 @@ for ($i = 0; $i < 3; $i++) {
 				new VidClip("images/mixer/bermuda_eyehole.png", "images/mixer/thumbs/bermuda_eyehole.jpg"),
 				
 				//gif jockey
-new VidClip("images/mixer/gif/Agnex.gif", "images/mixer/gif/thumb/Agnex.jpg"),
+//new VidClip("images/mixer/gif/Agnex.gif", "images/mixer/gif/thumb/Agnex.jpg"),
 new VidClip("images/mixer/gif/Dominoes.gif", "images/mixer/gif/thumb/Dominoes.jpg"),
 new VidClip("images/mixer/gif/Exploding-head.gif", "images/mixer/gif/thumb/Exploding-head.jpg"),
 new VidClip("images/mixer/gif/Fire_Works____by_MattTheSamurai.gif", "images/mixer/gif/thumb/Fire_Works____by_MattTheSamurai.jpg"),
@@ -233,10 +233,10 @@ new VidClip("images/mixer/gif/adam_harms.gif", "images/mixer/gif/thumb/adam_harm
 new VidClip("images/mixer/gif/artichoke.gif", "images/mixer/gif/thumb/artichoke.jpg"),
 new VidClip("images/mixer/gif/atom_b.gif", "images/mixer/gif/thumb/atom_b.jpg"),
 new VidClip("images/mixer/gif/ballonface.gif", "images/mixer/gif/thumb/ballonface.jpg"),
-new VidClip("images/mixer/gif/balloon-face.gif", "images/mixer/gif/thumb/balloon-face.jpg"),
-new VidClip("images/mixer/gif/barrel-eater.gif", "images/mixer/gif/thumb/barrel-eater.jpg"),
+//new VidClip("images/mixer/gif/balloon-face.gif", "images/mixer/gif/thumb/balloon-face.jpg"),
+
+//new VidClip("images/mixer/gif/barrel-eater.gif", "images/mixer/gif/thumb/barrel-eater.jpg"),
 new VidClip("images/mixer/gif/bb-v-bubble.gif", "images/mixer/gif/thumb/bb-v-bubble.jpg"),
-new VidClip("images/mixer/gif/break_dancing.gif", "images/mixer/gif/thumb/break_dancing.jpg"),
 new VidClip("images/mixer/gif/break_glass.gif", "images/mixer/gif/thumb/break_glass.jpg"),
 new VidClip("images/mixer/gif/bill_cosby-jello.gif", "images/mixer/gif/thumb/bill_cosby-jello.jpg"),
 new VidClip("images/mixer/gif/5OXea.gif", "images/mixer/gif/thumb/5OXea.jpg"),
@@ -298,6 +298,7 @@ new VidClip("images/mixer/gif/trippy-some_by_dvdp/vortexy.gif", "images/mixer/gi
 new VidClip("images/mixer/gif/trippy-some_by_dvdp/wavy.gif", "images/mixer/gif/trippy-some_by_dvdp/thumb/wavy.jpg")
 
  
+new VidClip("images/mixer/gif/break_dancing.gif", "images/mixer/gif/thumb/break_dancing.jpg"),  //2
 
 				]); //copy array and add more!
 	
