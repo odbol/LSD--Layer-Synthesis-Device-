@@ -32,7 +32,7 @@
 */  
 
 var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
-var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>"
+var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>";
 var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
 			"<p>Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls " +
 			"or the interactive mouse mode. Create your customized hallucination directly in your browser and share with your friends!</p>" +		
@@ -47,18 +47,18 @@ var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" 
 			"Click the mouse to change the blend mode.</p>" +
 			"<h4>About</h4>" +
 			REQUIREMENTS_HTML + 
-			"<p>Code and video content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.</p>"
+			"<p>Code and video content by <a href='http://odbol.com'>odbol</a>, 2010&nbsp;" + LICENSE_HTML + "<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, <a href='http://surrogate-self.com/' target='_blank'>Surrogate Self</a>, <a href='http://pixelfucks.com' target='_blank'>pixelf*cks</a>, and unknown sources.</p>";
 var ERROR_MSG_HTML_START = 
 '		<div class="ui-widget">' +
 '			<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> ' +
 '				<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> ' +
-'				<strong>Error:</strong> '
+'				<strong>Error:</strong> ';
 
 var ERROR_MSG_HTML_END = '</p>' +
 '			</div>' +
-'		</div>	'
+'		</div>	';
 
-var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>'
+var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>';
 		
 		
 var INTRO_HTML = '<div id="intro" class="dialogControls">' +
