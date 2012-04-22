@@ -45,7 +45,7 @@ for f in  os.listdir(directory):
 		fileNum = "vp%d%02d" % (numberFrom, i)
 		f = fileNum + ".jpg"
 	else:
-		fileNum = f.split(".")[0] + ".jpg"
+		fileNum = f.rsplit(".", 1)[0] + ".jpg"
 	f = fileNum
 	
 	print "Processing %s (%s)" % (filename, fileNum)

@@ -209,17 +209,17 @@ for ($i = 0; $i < 3; $i++) {
 				new VidClip([new VidSource("images/mixer/240p/fish_big_spinner_LOOP.mp4", "video/mp4"), 
 					new VidSource("images/mixer/240p/fish_big_spinner_LOOP.ogg", "video/ogg")], "images/mixer/thumbs/fish_big_spinner_LOOP.jpg", 500),
 				new VidClip([new VidSource("images/mixer/240p/fish_blue_LONG.mp4", "video/mp4"), 
-					new VidSource("images/mixer/240p/fish_blue_LONG.ogg", "video/ogg")], "images/mixer/thumbs/fish_blue_LONG.jpg", 500),
+					new VidSource("images/mixer/240p/fish_blue_LONG.ogg", "video/ogg")], "images/mixer/thumbs/fish_blue_LONG.jpg", 370),
 
 				new VidClip([new VidSource("images/mixer/240p/winter_icicle_drip_LOOP.mp4", "video/mp4"), 
-							new VidSource("images/mixer/240p/winter_icicle_drip_LOOP.ogg", "video/ogg")], "images/mixer/thumbs/winter_icicle_drip_LOOP.jpg", 500),
+							new VidSource("images/mixer/240p/winter_icicle_drip_LOOP.ogg", "video/ogg")], "images/mixer/thumbs/winter_icicle_drip_LOOP.jpg", 370),
 				
 				new VidClip([new VidSource("images/mixer/240p/fish_tiny_LONG.mp4", "video/mp4"), 
-					new VidSource("images/mixer/240p/fish_tiny_LONG.ogg", "video/ogg")], "images/mixer/thumbs/fish_tiny_LONG.jpg", 500),
+					new VidSource("images/mixer/240p/fish_tiny_LONG.ogg", "video/ogg")], "images/mixer/thumbs/fish_tiny_LONG.jpg", 370),
 				new VidClip([new VidSource("images/mixer/240p/fish_tropical_VERT_LOOP.mp4", "video/mp4"), 
-					new VidSource("images/mixer/240p/fish_tropical_VERT_LOOP.ogg", "video/ogg")], "images/mixer/thumbs/fish_tropical_VERT_LOOP.jpg", 500),
+					new VidSource("images/mixer/240p/fish_tropical_VERT_LOOP.ogg", "video/ogg")], "images/mixer/thumbs/fish_tropical_VERT_LOOP.jpg", 370),
 				new VidClip([new VidSource("images/mixer/240p/fish_water_reflections.mp4", "video/mp4"), 
-					new VidSource("images/mixer/240p/fish_water_reflections.ogg", "video/ogg")], "images/mixer/thumbs/fish_water_reflections.jpg", 500),
+					new VidSource("images/mixer/240p/fish_water_reflections.ogg", "video/ogg")], "images/mixer/thumbs/fish_water_reflections.jpg", 370),
 	
 	/*			new VidClip([new VidSource("images/mixer/240p/union_square640x480.mp4", "video/mp4"), 
 					new VidSource("images/mixer/240p/union_square640x480.ogg", "video/ogg")], "images/mixer/thumbs/union_square640x480.jpg"),
@@ -260,7 +260,7 @@ new VidClip('images/mixer/gif_sorted/_dark/fire_swords.gif', 'images/mixer/gif_s
 new VidClip('images/mixer/gif_sorted/_dark/headscan.gif', 'images/mixer/gif_sorted/_dark/thumb/headscan.jpg',800),
 new VidClip('images/mixer/gif_sorted/_dark/pineapple-mri.gif', 'images/mixer/gif_sorted/_dark/thumb/pineapple-mri.jpg',800),
 new VidClip('images/mixer/gif_sorted/_dark/Popcorn_decepticon.gif', 'images/mixer/gif_sorted/_dark/thumb/Popcorn_decepticon.jpg'),
-new VidClip('images/mixer/gif_sorted/_dark/stream_of_dots.gif', 'images/mixer/gif_sorted/_dark/thumb/stream_of_dots.jpg', 300),
+new VidClip('images/mixer/gif_sorted/_dark/stream_of_dots.gif', 'images/mixer/gif_sorted/_dark/thumb/stream_of_dots.jpg', 500),
 new VidClip('images/mixer/gif_sorted/_dark/xray_body-mri.gif', 'images/mixer/gif_sorted/_dark/thumb/xray_body-mri.jpg',700),
 
 
@@ -289,7 +289,7 @@ new VidClip('images/mixer/gif_sorted/_funny/elmo_toilet_dance.gif', 'images/mixe
 new VidClip('images/mixer/gif_sorted/_funny/laser_situation.gif', 'images/mixer/gif_sorted/_funny/thumb/laser_situation.jpg', 200),
 new VidClip('images/mixer/gif_sorted/_funny/merlin_smoking_pipe.gif', 'images/mixer/gif_sorted/_funny/thumb/merlin_smoking_pipe.jpg', 100),
 new VidClip('images/mixer/gif_sorted/_funny/neti.gif', 'images/mixer/gif_sorted/_funny/thumb/neti.jpg', 100),
-new VidClip('images/mixer/gif_sorted/_funny/rainbow.gif', 'images/mixer/gif_sorted/_funny/thumb/rainbow.jpg', 200),
+new VidClip('images/mixer/gif_sorted/_funny/rainbow.gif', 'images/mixer/gif_sorted/_funny/thumb/rainbow.jpg', 500),
 new VidClip('images/mixer/gif_sorted/_funny/transformer_man_to_car.gif', 'images/mixer/gif_sorted/_funny/thumb/transformer_man_to_car.jpg', 100),
 
 
@@ -305,7 +305,7 @@ new VidClip('images/mixer/gif_sorted/dvdp/hyperblog.gif', 'images/mixer/gif_sort
 new VidClip('images/mixer/gif_sorted/dvdp/seizure_sun.gif', 'images/mixer/gif_sorted/dvdp/thumb/seizure_sun.jpg', 500),
 new VidClip('images/mixer/gif_sorted/dvdp/shifting_lines-dvdp.gif', 'images/mixer/gif_sorted/dvdp/thumb/shifting_lines-dvdp.jpg', 400),
 new VidClip('images/mixer/gif_sorted/dvdp/shifting_lines2-dvdp.gif', 'images/mixer/gif_sorted/dvdp/thumb/shifting_lines2-dvdp.jpg', 300),
-new VidClip('images/mixer/gif_sorted/dvdp/shifting_smoke-dvdp.gif', 'images/mixer/gif_sorted/dvdp/thumb/shifting_smoke-dvdp.jpg', 200),
+new VidClip('images/mixer/gif_sorted/dvdp/shifting_smoke-dvdp.gif', 'images/mixer/gif_sorted/dvdp/thumb/shifting_smoke-dvdp.jpg', 500),
 new VidClip('images/mixer/gif_sorted/dvdp/torus_infinite-dvdp.gif', 'images/mixer/gif_sorted/dvdp/thumb/torus_infinite-dvdp.jpg', 200),
 new VidClip('images/mixer/gif_sorted/dvdp/tree_trunk.gif', 'images/mixer/gif_sorted/dvdp/thumb/tree_trunk.jpg', 700),
 new VidClip('images/mixer/gif_sorted/dvdp/triangle_sea.gif', 'images/mixer/gif_sorted/dvdp/thumb/triangle_sea.jpg', 500),
@@ -314,10 +314,10 @@ new VidClip('images/mixer/gif_sorted/dvdp/wavy_hat.gif', 'images/mixer/gif_sorte
 new VidClip('images/mixer/gif_sorted/pixelfucks/bear_dancing.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/bear_dancing.jpg', 400),
 new VidClip('images/mixer/gif_sorted/pixelfucks/bend_it.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/bend_it.jpg', 450),
 new VidClip('images/mixer/gif_sorted/pixelfucks/BUZZED_UP.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/BUZZED_UP.jpg', 400),
-new VidClip('images/mixer/gif_sorted/pixelfucks/cat_tripping.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/cat_tripping.jpg', 400),
+new VidClip('images/mixer/gif_sorted/pixelfucks/cat_tripping.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/cat_tripping.jpg', 500),
 new VidClip('images/mixer/gif_sorted/pixelfucks/infinite_walk.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/infinite_walk.jpg', 400),
 new VidClip('images/mixer/gif_sorted/pixelfucks/miss_miss.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/miss_miss.jpg', 700),
-new VidClip('images/mixer/gif_sorted/pixelfucks/OLD_NESS.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/OLD_NESS.jpg', 400),
+new VidClip('images/mixer/gif_sorted/pixelfucks/OLD_NESS.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/OLD_NESS.jpg', 200),
 new VidClip('images/mixer/gif_sorted/pixelfucks/piano_kd.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/piano_kd.jpg', 400),
 new VidClip('images/mixer/gif_sorted/pixelfucks/PSYCHEDELIC_HORSE.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/PSYCHEDELIC_HORSE.jpg', 600),
 new VidClip('images/mixer/gif_sorted/pixelfucks/rainbow_legs.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/rainbow_legs.jpg', 400),
@@ -330,7 +330,7 @@ new VidClip('images/mixer/gif_sorted/pixelfucks/ultimate_warrior.gif', 'images/m
 new VidClip('images/mixer/gif_sorted/pixelfucks/unnesssarrry.gif', 'images/mixer/gif_sorted/pixelfucks/thumb/unnesssarrry.jpg', 200),
 
 
-new VidClip('images/mixer/gif_sorted/Francoise_Gamma/01___MYSTIC_arrugarseFLs.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/01___MYSTIC_arrugarseFLs.jpg', 500),
+new VidClip('images/mixer/gif_sorted/Francoise_Gamma/01___MYSTIC_arrugarseFLs.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/01___MYSTIC_arrugarseFLs.jpg', 400),
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/02___FLY___again.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/02___FLY___again.jpg', 450),
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/03___METAPHYSICAL___variacion.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/03___METAPHYSICAL___variacion.jpg', 450),
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/05___DANCE_luz.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/05___DANCE_luz.jpg', 450),
@@ -339,11 +339,11 @@ new VidClip('images/mixer/gif_sorted/Francoise_Gamma/ESCULTURA__movimentFLA__02.
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/fractura.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/fractura.jpg', 450),
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/fracturas.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/fracturas.jpg', 450),
 new VidClip('images/mixer/gif_sorted/Francoise_Gamma/JUMPJUMPJUMP_Symetry.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/JUMPJUMPJUMP_Symetry.jpg', 450),
-new VidClip('images/mixer/gif_sorted/Francoise_Gamma/walking_wireframe-Untitled_Outside_003b.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/walking_wireframe-Untitled_Outside_003b.jpg', 650),
+new VidClip('images/mixer/gif_sorted/Francoise_Gamma/walking_wireframe-Untitled_Outside_003b.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/walking_wireframe-Untitled_Outside_003b.jpg', 450),
 //new VidClip('images/mixer/gif_sorted/Francoise_Gamma/walking_wireframe.gif', 'images/mixer/gif_sorted/Francoise_Gamma/thumb/walking_wireframe.jpg', 450),
 
 new VidClip('images/mixer/gif_sorted/Icky/adam_harms.gif', 'images/mixer/gif_sorted/Icky/thumb/adam_harms.jpg'),
-new VidClip('images/mixer/gif_sorted/Icky/doggy_dog_world-lcky.gif', 'images/mixer/gif_sorted/Icky/thumb/doggy_dog_world-lcky.jpg', 700),
+new VidClip('images/mixer/gif_sorted/Icky/doggy_dog_world-lcky.gif', 'images/mixer/gif_sorted/Icky/thumb/doggy_dog_world-lcky.jpg', 400),
 
 new VidClip('images/mixer/gif_sorted/surrogate_self/34LNS-TUNNEL.gif', 'images/mixer/gif_sorted/surrogate_self/thumb/34LNS-TUNNEL.jpg', 330),
 new VidClip('images/mixer/gif_sorted/surrogate_self/bllz.KLSTR.bw.gif', 'images/mixer/gif_sorted/surrogate_self/thumb/bllz.KLSTR.bw.jpg', 330),
@@ -378,7 +378,7 @@ new VidClip('images/mixer/gif_sorted/_wtf/eyes.gif', 'images/mixer/gif_sorted/_w
 new VidClip('images/mixer/gif_sorted/_wtf/full_body_workout.gif', 'images/mixer/gif_sorted/_wtf/thumb/full_body_workout.jpg', 460),
 new VidClip('images/mixer/gif_sorted/_wtf/hoop_girl.gif', 'images/mixer/gif_sorted/_wtf/thumb/hoop_girl.jpg', 450),
 new VidClip('images/mixer/gif_sorted/_wtf/infinite_zoom.gif', 'images/mixer/gif_sorted/_wtf/thumb/infinite_zoom.jpg', 460),
-new VidClip('images/mixer/gif_sorted/_wtf/keyboard_zap.gif', 'images/mixer/gif_sorted/_wtf/thumb/keyboard_zap.jpg', 260),
+new VidClip('images/mixer/gif_sorted/_wtf/keyboard_zap.gif', 'images/mixer/gif_sorted/_wtf/thumb/keyboard_zap.jpg', 560),
 new VidClip('images/mixer/gif_sorted/_wtf/licklol.gif', 'images/mixer/gif_sorted/_wtf/thumb/licklol.jpg', 860),
 new VidClip('images/mixer/gif_sorted/_wtf/papers_flying.gif', 'images/mixer/gif_sorted/_wtf/thumb/papers_flying.jpg', 160),
 new VidClip('images/mixer/gif_sorted/_wtf/reindeer-activate.gif', 'images/mixer/gif_sorted/_wtf/thumb/reindeer-activate.jpg', 360),
