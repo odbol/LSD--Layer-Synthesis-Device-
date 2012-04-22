@@ -28,6 +28,7 @@ VidClip.prototype.thumbnail = ""; //url of a thumbnail image
 VidClip.prototype.image = null; //stores the loaded media for caching
 VidClip.prototype.id = "empty"; //identifies by index
 VidClip.prototype.element = null; //the gui element associated with this clip (not the actual image src!)
+VidClip.prototype.rating = 1000; //default rating, used for filtering
 VidClip.prototype.load = function (callback) {
 	var parentClip = this;
 	
@@ -44,7 +45,7 @@ VidClip.prototype.load = function (callback) {
 VidClip.prototype.isVideo = function () {
 	return ( typeof(this.src) !== "string" );
 };
-function VidClip(mediaSource, thumbnail) {
+function VidClip(mediaSource, thumbnail, rating) {
 	this.thumbnail = thumbnail;
 	
 	//mobile can't handle videos, so just load the thumb as placeholder
@@ -54,6 +55,9 @@ function VidClip(mediaSource, thumbnail) {
 		this.src = mediaSource;
 	
 	this.id = thumbnail; //TODO: use something else?
+	
+	if (rating > 0)
+		this.rating = rating;
 	
 	return this;
 }

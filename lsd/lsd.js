@@ -175,14 +175,16 @@ function VidLayer(clip, id) {
 		
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
-		var getShareURL = function(screenId, skipIntro, forceMobile) {
+		//minRating is the minimum clip rating to allow.
+		var getShareURL = function(screenId, skipIntro, forceMobile, minRating) {
 			//sanitize screenId 
 			screenId = screenId.replace(/^\d+|\W/g, '');
 		
 			return "http://odbol.com/lsd.php?screen=" + encodeURIComponent(screenId) + 
 					/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
 					((isMobile && forceMobile !== false) || forceMobile ? "&mobileOnly=true" : "") +
-					(skipIntro ? "&skipIntro=true" : "");
+					(skipIntro ? "&skipIntro=true" : "") +
+					(parseInt(minRating) > 0 ? "&rating=" + minRating : "");
 		};
 
 
@@ -284,17 +286,25 @@ function VidLayer(clip, id) {
 			});
 		
 			
+			//filter clips list by rating and mobileOnly flag:
+			var minRating = 500;
+			var ratingMatch = (/rating=(\d+)/).exec(window.location.href);
+			if (ratingMatch && ratingMatch.length > 1)
+				minRating = parseInt(ratingMatch[1]);
+
 			//if master sharer is on mobile, don't allow anyone to use videos - only GIFs
 			//remove all videos from clips list
-			if ( /mobileOnly=true/.test(window.location.href) ) {
-				var newVidClips = [];
-				for (var i in vidClips) {
-					if ( !vidClips[i].isVideo() ) {
-						newVidClips.push( vidClips[i] );
-					}
+			var removeVids = /mobileOnly=true/.test(window.location.href);
+
+			var newVidClips = [];
+			for (var i in vidClips) {
+				if ( vidClips[i].rating >= minRating &&  
+					!( removeVids && vidClips[i].isVideo() ) ) {
+					newVidClips.push( vidClips[i] );
 				}
-				vidClips = newVidClips;
 			}
+			vidClips = newVidClips;
+
 		
 		
 		
@@ -670,7 +680,7 @@ function VidLayer(clip, id) {
 			
 			
 			$("#buttonShare").toggle(function (e) {
-					var shareUrl = getShareURL(screenId, false, /mobileOnly=true/.test(window.location.href) );
+					var shareUrl = getShareURL(screenId, false, /mobileOnly=true/.test(window.location.href), minRating );
 					$("<div id='shareOverlay' class='dialogControls'>" + 
 						"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
@@ -916,8 +926,8 @@ function VidLayer(clip, id) {
 				//animates the mixer according to input from lastEvent
 				var drawFrame = function () {
 					//WTF is this?
-					//if (!(e = lastEvent))
-					//	return;
+					if (!(e = lastEvent))
+						return;
 						
 					ctx.globalAlpha = 1.0;
 					
@@ -1038,7 +1048,8 @@ function VidLayer(clip, id) {
 								
 								//TODO: figure out if screen is mobile or not.
 								
-								listHTML += "<li class='dialogButton'><a href='" + getShareURL(screenName, true, false) + "'>" +
+								//use rating filter of the screen
+								listHTML += "<li class='dialogButton'><a href='" + getShareURL(screenName, true, false, screen.minRating) + "'>" +
 									htmlEncode(screenName) + 
 									"</a> (" + numUsers + " users)</li>";
 							
@@ -1120,8 +1131,10 @@ function VidLayer(clip, id) {
 				if (userStatus == QUEUE_STATUS.MASTER) {
 					var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
 					//Make sure if master loses connection the screen is marked as offline.
-					presenceRef.setOnDisconnect(0);
-					//TODO: need a way to set priority on disconnect
+					presenceRef.setOnDisconnect(0); //priority is automatically set to null on disconnect
+					
+					var ratingRef = new Firebase(fireBaseRoot + '/minRating');
+					ratingRef.set(minRating);
 					
 					setInterval(function () {
 						var presenceRef = new Firebase(fireBaseRoot);
