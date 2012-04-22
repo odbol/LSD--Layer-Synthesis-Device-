@@ -73,7 +73,7 @@ var INTRO_HTML = '<div id="intro" class="dialogControls">' +
 		'</div>';
 		
 var SCREEN_LIST_HTML = '<div id="screenList"><h2 class="chooseHeader">Choose a Screen to Control:</h2>' +
-		'<ul><li>Loading...</li></ul></div>';
+		'<ul><li class="loading">Loading...</li></ul></div>';
 
 var SCREEN_LIST_HOLDER_START = '<div id="screenListDialog" class="dialogControls">';
 var SCREEN_LIST_HOLDER_END = 	
@@ -1064,7 +1064,7 @@ function VidLayer(clip, id) {
 									.find(".moreScreens")
 										.click(function () {
 											$("#screenList ul")
-												.html("<li>Loading...</li>");
+												.html("<li class='loading'>Loading...</li>");
 												
 											populateScreenList(limit, lastPriority + 1);
 											return false;
@@ -1080,6 +1080,9 @@ function VidLayer(clip, id) {
 								e.stopPropagation();
 								window.location.href = $(this).find('a').attr('href');
 							});
+							
+							//finally show the hidden new button, so people don't click it until they have all the choices!
+							$("#intro .buttonNew").show();
 						});
 					};
 
@@ -1099,6 +1102,9 @@ function VidLayer(clip, id) {
 					//hide joining the default screen		
 					if (screenId == 'lounge') {
 						$("#intro .buttonClose").hide();
+						
+						$("#intro .buttonNew")
+							.hide(); //don't show until we've loaded the screen list, to quell those anxious impatient people.
 						
 						//just show them the screen list straight up
 						$('#intro .buttonFind').replaceWith(SCREEN_LIST_HTML);

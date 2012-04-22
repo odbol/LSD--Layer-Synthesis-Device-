@@ -96,6 +96,11 @@
 		background-image: linear-gradient(rgba(255,255,255,0.7) 5%, rgba(255,255,255,0) 70%, rgba(85,0,0,.05) 85%);
 		*/
 	}
+	
+	#screenList li.loading {
+		height:34px;
+		background: url("blackSpinner.gif") no-repeat scroll center bottom transparent;
+	}
 
 .dialogButton {
 	display:inline-block;
