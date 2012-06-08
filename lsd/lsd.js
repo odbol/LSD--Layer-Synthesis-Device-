@@ -1045,10 +1045,7 @@ function VidLayer(clip, id) {
 										numUsers = screen.queue.length;
 									else { //count manually
 										screenSnap.child("queue").forEach(function (userSnap) {
-											var u = userSnap.val();
-
-											//build list in reverse
-											if (isUserOnline(u))
+											if (isUserOnline(userSnap.val()))
 												numUsers++;
 										});
 									}		
