@@ -47,7 +47,7 @@
 	}
 	
 	#intro #screenList {
-		margin-top: -12px; /*defeat the br */
+		margin-bottom: 10px;
 	}
 	
 #screenListDialog {

@@ -6,6 +6,10 @@ include("header_head.php");
 
 <style type="text/css">
 <!--
+html body {
+	background-image: none;
+}
+
 .elements {
 	position: relative;
 	left: 0px;

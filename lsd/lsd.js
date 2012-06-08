@@ -187,6 +187,9 @@ function VidLayer(clip, id) {
 					(parseInt(minRating) > 0 ? "&rating=" + minRating : "");
 		};
 
+		var isUserOnline = function(user) {
+			return !(user.online == QUEUE_STATUS.OFFLINE || parseInt(user.online) == QUEUE_STATUS.OFFLINE);
+		};
 
 		//make the page smaller so there's no scrolling
 		$(".waitingDesc").hide();
@@ -274,10 +277,10 @@ function VidLayer(clip, id) {
 					liHTML += "'>" + htmlEncode(i) + "</li>";
 					
 					//build list in reverse
-					if (u.online == QUEUE_STATUS.OFFLINE || parseInt(u.online) == QUEUE_STATUS.OFFLINE)
-						offlineUserHTML = liHTML + offlineUserHTML;
-					else
+					if (isUserOnline(u))
 						userHTML = liHTML + userHTML;
+					else
+						offlineUserHTML = liHTML + offlineUserHTML;
 				});
 			  }
 			  
@@ -1037,8 +1040,19 @@ function VidLayer(clip, id) {
 								var screen = screenSnap.val();
 															
 								var numUsers = 0;
-								if (screen.queue && screen.queue.length)
-									numUsers = screen.queue.length;
+								if (screen.queue) {
+									if (screen.queue.length) //this never works.
+										numUsers = screen.queue.length;
+									else { //count manually
+										screenSnap.child("queue").forEach(function (userSnap) {
+											var u = userSnap.val();
+
+											//build list in reverse
+											if (isUserOnline(u))
+												numUsers++;
+										});
+									}		
+								}
 								
 								lastPriority = screenSnap.getPriority();
 									
@@ -1081,8 +1095,8 @@ function VidLayer(clip, id) {
 								window.location.href = $(this).find('a').attr('href');
 							});
 							
-							//finally show the hidden new button, so people don't click it until they have all the choices!
-							$("#intro .buttonNew").show();
+							//finally show the hidden close button, so people don't click it until they have all the choices!
+							$("#intro .buttonClose").show();
 						});
 					};
 
@@ -1107,7 +1121,8 @@ function VidLayer(clip, id) {
 							.hide(); //don't show until we've loaded the screen list, to quell those anxious impatient people.
 						
 						//just show them the screen list straight up
-						$('#intro .buttonFind').replaceWith(SCREEN_LIST_HTML);
+						$('#intro .buttonFind').hide();
+						$('#intro .buttonClose').before(SCREEN_LIST_HTML);
 						populateScreenList();
 					}
 					else { //they came for a specific screen, hide screen list in separate dialog
