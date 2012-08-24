@@ -696,9 +696,13 @@ function VidLayer(clip, id) {
 						.click(function () {
 							$("#shareOverlay").remove();
 						});
+						
+					toggleShareLogo();
 				}, 
 				function (e) {
 					$("#shareOverlay").remove();
+					
+					toggleShareLogo();
 				});		
 			
 			var toggleShareLogo = function () {
