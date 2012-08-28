@@ -377,9 +377,9 @@ function VidLayer(clip, id) {
 			
 		
 		
-		
+			var shouldInitClips = (screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
 			for (var i = 0; i < numLayers; i++) {
-				layers[i] = new VidLayer(vidClips[i], i); //the clip thumbs will be added to GUI later, during clip initialization
+				layers[i] = new VidLayer(shouldInitClips ? vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
