@@ -87,7 +87,6 @@ var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
 var CLIP_PAGE_SIZE = 9;
 
-var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
 var enableBlendEffectOnClick = !isMobile;
@@ -106,6 +105,35 @@ var isDebug = (/debug=true/).test(window.location.href);
 function limitNum(min, num, max) {
 	return Math.max(min, Math.min(max, num));
 }
+
+				
+//from http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+// shim layer with setTimeout fallback
+(function() {
+	var lastTime = 0;
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
+	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+		window.cancelAnimationFrame = 
+		  window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+	}
+ 
+	if (!window.requestAnimationFrame)
+		window.requestAnimationFrame = function(callback, element) {
+			var currTime = new Date().getTime();
+			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+			var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+			  timeToCall);
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+ 
+	if (!window.cancelAnimationFrame)
+		window.cancelAnimationFrame = function(id) {
+			clearTimeout(id);
+		};
+}());
+						
 
 //////////////////////////////
 // 	VidLayer CLASS
@@ -161,11 +189,6 @@ function VidLayer(clip, id) {
 (function( $ ){
 //$(function(){
 
-	//sanitizes any text for insertion as HTML
-	function htmlEncode(value){
-	  return $('<div/>').text(value).html();
-	}
-
 	//installs and runs LSD in the background of your page content
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
@@ -187,9 +210,6 @@ function VidLayer(clip, id) {
 					(parseInt(minRating) > 0 ? "&rating=" + minRating : "");
 		};
 
-		var isUserOnline = function(user) {
-			return !(user.online == QUEUE_STATUS.OFFLINE || parseInt(user.online) == QUEUE_STATUS.OFFLINE);
-		};
 
 		//make the page smaller so there's no scrolling
 		$(".waitingDesc").hide();
@@ -210,84 +230,7 @@ function VidLayer(clip, id) {
             	return false;
 			};
 
-			//get user id
-			var lsdUserId = window.localStorage.getItem("lsdUserId");
-			if ( !lsdUserId )
-				lsdUserId = prompt("Please enter your VJ name:", userId);
-	
-			if ( lsdUserId ) {
-				userId = lsdUserId;
-				window.localStorage.setItem("lsdUserId", userId);
-			}
-			
-			//INITIATE CROWD CONTROL
-			var fireBaseRoot = FIREBASE_ROOT_BASE;
-			
-			var screenId = null;
-			var screenIdMatch = (/screen=([^&#]+)/).exec(window.location.href);
-			if (screenIdMatch && screenIdMatch.length > 1)
-				screenId = screenIdMatch[1];
-			if (!screenId)
-				screenId = 'lounge';
-			fireBaseRoot += '/' + screenId;
-		
-			var userStatus = QUEUE_STATUS.OFFLINE;
-			//var fireRef = new Firebase('http://angelhack.firebase.com/gif_jockey');
-			var presenceRef = new Firebase(fireBaseRoot + '/queue/' + userId + '/online');
-			
-			//Make sure if I lose my connection I am marked as offline.
-			presenceRef.setOnDisconnect(QUEUE_STATUS.OFFLINE);
-			//Now, mark myself as online.
-			presenceRef.setWithPriority(QUEUE_STATUS.WAITING, QUEUE_STATUS.WAITING);
-		
-			//keep track of status in queue
-			presenceRef.on('value', function(snapshot) {
-			  if(snapshot.val() === null) {
-				console.log('User does not exist.');
-				userStatus = QUEUE_STATUS.OFFLINE;
-			  } else {
-				userStatus = snapshot.val();
-			  }
-			});
-		
-			//immediately start
-			if ((/master=true/).test(window.location.href)) //TODO: check other users in queue if you're first
-				presenceRef.setWithPriority(QUEUE_STATUS.MASTER, QUEUE_STATUS.MASTER);
-			else
-				presenceRef.setWithPriority(QUEUE_STATUS.PLAYING, QUEUE_STATUS.PLAYING);
-			
-			
-			//make users list
-			$("body").append("<div id='userList' class='dialogControls'><h1>VJs Online</h1><br class='clear' /><ul></ul></div>");
 
-			var usersRef = new Firebase(fireBaseRoot + '/queue/');
-			usersRef.on('value', function(snapshot) {
-			  var users = snapshot.val();
-			  var userHTML = "";
-			  var offlineUserHTML = "";
-			  
-			  if(users) {
-				snapshot.forEach(function (userSnap) {
-					var u = userSnap.val();
-					var i = userSnap.name();
-					
-					var liHTML = "<li class='status_" + escape(u.online);
-					if (i == userId)
-						liHTML += " self"; 
-					liHTML += "'>" + htmlEncode(i) + "</li>";
-					
-					//build list in reverse
-					if (isUserOnline(u))
-						userHTML = liHTML + userHTML;
-					else
-						offlineUserHTML = liHTML + offlineUserHTML;
-				});
-			  }
-			  
-			  //keep offline users last (since priorty sort doesn't really work that well)
-			  $("#userList ul").eq(0).html(userHTML + offlineUserHTML);
-			});
-		
 			
 			//filter clips list by rating and mobileOnly flag:
 			var minRating = 500;
@@ -309,6 +252,9 @@ function VidLayer(clip, id) {
 			vidClips = newVidClips;
 
 		
+							
+			var crowd = new CrowdControl().init(minRating);
+
 		
 		
 			var ctx = canvas.getContext('2d');
@@ -323,8 +269,10 @@ function VidLayer(clip, id) {
 				
 			//changes the clip in the given layer. TODO: this could be better	
 			var changeClip = function (currentLayer, currentLayerControl, clip) {
-				currentLayer.load(clip);
-				currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+				if (currentLayer.clip != clip) { //avoid infinite loop
+					currentLayer.load(clip);
+					currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+				}
 			};
 			
 			
@@ -337,55 +285,40 @@ function VidLayer(clip, id) {
 			var sliders = new Array(numLayers);
 			
 			
-			//CROWD CONTROL
-			
-			var makeOnClipChange = function (layerId) {
-				//CROWD: receive layer change events
-				var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/clip');
-				clipRef.on('value', function(snapshot) {
-					//var layerId = parseInt(clipRef.parent().name());
-					var clipId = snapshot.val();
-					
-					//find clip and see if it's changed
-					if (clipId) {
-						var clip = null;
-						for (var j in vidClips) {
-							if ( vidClips[j].id == clipId ) {
-								var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
-								changeClip( layers[layerId], layerControl, vidClips[j] );	
-								
-								break;
-							}
-						}
-					}
-				});
-			};
-			
-			var makeOnLayerChange = function (layerId) {
-				//CROWD: receive layer opacity change events
-				var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/opacity');
-				clipRef.on('value', function(snapshot) {
-					var val = snapshot.val();
-					if (val >= 0) {
-						//layers[layerId].opacity = val; //parseFloat(snapshot.val());
+			var changeClipById = function(event, layerId, clipId) {
+				for (var j in vidClips) {
+					if ( vidClips[j].id == clipId ) {
+						var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
+						changeClip( layers[layerId], layerControl, vidClips[j] );	
 						
-						//TODO: update slider val!
-						sliders[layerId].tweenTo(val);
+						break;
 					}
-				});
+				}
+			}; 
+			
+			var changeLayerOpacity = function(event, layerId, val) {
+				//layers[layerId].opacity = val; //parseFloat(snapshot.val());
+						
+				//TODO: update slider val!
+				sliders[layerId].tweenTo(val);
 			};
 			
+			$(document)
+				.bind('changeClip.lsd', changeClipById)
+				.bind('changeLayer.lsd', changeLayerOpacity);	
+			
+
 		
 		
-			var shouldInitClips = (screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
+			var shouldInitClips = (crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(shouldInitClips ? vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
 					
-				makeOnClipChange(i);
-				makeOnLayerChange(i);
+				crowd.makeOnClipChange(i);
+				crowd.makeOnLayerChange(i);
 			}
 				
 			 //GLOBALS!
@@ -475,24 +408,23 @@ function VidLayer(clip, id) {
 			if (isInteractiveMode) //init HTML
 				$("#interactiveToggle input").attr("checked", true);
 			
+			var onChangeComposition = function (event, value) {		
+					compositeIndex = value;
+					$("#compositionSelector").val(compositeIndex);
+				};
+			
+			$(document).bind('changeComposition.lsd', onChangeComposition);
+			
 			$("#compositionSelector")
 				.change(function () {
-					compositeIndex = this.value;
+					$(document).trigger('changeComposition.lsd', [this.value]);						
 					
 					//CROWD: receive layer change events
-					var clipRef = new Firebase(fireBaseRoot + '/composition');
-					clipRef.set( this.value );
+//TODO: should this be here, or should it also subscribe to lsd.changeComposition event????					
+					crowd.setComposition(this.value);
 				});
 				
-			//CROWD: receive layer change events
-			var compRef = new Firebase(fireBaseRoot + '/composition');	
-			compRef.on('value', function(snapshot) {
-					var val = snapshot.val();
-					if (val >= 0) {
-						compositeIndex = val;
-						$("#compositionSelector").val(compositeIndex);
-					}
-			});
+
 			
 			//layer controls
 			var setCurrentLayer = function (layerControlElement) { 	
@@ -501,11 +433,7 @@ function VidLayer(clip, id) {
 				
 				//visually toggle it
 				$("#backgroundCanvasControls .layerControl").removeClass("current");
-/*					.find(".ui-icon")
-						.removeClass('ui-icon-triangle-1-n')
-						.addClass('ui-icon-triangle-1-s');*/
-				currentLayerControl.addClass('current'); /*
-					.find(".ui-icon").addClass('ui-icon-triangle-1-n');*/
+				currentLayerControl.addClass('current');
 			}
 			$("#backgroundCanvasControls .layerControl")
 				.each(function (i, el) {	//add linkback data from tags to objects
@@ -590,9 +518,7 @@ function VidLayer(clip, id) {
 						
 						
 						//CROWD: send event
-						//console.log('changing clip on layer ' + fireBaseRoot + '/layers/' + currentLayer.id + '/clip' + " to " + $this.data("vidClip").id );
-						var clipRef = new Firebase(fireBaseRoot + '/layers/' + currentLayer.id + '/clip');
-						clipRef.set( $this.data("vidClip").id );
+						crowd.setClip(currentLayer.id, $this.data("vidClip").id);
 					}
 				})
 				.slice(0, 3) //add the thumbs for the first three already-loaded clips into the layers
@@ -683,7 +609,7 @@ function VidLayer(clip, id) {
 			
 			
 			$("#buttonShare").toggle(function (e) {
-					var shareUrl = getShareURL(screenId, false, /mobileOnly=true/.test(window.location.href), minRating );
+					var shareUrl = getShareURL(crowd.screenId, false, /mobileOnly=true/.test(window.location.href), minRating );
 					$("<div id='shareOverlay' class='dialogControls'>" + 
 						"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
 						"<div class='shareButtons'>" + 
@@ -774,12 +700,6 @@ function VidLayer(clip, id) {
 	
 	
 				//OPACITY SLIDERS
-				//CROWD: receive layer change events
-				var sendChangeOpacity = function(layerId, opacity) {
-					var clipRef = new Firebase(fireBaseRoot + '/layers/' + layerId + '/opacity');
-					clipRef.set( opacity );
-				};
-				
 				
 				var interactiveOff = function () { //turn interactive off if they try to change manually
 					$("#interactiveToggle input").attr("checked", false).change();
@@ -828,7 +748,7 @@ function VidLayer(clip, id) {
 							'dragend': [function (data) {
 								//change local immediately, and only send final value to crowd so the rest can tween
 								//CROWD
-								sendChangeOpacity(i, parseFloat(data.value) );
+								crowd.setOpacity(i, parseFloat(data.value) );
 							}]
         				  }
 						});
@@ -840,7 +760,7 @@ function VidLayer(clip, id) {
 							
 							//$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
 							
-							sendChangeOpacity(i, parseFloat($this.slider("option", "value")) );
+							crowd.setOpacity(i, parseFloat($this.slider("option", "value")) );
 						};
 						
 						var slideOpts = {
@@ -902,34 +822,7 @@ function VidLayer(clip, id) {
 						}
 					}
 				});
-				
-				//from http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-				// shim layer with setTimeout fallback
-				(function() {
-					var lastTime = 0;
-					var vendors = ['ms', 'moz', 'webkit', 'o'];
-					for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-						window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-						window.cancelAnimationFrame = 
-						  window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-					}
-				 
-					if (!window.requestAnimationFrame)
-						window.requestAnimationFrame = function(callback, element) {
-							var currTime = new Date().getTime();
-							var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-							var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-							  timeToCall);
-							lastTime = currTime + timeToCall;
-							return id;
-						};
-				 
-					if (!window.cancelAnimationFrame)
-						window.cancelAnimationFrame = function(id) {
-							clearTimeout(id);
-						};
-				}());
-								
+		
 				//animates the mixer according to input from lastEvent
 				var drawFrame = function () {
 					//WTF is this?
@@ -1017,7 +910,7 @@ function VidLayer(clip, id) {
 				//show intro screen
 				if (! /skipIntro=true/.test(window.location.href) ) {
 					var startNewScreen = function() {
-						var newScreen = prompt("Choose a name for your screen:", screenId);
+						var newScreen = prompt("Choose a name for your screen:", crowd.screenId);
 						if (newScreen && newScreen.length > 0)
 							window.location.href = getShareURL(newScreen, true) + "&master=true";
 						
@@ -1034,9 +927,7 @@ function VidLayer(clip, id) {
 					
 						//get list of currently active screens
 						var yesterday = Math.round((new Date()).getTime() / 1000) - 24 * 60 * 60;
-						var screensRef = new Firebase(FIREBASE_ROOT_BASE);
-						screensRef.startAt(startAt).limit(limit); //only get active screens (non-active are null/0)
-						screensRef.once('value', function(snapshot) {
+						crowd.getScreens(limit, startAt, function(snapshot) {
 							var listHTML = "";
 							var lastPriority = startAt;
 							snapshot.forEach(function(screenSnap) {
@@ -1049,7 +940,7 @@ function VidLayer(clip, id) {
 										numUsers = screen.queue.length;
 									else { //count manually
 										screenSnap.child("queue").forEach(function (userSnap) {
-											if (isUserOnline(userSnap.val()))
+											if (CrowdControl.isUserOnline(userSnap.val()))
 												numUsers++;
 										});
 									}		
@@ -1115,7 +1006,7 @@ function VidLayer(clip, id) {
 							.click(closeIntro);
 							
 					//hide joining the default screen		
-					if (screenId == 'lounge') {
+					if (crowd.screenId == 'lounge') {
 						$("#intro .buttonClose").hide();
 						
 						$("#intro .buttonNew")
@@ -1147,28 +1038,11 @@ function VidLayer(clip, id) {
 							});
 					}
 				}
-				
-				//CROWD
-				//alert firebase that this screen is still active
-				if (userStatus == QUEUE_STATUS.MASTER) {
-					var presenceRef = new Firebase(fireBaseRoot + '/activeSince');
-					//Make sure if master loses connection the screen is marked as offline.
-					presenceRef.setOnDisconnect(0); //priority is automatically set to null on disconnect
-					
-					var ratingRef = new Firebase(fireBaseRoot + '/minRating');
-					ratingRef.set(minRating);
-					
-					setInterval(function () {
-						var presenceRef = new Firebase(fireBaseRoot);
-						var timestamp = Math.round((new Date()).getTime() / 1000);
-						presenceRef.setPriority(timestamp);
-						presenceRef.child('activeSince').set(timestamp);
-					}, 30000);
-				}
+
 				
 				
 				//preload ALL the things!
-				if (enablePreloading && userStatus == QUEUE_STATUS.MASTER) {
+				if (enablePreloading && crowd.userStatus == QUEUE_STATUS.MASTER) {
 					var curPreloadedClip = 0; //one at a time, please!
 					var preloadClips = function () {
 						vidClips[curPreloadedClip++].load(preloadClips);
