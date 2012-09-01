@@ -1,0 +1,47 @@
+#musicControls {
+	position: absolute;
+	left: 5px;
+	bottom: 5px;
+	z-index: 1000;
+	
+	width: 48px; /*default to hiding the music player*/
+	height: 32px;
+	overflow:hidden;
+}
+
+	#musicHolder {
+		position:absolute;
+		left:48px; /*hide the play button so we use our own. yes this is very sketchy*/
+		z-index:10;
+	}
+
+	#musicControls ul {
+		z-index:20;
+		
+		/*hide the player behind it:*/
+		position:absolute;
+		left:4px;
+		background:#000;
+	}
+
+	#musicControls .button {
+		cursor:pointer;
+		overflow:hidden;
+		display:block;
+		float:left;
+	}
+
+	#musicControls .button .ui-icon {
+		text-indent: 9999px
+	}
+	
+	#musicControls ul.icons {
+		float: left;
+		margin: 0;
+		padding: 4px 0;
+    }
+
+
+#playButton {
+
+}

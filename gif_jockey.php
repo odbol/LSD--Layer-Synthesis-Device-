@@ -34,8 +34,8 @@ html body {
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-	<link rel="stylesheet" type="text/css" media="screen, projection" href="gif_jockey/fd-slider/fd-slider.min.css" />   
-    <script src="gif_jockey/fd-slider/js/fd-slider.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen, projection" href="joke/fd-slider/fd-slider.min.css" />   
+    <script src="joke/fd-slider/js/fd-slider.js"></script>
     
 	<!--script type="text/javascript" src="_js/jquery.js"></script-->
 	<script src="http://code.jquery.com/jquery-1.5.min.js"></script>
@@ -43,7 +43,7 @@ html body {
 	<link type="text/css" href="_js/jquery-ui/css/vader/jquery-ui-1.8.5.custom.css" rel='stylesheet' />	
 	<script type="text/javascript" src="_js/jquery-ui/js/jquery-ui.js"></script>
 
-	<!-- script src="/gif_jockey/jqswipe.js" type="text/javascript"></script-->
+	<!-- script src="/joke/jqswipe.js" type="text/javascript"></script-->
 
 <!--
 <script type='text/javascript'>	
@@ -53,12 +53,12 @@ $(document).bind("mobileinit", function(){
 	});
 
 </script>	
-<link href="gif_jockey/verticalSlider.css" rel="stylesheet" type="text/css" />
+<link href="joke/verticalSlider.css" rel="stylesheet" type="text/css" />
 
 <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.js"></script>
-<script src="gif_jockey/verticalSlider.js"></script>
+<script src="joke/verticalSlider.js"></script>
 	-->
-	<link type="text/css" href="gif_jockey/lsd.css" rel='stylesheet' />
+	<link type="text/css" href="joke/lsd.css" rel='stylesheet' />
     <style type="text/css">
 /* odbol fixes for LSD*/
 body {
@@ -85,24 +85,25 @@ body .element {
     <!-- facebook share tags (screw the like button! I want my thumbnail in the news feed! -->
     <meta property="og:title" content="Take LSD!" />
 	<meta property="og:description" content="Take LSD directly from your browser! LSD (Layer Synthesis Device) allows you to VJ live video on the web using HTML5. Choose video clips and images and blend them together using the mixer controls or the interactive mouse mode. Create your customized hallucination and share with your friends!" />
-	<meta property="og:image" content="http://odbol.com/gif_jockey/icons/stamp-lsd-114.png" />
+	<meta property="og:image" content="http://odbol.com/joke/icons/stamp-lsd-114.png" />
 	<!-- end facebook share tags -->
 	
-	<link rel="icon" type="image/png" href="/gif_jockey/icons/stamp-lsd-16.png" />
+	<link rel="icon" type="image/png" href="/joke/icons/stamp-lsd-16.png" />
 	
 	<!-- iphone app icons -->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<link rel="apple-touch-icon-precomposed" href="/gif_jockey/icons/stamp-lsd-57.png" />
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/gif_jockey/icons/stamp-lsd-72.png" />
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/gif_jockey/icons/stamp-lsd-114.png" />
-	<link rel="apple-touch-startup-image" href="/gif_jockey/icons/stamp-lsd-startup.png">
+	<link rel="apple-touch-icon-precomposed" href="/joke/icons/stamp-lsd-57.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/joke/icons/stamp-lsd-72.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/joke/icons/stamp-lsd-114.png" />
+	<link rel="apple-touch-startup-image" href="/joke/icons/stamp-lsd-startup.png">
 	
 	<!-- END iphone app icons -->	
 	
     <!-- END used for LSD -->
 
-
+	<!--- for music player -->
+	<link type="text/css" href="joke/musicPlayer.css" rel='stylesheet' />
 
 </head>
 
@@ -146,12 +147,17 @@ body .element {
 	
 	<!-- collaborative support -->
 	<script type='text/javascript' src='http://static.firebase.com/v0/firebase.js'></script>
-    <script type="text/javascript" src="gif_jockey/crowd.js"></script>
+    <script type="text/javascript" src="joke/crowd.js"></script>
 	
 
-    <script type="text/javascript" src="gif_jockey/image_preloader.js"></script>
-    <script type="text/javascript" src="gif_jockey/imageSlider.js"></script> 
-    <script type="text/javascript" src="gif_jockey/lsd.js"></script>
+    <script type="text/javascript" src="joke/image_preloader.js"></script>
+    <script type="text/javascript" src="joke/imageSlider.js"></script> 
+    <script type="text/javascript" src="joke/lsd.js"></script>
+
+	<!-- for music integration -->
+	<script type="text/javascript" src="http://popcornjs.org/code/dist/popcorn.min.js"></script>
+	<script type="text/javascript" src="joke/musicPlayer.js"></script>
+	
 
 	<script type="text/javascript">
 		$(function(){
@@ -177,7 +183,7 @@ for ($i = 0; $i < 3; $i++) {
 		$clipType = $_GET["type$i"];
 		$clipThumb = $_GET["img$i"];
 		if (!$clipThumb)
-			$clipThumb = "gif_jockey/lsd_thumb.jpg";
+			$clipThumb = "joke/lsd_thumb.jpg";
 		
 		print "\n\t\t\tnew VidClip([new VidSource('$clipUrl', '$clipType')], '$clipThumb'),";
 	}
@@ -418,7 +424,24 @@ new VidClip('images/mixer/gif_sorted/_pop/zoidberg.gif', 'images/mixer/gif_sorte
 	
 			$().takeLSD(vidClips, compositeTypes, null, userId);				
 
+			$().musicPlayer('/sounds/odbol%20-%20Between%20a%20Shock%20and%20a%20Charred%20Face.mp3');
 		});
 	</script>	
+	
+	
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32858585-1']);
+  _gaq.push(['_setDomainName', 'odbol.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </body>
 </html>

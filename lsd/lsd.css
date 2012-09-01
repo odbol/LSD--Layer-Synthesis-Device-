@@ -172,25 +172,28 @@ a.dialogButton:active,
 }
 
 /* buttons */
-#backgroundCanvasControls .button {
+.dialogControls .button {
 	cursor: pointer;
 }
-#backgroundCanvasControls .disabled 
+.dialogControls .disabled 
 {
 	opacity: 0.3;
 }
-#backgroundCanvasControls .ui-state-default,
-#backgroundCanvasControls .ui-state-hover.disabled {
+.dialogControls .ui-state-default,
+.dialogControls .ui-state-hover.disabled {
 	background: #333;
 }
-#backgroundCanvasControls .ui-state-hover {
+.dialogControls .ui-state-hover,
+.dialogControls .ui-state-default:hover {
 	background: url("../_js/jquery-ui/css/vader/images/ui-bg_highlight-soft_60_dddddd_1x100.png") repeat-x scroll 50% 50% #DDDDDD;
 }
-#backgroundCanvasControls .ui-state-default .ui-icon,
-#backgroundCanvasControls .ui-state-hover.disabled .ui-icon {
+.dialogControls .ui-state-default .ui-icon,
+.dialogControls .ui-state-hover.disabled .ui-icon,
+.dialogControls .ui-state-default:hover.disabled .ui-icon {
 	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_aaaaaa_256x240.png")
 }
-#backgroundCanvasControls .ui-state-hover .ui-icon {
+.dialogControls .ui-state-hover .ui-icon,
+.dialogControls .ui-state-default:hover .ui-icon {
 	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_cd0a0a_256x240.png")
 }
 
@@ -525,9 +528,17 @@ body #backgroundCanvasControls div .clipThumb {
 /* jQuery UI */
 
 
-#backgroundCanvasControls ul.icons {margin: 0; padding: 4px 0; float:right;}
-#backgroundCanvasControls ul.icons li {margin: 2px; position: relative; padding: 1px; cursor: pointer; float: left;  list-style: none;}
-#backgroundCanvasControls ul.icons span.ui-icon {float: left;}
+#backgroundCanvasControls ul.icons,
+#musicControls ul.icons
+{margin: 0; padding: 4px 0; float:right;}
+
+#backgroundCanvasControls ul.icons li,
+#musicControls ul.icons li
+{margin: 2px; position: relative; padding: 1px; cursor: pointer; float: left;  list-style: none;}
+
+#backgroundCanvasControls ul.icons span.ui-icon,
+#musicControls ul.icons span.ui-icon
+{float: left;}
 
 
 
