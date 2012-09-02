@@ -26,8 +26,56 @@
 
 (function( $ ){
 
-	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li></ul>";
+	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>",
+		MUSIC_CONTROLS_END = '</div>';
 
+	var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists';
+
+
+	/**
+		the storage for playlists
+	**/
+	var PlaylistRepo = function() {
+		
+	};
+	
+	PlaylistRepo.prototype = {
+		fireBaseRoot : FIREBASE_ROOT_BASE,
+		
+		init : function () {
+			var screenIdMatch = (/playlist=([^&#]+)/).exec(window.location.href);
+			if (screenIdMatch && screenIdMatch.length > 1)
+				this.playlistId = screenIdMatch[1];
+			if (!this.playlistId)
+				this.playlistId = 'default';
+			this.fireBaseRoot += '/' + this.playlistId;
+			
+			
+			return this;
+		},
+		
+		getPlaylists : function getPlaylists(callback, limit, startAt) {
+			var screensRef = new Firebase(FIREBASE_ROOT_BASE);
+			screensRef.startAt(startAt).limit(limit); //only get active screens (non-active are null/0)
+			screensRef.once('value', callback);
+		},
+	
+		getPlaylist : function(callback, playlistId) {
+			playlistId = playlistId || this.playlistId;
+			
+			var screensRef = new Firebase(FIREBASE_ROOT_BASE + '/' + playlistId);
+			screensRef.once('value', function (snapshot) {
+				callback(snapshot.val());
+			});
+		},
+		
+		setPlaylist : function (playlistId, playlist) {
+			playlistId = playlistId || this.playlistId;
+			
+			var clipRef = new Firebase(FIREBASE_ROOT_BASE + '/' + playlistId);
+			clipRef.set( playlist );
+		}
+	};
 
 	/**
 		the timeline gui
@@ -42,6 +90,8 @@
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
+		
+		this._playlistRepo = new PlaylistRepo().init();
 	};
 	
 	Timeline.prototype = {
@@ -60,9 +110,31 @@
 			//TODO: reset all clip positions if playlist != null
 		},
 		
-		add : function add(item) {
+		clearPlaylist : function clearPlaylist() {
+			this.playlist = [];
+			$('#timeline timelineLayer').each(function () {
+				$(this).empty();
+			});
+		}, 
+		
+		load : function load() {
+			var that = this;
+			
+			this._playlistRepo.getPlaylist(function (song) {
+				var playlist = song.playlist;
+				
+				that.clearPlaylist();
+				for (var i = 0; i < playlist.length; i++) {
+					that.add(playlist[i]);
+				}
+				
+				$(document).trigger('playlistLoaded.timeline', [this.playlist]);
+			});
+		},
+		
+		render : function render(item) {
 			var event = item.event,
-				left = (item.time / this.totalTime) * this.width;
+				left = (item.time / this.totalTime) * 100;//* this.width;// percents don't work well in chrome
 		
 			this.width = $('#timeline').width();
 		
@@ -70,26 +142,38 @@
 				case 'clip':	
 					var clip = this.lsd.getVidClipById(event.clipId);
 						
-					item.$el = $('<div class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
+					item$el = $('<div class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
 				break;
 				case 'layer':	
 					var height = event.opacity * 100; 
 					
-					item.$el = $('<div class="layerOpacity"></div>')
-						.css('height', height + '%');
+					item$el = $('<div class="layerOpacity"></div>')
+						.css('height', Math.round(height) + '%');
 				break;
 				case 'composition':	
-					item.$el = $('<div class="composition"><span>' + event.composition + '</span></div>');
+					item$el = $('<div class="composition"><span>' + event.composition + '</span></div>');
 				break;
 			}
 			
-			if (item.$el) {
-				item.$el
+			if (item$el) {
+				item$el
 						.appendTo('#timelineLayer_' + event.layerId)
-						.css('left', left + 'px');
+						.css('left', Math.round(left) + '%');
 			}
-			
+		},
+		
+		add : function add(item) {
+			this.render(item);			
 			this.playlist.push(item);
+			
+			$(document).trigger('added.timeline', [item]);
+		},
+		
+		save : function save(saveAs) {			
+			this._playlistRepo.setPlaylist(saveAs, {
+				title: "Joke",
+				playlist: this.playlist
+			});
 		}
 	
 	};
@@ -101,7 +185,7 @@
 	//	audio		- the URL to the audio file
 	//	lsd 		- LSD object	
 	$.fn.musicPlayer = function (audioUrl, lsd) {
-		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div></div>');
+		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div>' + MUSIC_CONTROLS_END);
 		
 		var popcorn = Popcorn( "#music" ),
 			timeline = new Timeline(lsd, popcorn.duration());
@@ -124,7 +208,7 @@
 				}
 			},
 			saveRecording = function () {
-				lsd.crowd.savePlaylist(playlist);
+				timeline.save();
 			},
 			
 			onPause = function () {
@@ -132,6 +216,7 @@
 			}
 			
 			//for recording LSD events:
+			lastEventItem = null,
 			addPlaylistEvent = function(event) {
 				if (isRecording) {
 					var item = {
@@ -162,12 +247,42 @@
 					composition: val,
 					layerId: 0 //just show on top layer - these are global, not layer specific at the moment.
 				});		
+			},
+			
+			//cue timeline events
+			cueEvent = function cueEvent(event) {
+				switch (event.type) {
+					case 'clip':	
+						$(document).trigger('changeClip.lsd', [event.layerId, event.clipId]);
+					break;
+					case 'layer':	
+						$(document).trigger('changeLayer.lsd', [event.layerId, event.opacity]);
+					break;
+					case 'composition':	
+						$(document).trigger('changeComposition.lsd', [event.composition]);
+					break;
+				}
+			},
+			
+			//catch timeline events
+			onEventAdded = function (ev, item) {
+				//if (lastEventItem != item) { //protect against infinite loop event triggering. TODO: how to fix this???
+					//wait a little bit in case you cue the event and popcorn triggers 
+					setTimeout(function () {
+						popcorn.cue(item.time, function() {
+							cueEvent(item.event);
+						});
+					}, 1000);
+					lastEventItem = item;
+				//}
 			};
 
 		//bind to player events to keep track
 		popcorn
 			.on('durationchange', function () {
 				timeline.setTotalTime(popcorn.duration());
+				
+				timeline.load();
 			})			
 			.on('play', function () {
 				$('#musicControls').removeClass('paused').addClass('playing');
@@ -196,6 +311,12 @@
 			}
 			
 			toggleRecord();
+		});
+		
+		$('#saveButton').click(function () {
+			var saveAs = false;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
+			
+			timeline.save(saveAs);
 		});
 		
 		/*
@@ -234,7 +355,11 @@
 		$(document)
 			.bind('changeClip.lsd', onChangeClip)
 			.bind('changeLayer.lsd', onChangeLayer)
-			.bind('changeComposition.lsd', onChangeComposition);	
+			.bind('changeComposition.lsd', onChangeComposition)
+			
+		//bind to timline events
+			.bind('added.timeline', onEventAdded);
+			
 	};
    
 

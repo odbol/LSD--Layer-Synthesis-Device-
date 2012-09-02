@@ -51,7 +51,9 @@ CrowdControl.prototype = {
 		var screenIdMatch = (/screen=([^&#]+)/).exec(window.location.href);
 		if (screenIdMatch && screenIdMatch.length > 1)
 			this.screenId = screenIdMatch[1];
-		if (!this.screenId)
+		if (this.screenId)
+			this.screenId = this.screenId.replace(/[^\w\d]/g, ''); //don't allow special characters
+		else
 			this.screenId = 'lounge';
 		this.fireBaseRoot += '/' + this.screenId;
 	
@@ -204,5 +206,6 @@ CrowdControl.prototype = {
 		var screensRef = new Firebase(FIREBASE_ROOT_BASE);
 		screensRef.startAt(startAt).limit(limit); //only get active screens (non-active are null/0)
 		screensRef.once('value', callback);
-	}			
+	},
+
 };

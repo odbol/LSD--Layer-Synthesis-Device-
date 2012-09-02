@@ -2,9 +2,9 @@
 	position: absolute;
 	left: 5px;
 	bottom: 5px;
-	z-index: 1000;
+	z-index: 910;
 	
-	width: 48px; /*default to hiding the music player*/
+	width: 72px; /*default to hiding the music player*/
 	height: 32px;
 	overflow:hidden;
 	
@@ -22,7 +22,7 @@
 
 	#musicHolder {
 		position:absolute;
-		left:48px; /*hide the play button so we use our own. yes this is very sketchy*/
+		left:72px; /*hide the play button so we use our own. yes this is very sketchy*/
 		z-index:10;
 	}
 
@@ -75,7 +75,7 @@
 
 /***** timeline ******/
 #timeline {
-	width: 100%;
+	width: 99%;
 	min-width: 300px;
 }
 	
@@ -84,9 +84,8 @@
 		width: 100%;
 		height: 45px;
 		background: #333;
-		border: 1px solid #333;
+		border: 1px solid #666;
 		margin: 5px 0;
-		padding: 2px;
 		
 		overflow:hidden;
 	}
@@ -95,18 +94,23 @@
 	#timeline .clipThumb img {
 		height: 45px;
 		width: 45px;
+	}
+	
+	#timeline .clipThumb {
 		position:absolute;
 		top: 0;
+		z-index: 5;
 	}
 	
 	#timeline .layerOpacity {
 		position:absolute;
-		bottom: 0;
+		bottom: 0px; 
 		width: 10px;
 		border: 1px solid #f00;
 		border-bottom: none;
 		background: #500;
-		opacity: 0.5;
+		opacity: 0.65;
+		z-index: 10;
 	}
 	
 	#timeline .composition {
@@ -116,4 +120,6 @@
 		height: 3px;
 		border: 1px solid #333;
 		background: #ccc;
+		overflow:hidden;
+		z-index: 20;
 	}
