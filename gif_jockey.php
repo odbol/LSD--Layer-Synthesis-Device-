@@ -422,9 +422,9 @@ new VidClip('images/mixer/gif_sorted/_pop/zoidberg.gif', 'images/mixer/gif_sorte
    
    	
 	
-			$().takeLSD(vidClips, compositeTypes, null, userId);				
+			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId);				
 
-			$().musicPlayer('/sounds/odbol%20-%20Between%20a%20Shock%20and%20a%20Charred%20Face.mp3');
+			$().musicPlayer('/sounds/odbol%20-%20Between%20a%20Shock%20and%20a%20Charred%20Face.mp3', lsd);
 		});
 	</script>	
 	

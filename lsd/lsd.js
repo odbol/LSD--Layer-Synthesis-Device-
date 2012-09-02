@@ -284,15 +284,22 @@ function VidLayer(clip, id) {
 			
 			var sliders = new Array(numLayers);
 			
-			
-			var changeClipById = function(event, layerId, clipId) {
+			var getVidClipById = function(clipId) {
 				for (var j in vidClips) {
 					if ( vidClips[j].id == clipId ) {
-						var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
-						changeClip( layers[layerId], layerControl, vidClips[j] );	
-						
-						break;
+						return vidClips[j];
 					}
+				}
+				
+				return null;
+			};
+			
+			var changeClipById = function(event, layerId, clipId) {
+				var clip = getVidClipById(clipId);
+				if ( clip ) {
+					var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
+					changeClip( layers[layerId], layerControl, clip );	
+	
 				}
 			}; 
 			
@@ -1055,10 +1062,22 @@ function VidLayer(clip, id) {
 					//}
 				}
 			//});
+			
+			
+			//return an object they can play around with
+			return {
+				crowd: crowd,
+				vidClips : vidClips,
+				getVidClipById : getVidClipById
+			};
 		}
 		else { //HTML5 fail!
 			$("body").prepend(ERROR_MSG_HTML_START + "Sorry! Your browser isn't strong enough to take LSD.<br /><br />" + REQUIREMENTS_HTML + ERROR_MSG_HTML_END);
+
+			return false;
 		}
+		
+		
 	}	
 
 })( jQuery );

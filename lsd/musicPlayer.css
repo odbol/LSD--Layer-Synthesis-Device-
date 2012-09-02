@@ -7,6 +7,17 @@
 	width: 48px; /*default to hiding the music player*/
 	height: 32px;
 	overflow:hidden;
+	
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all  0.3s ease;
+}
+
+#musicControls.recording {
+	height: 200px;
+	width: 90% !important;
+	min-width: 400px;
 }
 
 	#musicHolder {
@@ -19,8 +30,7 @@
 		z-index:20;
 		
 		/*hide the player behind it:*/
-		position:absolute;
-		left:4px;
+		position:relative;
 		background:#000;
 	}
 
@@ -42,6 +52,68 @@
     }
 
 
-#playButton {
-
+.playing #playButton .ui-icon-play {
+	background-position: -16px -160px;
 }
+
+#recordButton .ui-icon,
+#recordButton:hover .ui-icon {
+	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_cd0a0a_256x240.png")
+}
+
+#recordButton.ui-state-default,
+#recordButton:hover {
+	background: #333;
+}
+#recordButton:hover,
+.recording #recordButton {
+	background: url("../_js/jquery-ui/css/vader/images/ui-bg_highlight-soft_60_dddddd_1x100.png") repeat-x scroll 50% 50% #DDDDDD;
+}
+
+
+
+
+/***** timeline ******/
+#timeline {
+	width: 100%;
+	min-width: 300px;
+}
+	
+	#timeline .timelineLayer {
+		position: relative;
+		width: 100%;
+		height: 45px;
+		background: #333;
+		border: 1px solid #333;
+		margin: 5px 0;
+		padding: 2px;
+		
+		overflow:hidden;
+	}
+	
+	#timeline .clipThumb, 
+	#timeline .clipThumb img {
+		height: 45px;
+		width: 45px;
+		position:absolute;
+		top: 0;
+	}
+	
+	#timeline .layerOpacity {
+		position:absolute;
+		bottom: 0;
+		width: 10px;
+		border: 1px solid #f00;
+		border-bottom: none;
+		background: #500;
+		opacity: 0.5;
+	}
+	
+	#timeline .composition {
+		position:absolute;
+		top: 0;
+		width: 10px;
+		height: 3px;
+		border: 1px solid #333;
+		background: #ccc;
+	}

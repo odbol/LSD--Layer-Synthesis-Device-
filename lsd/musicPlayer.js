@@ -29,15 +29,83 @@
 	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li></ul>";
 
 
+	/**
+		the timeline gui
+	**/
+	var Timeline = function(lsd, totalTime) {
+		var layersHTML = '';
+		for (var i = 0; i < 3; i++) {
+			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
+		}
+	
+		$('#musicControls').append('<div id="timeline">' + layersHTML + '</div');
+		
+		this.lsd = lsd;
+		this.totalTime = totalTime;
+	};
+	
+	Timeline.prototype = {
+		totalTime : 0,
+		width : 0,
+		
+		//reference to LSD
+		lsd : null,
+		
+		//keeps track of all events from LSD during recording for later playback.
+		playlist : [],
+		
+		setTotalTime : function setTotalTime(totalTime) {
+			this.totalTime = totalTime; 
+			
+			//TODO: reset all clip positions if playlist != null
+		},
+		
+		add : function add(item) {
+			var event = item.event,
+				left = (item.time / this.totalTime) * this.width;
+		
+			this.width = $('#timeline').width();
+		
+			switch (event.type) {
+				case 'clip':	
+					var clip = this.lsd.getVidClipById(event.clipId);
+						
+					item.$el = $('<div class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
+				break;
+				case 'layer':	
+					var height = event.opacity * 100; 
+					
+					item.$el = $('<div class="layerOpacity"></div>')
+						.css('height', height + '%');
+				break;
+				case 'composition':	
+					item.$el = $('<div class="composition"><span>' + event.composition + '</span></div>');
+				break;
+			}
+			
+			if (item.$el) {
+				item.$el
+						.appendTo('#timelineLayer_' + event.layerId)
+						.css('left', left + 'px');
+			}
+			
+			this.playlist.push(item);
+		}
+	
+	};
+
+
+
 
 	//installs and runs the music player 
-	//	audio		- the URL to the audio file	
-	$.fn.musicPlayer = function (audioUrl) {
-		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div></div>')
+	//	audio		- the URL to the audio file
+	//	lsd 		- LSD object	
+	$.fn.musicPlayer = function (audioUrl, lsd) {
+		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div></div>');
+		
 		var popcorn = Popcorn( "#music" ),
+			timeline = new Timeline(lsd, popcorn.duration());
 			isRecording = false,
-			//keeps track of all events from LSD during recording for later playback.
-			playlist = [],
 			
 			//controls
 			play = function() {
@@ -46,8 +114,8 @@
 			pause = function() {
 				popcorn.pause();
 			},
-			toggleRecord = function () {
-				isRecording = !isRecording;
+			toggleRecord = function () {//isRecordOn) {
+				isRecording = !isRecording; //(isRecordOn !== false && isRecordOn === true) || !isRecording;
 				if (isRecording) {
 					$('#musicControls').addClass('recording');
 				}
@@ -55,6 +123,10 @@
 					$('#musicControls').removeClass('recording');
 				}
 			},
+			saveRecording = function () {
+				lsd.crowd.savePlaylist(playlist);
+			},
+			
 			onPause = function () {
 				$('#musicControls').removeClass('playing').addClass('paused');
 			}
@@ -62,10 +134,12 @@
 			//for recording LSD events:
 			addPlaylistEvent = function(event) {
 				if (isRecording) {
-					playlist.push({
+					var item = {
 						time: popcorn.currentTime(),
 						event: event
-					});
+					};
+					
+					timeline.add(item);
 				}
 			},
 			onChangeClip = function (event, layerId, val) {
@@ -85,17 +159,25 @@
 			onChangeComposition = function (event, val) {
 				addPlaylistEvent({
 					type: 'composition',
-					composition: val
+					composition: val,
+					layerId: 0 //just show on top layer - these are global, not layer specific at the moment.
 				});		
 			};
 
 		//bind to player events to keep track
 		popcorn
+			.on('durationchange', function () {
+				timeline.setTotalTime(popcorn.duration());
+			})			
 			.on('play', function () {
 				$('#musicControls').removeClass('paused').addClass('playing');
 			})
 			.on('pause', onPause);
-			//.on('ended', onPause);
+			/*.on('ended', function () {
+				if (isRecording) {
+					toggleRecord();
+				}
+			});*/
 
 		$('#playButton').click(function () {
 			if (popcorn.paused() ) {
@@ -107,15 +189,13 @@
 		});
 		
 		$('#recordButton').click(function () {
-			if (isRecording) {
-				pause();
-			}
-			else {
+			if (!isRecording) {
 				if (popcorn.paused() ) {
 					play();
 				}
-				toggleRecord();
 			}
+			
+			toggleRecord();
 		});
 		
 		/*
@@ -136,7 +216,7 @@
 				isHovering = true;
 				setTimeout(function () { 
 						//arg .hide() on the music player doesnt work in chrome
-						if (isHovering) 
+						if (isHovering && !isRecording) 
 							$('#musicControls').animate({ width: musicControlsWidth + playerWidth + 'px' }, 300) 
 					}, 100);
 			},
@@ -144,7 +224,7 @@
 				isHovering = false;
 				setTimeout(function () { 
 						//arg .hide() on the music player doesnt work in chrome
-						if (!isHovering) 
+						if (!isHovering && !isRecording) 
 							$('#musicControls').animate({ width: musicControlsWidth + 'px' }, 300) 
 					}, 100);
 			});	
