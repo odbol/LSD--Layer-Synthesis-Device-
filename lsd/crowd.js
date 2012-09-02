@@ -31,7 +31,7 @@ CrowdControl.prototype = {
 	
 	userStatus : QUEUE_STATUS.OFFLINE,
 	
-	init : function (minRating) {
+	init : function (lsd, minRating) {
 		var crowd = this;
 		
 			//get user id
@@ -142,12 +142,22 @@ CrowdControl.prototype = {
 			compRef.on('value', function(snapshot) {
 					var val = snapshot.val();
 					if (val >= 0) {
-						$(document).trigger('changeComposition.lsd', [val]);
+						$(crowd).trigger('changeComposition.lsd', [val]);
 					}
 			});
 
 
-
+			
+			$(lsd)
+				.bind('changeClip.lsd', function () {
+					crowd.setClip.apply(crowd, arguments);
+				})
+				.bind('opacityEnd.lsd', function () {
+					crowd.setOpacity.apply(crowd, arguments);
+				})
+				.bind('changeComposition.lsd', function () {
+					crowd.setComposition.apply(crowd, arguments);
+				});
 
 
 		return this;
@@ -157,6 +167,8 @@ CrowdControl.prototype = {
 
 	//creates event triggers to handle when clip is changed remotely	
 	makeOnClipChange : function (layerId) {
+				var crowd = this;
+			
 				//CROWD: receive layer change events
 				var clipRef = new Firebase(this.fireBaseRoot + '/layers/' + layerId + '/clip');
 				clipRef.on('value', function(snapshot) {
@@ -166,38 +178,39 @@ CrowdControl.prototype = {
 					//find clip and see if it's changed
 					if (clipId) {
 						//changeClipById(layerId, clipId);
-						$(document).trigger('changeClip.lsd', [layerId, clipId]);
+						$(crowd).trigger('changeClip.lsd', [layerId, clipId]);
 					}
 				});
 			},
 			
 	makeOnLayerChange : function (layerId) {
+				var crowd = this;
 				//CROWD: receive layer opacity change events
 				var clipRef = new Firebase(this.fireBaseRoot + '/layers/' + layerId + '/opacity');
 				clipRef.on('value', function(snapshot) {
 					var val = snapshot.val();
 					if (val >= 0) {
 						//changeLayerOpacity(layerId, val);
-						$(document).trigger('changeLayer.lsd', [layerId, val]);
+						$(crowd).trigger('opacityEnd.lsd', [layerId, val]);
 					}
 				});
 			},
 			
 			
-	setComposition : function(value) {
+	setComposition : function(event, value) {
 		//CROWD: receive layer change events
 		var clipRef = new Firebase(this.fireBaseRoot + '/composition');
 		clipRef.set( value );
 	},
 	
-	setClip : function(layerId, clipId) {
+	setClip : function(event, layerId, clipId) {
 		//console.log('changing clip on layer ' + fireBaseRoot + '/layers/' + currentLayer.id + '/clip' + " to " + $this.data("vidClip").id );
 		var clipRef = new Firebase(this.fireBaseRoot + '/layers/' + layerId + '/clip');
 		clipRef.set( clipId );
 	},
 	
 	//CROWD: receive layer change events
-	setOpacity : function(layerId, opacity) {
+	setOpacity : function(event, layerId, opacity) {
 		var clipRef = new Firebase(this.fireBaseRoot + '/layers/' + layerId + '/opacity');
 		clipRef.set( opacity );
 	},

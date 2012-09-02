@@ -166,7 +166,7 @@
 			this.render(item);			
 			this.playlist.push(item);
 			
-			$(document).trigger('added.timeline', [item]);
+			$(this).trigger('added.timeline', [item]);
 		},
 		
 		save : function save(saveAs) {			
@@ -253,13 +253,13 @@
 			cueEvent = function cueEvent(event) {
 				switch (event.type) {
 					case 'clip':	
-						$(document).trigger('changeClip.lsd', [event.layerId, event.clipId]);
+						$(timeline).trigger('changeClip.lsd', [event.layerId, event.clipId]);
 					break;
 					case 'layer':	
-						$(document).trigger('changeLayer.lsd', [event.layerId, event.opacity]);
+						$(timeline).trigger('opacityEnd..lsd', [event.layerId, event.opacity]);
 					break;
 					case 'composition':	
-						$(document).trigger('changeComposition.lsd', [event.composition]);
+						$(timeline).trigger('changeComposition.lsd', [event.composition]);
 					break;
 				}
 			},
@@ -276,6 +276,12 @@
 					lastEventItem = item;
 				//}
 			};
+
+		//bind to lsd's event changes, and it to ours
+		lsd.subscribeTo(timeline);
+
+
+		//******UI*******
 
 		//bind to player events to keep track
 		popcorn
@@ -352,12 +358,13 @@
 		
 		
 		//bind to LSD events and record them
-		$(document)
+		$(lsd)
 			.bind('changeClip.lsd', onChangeClip)
-			.bind('changeLayer.lsd', onChangeLayer)
+			.bind('opacityEnd.lsd', onChangeLayer)
 			.bind('changeComposition.lsd', onChangeComposition)
 			
 		//bind to timline events
+		$(timeline)
 			.bind('added.timeline', onEventAdded);
 			
 	};

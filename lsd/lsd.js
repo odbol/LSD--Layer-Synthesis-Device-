@@ -189,12 +189,14 @@ function VidLayer(clip, id) {
 (function( $ ){
 //$(function(){
 
+   
 	//installs and runs LSD in the background of your page content
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	NOT optional id of user - alphanumeric only.
-   $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
+   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId) {
+		var lsd = this;
 		
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
@@ -249,11 +251,11 @@ function VidLayer(clip, id) {
 					newVidClips.push( vidClips[i] );
 				}
 			}
-			vidClips = newVidClips;
+			this.vidClips = newVidClips;
 
 		
 							
-			var crowd = new CrowdControl().init(minRating);
+			var crowd = new CrowdControl().init(this, minRating);
 
 		
 		
@@ -283,19 +285,10 @@ function VidLayer(clip, id) {
 			var layers = new Array(numLayers);
 			
 			var sliders = new Array(numLayers);
-			
-			var getVidClipById = function(clipId) {
-				for (var j in vidClips) {
-					if ( vidClips[j].id == clipId ) {
-						return vidClips[j];
-					}
-				}
-				
-				return null;
-			};
-			
+
 			var changeClipById = function(event, layerId, clipId) {
-				var clip = getVidClipById(clipId);
+				//if (event.name
+				var clip = lsd.getVidClipById(clipId);
 				if ( clip ) {
 					var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
 					changeClip( layers[layerId], layerControl, clip );	
@@ -309,17 +302,28 @@ function VidLayer(clip, id) {
 				//TODO: update slider val!
 				sliders[layerId].tweenTo(val);
 			};
+						
+			var onChangeComposition = function (event, value) {		
+					compositeIndex = value;
+					$("#compositionSelector").val(compositeIndex);
+				};
+
+			//binds to all related events triggered by given publisher
+			this.subscribeTo = function(publisher) { 
+				$(publisher)
+					.bind('changeClip.lsd', changeClipById)
+					.bind('opacityEnd.lsd', changeLayerOpacity)	
+					.bind('changeComposition.lsd', onChangeComposition);
+			};
 			
-			$(document)
-				.bind('changeClip.lsd', changeClipById)
-				.bind('changeLayer.lsd', changeLayerOpacity);	
-			
+			this.subscribeTo(lsd);
+			this.subscribeTo(crowd);
 
 		
 		
 			var shouldInitClips = (crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
 			for (var i = 0; i < numLayers; i++) {
-				layers[i] = new VidLayer(shouldInitClips ? vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
+				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
@@ -375,11 +379,11 @@ function VidLayer(clip, id) {
 				" <div class='panelHolder'>" +
 				"	<div class='slidingPanel'>" +
 						"<ul>";
-			for (i in vidClips) {
+			for (i in lsd.vidClips) {
 				//separate lists in pages for horizontal scrolling
 				if (i > 0 && i % CLIP_PAGE_SIZE == 0) 
 					sliderHTML += "</ul><ul>"
-				sliderHTML += "<li id='vidClip_" + i + "' class='clipThumb'><img src='" + vidClips[i].thumbnail + "' /></li>";
+				sliderHTML += "<li id='vidClip_" + i + "' class='clipThumb'><img src='" + lsd.vidClips[i].thumbnail + "' /></li>";
 			}
 			sliderHTML += "</ul></div></div>" + //end panelHolder
 				//"<br class='clear' />" +
@@ -414,21 +418,14 @@ function VidLayer(clip, id) {
 				});
 			if (isInteractiveMode) //init HTML
 				$("#interactiveToggle input").attr("checked", true);
-			
-			var onChangeComposition = function (event, value) {		
-					compositeIndex = value;
-					$("#compositionSelector").val(compositeIndex);
-				};
-			
-			$(document).bind('changeComposition.lsd', onChangeComposition);
-			
+
 			$("#compositionSelector")
 				.change(function () {
-					$(document).trigger('changeComposition.lsd', [this.value]);						
+					$(lsd).trigger('changeComposition.lsd', [this.value]);						
 					
 					//CROWD: receive layer change events
 //TODO: should this be here, or should it also subscribe to lsd.changeComposition event????					
-					crowd.setComposition(this.value);
+					//crowd.setComposition(this.value);
 				});
 				
 
@@ -511,21 +508,22 @@ function VidLayer(clip, id) {
 			//CLIP THUMBS
 			$("#backgroundCanvasControls .clipThumbs .clipThumb")
 				.each(function (i, el) {	//add linkback data from tags to objects
-					$(this).data("vidClip", vidClips[i]); //assumes they're in the same order as the array. risky....
-					vidClips[i].element = this;
+					$(this).data("vidClip", lsd.vidClips[i]); //assumes they're in the same order as the array. risky....
+					lsd.vidClips[i].element = this;
 					//$(this).data("vidClipIdx", i); //assumes they're in the same order as the array. risky....
 				})
 				.click(function () { 		//load clip's video into current layer
 					if (currentLayer) {
-						var $this = $(this);
+						var $this = $(this),
+							layerId = currentLayer.id,
+							clipId = $this.data("vidClip").id;
 						
 						//changeClip(currentLayer, currentLayerControl, $this.data("vidClip") );
+
+						$(lsd).trigger('changeClip.lsd', [layerId, clipId]);
+		
 						
 						hideSharedControls();
-						
-						
-						//CROWD: send event
-						crowd.setClip(currentLayer.id, $this.data("vidClip").id);
 					}
 				})
 				.slice(0, 3) //add the thumbs for the first three already-loaded clips into the layers
@@ -533,12 +531,11 @@ function VidLayer(clip, id) {
 						$("#layerControl_" + i).find(".clipThumb").html($(this).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
 					});
 			
-			
-			
+
 			
 			
 			//clip thumb scrolling
-			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(vidClips.length / 9.0), ".clipThumb")
+			var clipScroller = new ImageSlider($("#backgroundCanvasControls .clipThumbs"), 3, Math.ceil(lsd.vidClips.length / 9.0), ".clipThumb")
 			
 			
 			//BUTTONS
@@ -754,8 +751,10 @@ function VidLayer(clip, id) {
         				  	'change': [onSlide], //capture tween animations too!
 							'dragend': [function (data) {
 								//change local immediately, and only send final value to crowd so the rest can tween
-								//CROWD
-								crowd.setOpacity(i, parseFloat(data.value) );
+								
+								
+								$(lsd).trigger('opacityEnd.lsd', [i, parseFloat(data.value) ]);
+
 							}]
         				  }
 						});
@@ -766,8 +765,7 @@ function VidLayer(clip, id) {
 							var $this = $(this);
 							
 							//$this.data("vidLayer").opacity = parseFloat($this.slider("option", "value"));
-							
-							crowd.setOpacity(i, parseFloat($this.slider("option", "value")) );
+							$(lsd).trigger('opacityEnd.lsd', [i, parseFloat($this.slider("option", "value")) ]);
 						};
 						
 						var slideOpts = {
@@ -1052,12 +1050,12 @@ function VidLayer(clip, id) {
 				if (enablePreloading && crowd.userStatus == QUEUE_STATUS.MASTER) {
 					var curPreloadedClip = 0; //one at a time, please!
 					var preloadClips = function () {
-						vidClips[curPreloadedClip++].load(preloadClips);
+						lsd.vidClips[curPreloadedClip++].load(preloadClips);
 					};
 					preloadClips();
-					//for (i in vidClips) {
-					//	if (vidClips[i]) {
-							//vidClips.load
+					//for (i in lsd.vidClips) {
+					//	if (lsd.vidClips[i]) {
+							//lsd.vidClips.load
 					//	}
 					//}
 				}
@@ -1065,20 +1063,47 @@ function VidLayer(clip, id) {
 			
 			
 			//return an object they can play around with
-			return {
+			/*return {
 				crowd: crowd,
 				vidClips : vidClips,
 				getVidClipById : getVidClipById
 			};
+			*/
 		}
 		else { //HTML5 fail!
 			$("body").prepend(ERROR_MSG_HTML_START + "Sorry! Your browser isn't strong enough to take LSD.<br /><br />" + REQUIREMENTS_HTML + ERROR_MSG_HTML_END);
 
-			return false;
+			//return false;
 		}
 		
 		
 	}	
+	
+	LSD.prototype = {
+		crowd: null,
+		vidClips : [],
+		getVidClipById : function(clipId) {
+			for (var j in this.vidClips) {
+				if ( this.vidClips[j].id == clipId ) {
+					return this.vidClips[j];
+				}
+			}
+			
+			return null;
+		}
+	};
+	
+	
+	//installs and runs LSD in the background of your page content
+	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
+	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
+	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
+	//  userId			-	NOT optional id of user - alphanumeric only.
+   $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
+   		return new LSD(vidClips, compositeTypes, numLayers, userId);
+   }
+   
+			
 
 })( jQuery );
 //});
