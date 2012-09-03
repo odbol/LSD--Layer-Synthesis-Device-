@@ -86,7 +86,7 @@
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + layersHTML + '</div');
+		$('#musicControls').append('<div id="timeline"><div id="playhead"></div>' + layersHTML + '</div>');
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
@@ -174,8 +174,13 @@
 				title: "Joke",
 				playlist: this.playlist
 			});
-		}
+		},
 	
+		movePlayhead : function movePlayhead(time) {
+			var left = (time / this.totalTime) * 100;
+			
+			$('#playhead').css('left', left + '%');
+		}
 	};
 
 
@@ -289,7 +294,10 @@
 				timeline.setTotalTime(popcorn.duration());
 				
 				timeline.load();
-			})			
+			})		
+			.on('timeupdate', function () {
+				timeline.movePlayhead(popcorn.currentTime());
+			})						
 			.on('play', function () {
 				$('#musicControls').removeClass('paused').addClass('playing');
 			})

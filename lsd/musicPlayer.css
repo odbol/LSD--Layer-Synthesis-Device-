@@ -77,6 +77,7 @@
 #timeline {
 	width: 99%;
 	min-width: 300px;
+	position:relative;
 }
 	
 	#timeline .timelineLayer {
@@ -100,6 +101,16 @@
 		position:absolute;
 		top: 0;
 		z-index: 5;
+	}
+	
+	#playhead {
+		position:absolute;
+		height: 150px;
+		width: 1px;
+		bottom: 0;
+		background: red;
+		opacity: 0.4;
+		z-index: 50;
 	}
 	
 	#timeline .layerOpacity {
