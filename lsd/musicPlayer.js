@@ -26,7 +26,7 @@
 
 (function( $ ){
 
-	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>",
+	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li></ul>",
 		MUSIC_CONTROLS_END = '</div>';
 
 	var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists';
@@ -86,7 +86,7 @@
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline"><div id="playhead"></div>' + layersHTML + '</div>');
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='shareRButton' class='share button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-extlink'>Share</span></li><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>" + '<div id="playhead"></div>' + layersHTML + '</div>');
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
@@ -112,7 +112,7 @@
 		
 		clearPlaylist : function clearPlaylist() {
 			this.playlist = [];
-			$('#timeline timelineLayer').each(function () {
+			$('#timeline .timelineLayer').each(function () {
 				$(this).empty();
 			});
 		}, 
@@ -145,10 +145,13 @@
 					item$el = $('<div class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
 				break;
 				case 'layer':	
-					var height = event.opacity * 100; 
+					var height = event.opacity * 100
+						width = event.duration || 10; 
 					
 					item$el = $('<div class="layerOpacity"></div>')
-						.css('height', Math.round(height) + '%');
+						.css('height', Math.round(height) + '%')
+						.css('width', Math.round(width) + 'px')
+						;//.css('borderTopLeftRadius', (width - 10) + 'px');
 				break;
 				case 'composition':	
 					item$el = $('<div class="composition"><span>' + event.composition + '</span></div>');
@@ -261,7 +264,7 @@
 						$(timeline).trigger('changeClip.lsd', [event.layerId, event.clipId]);
 					break;
 					case 'layer':	
-						$(timeline).trigger('opacityEnd..lsd', [event.layerId, event.opacity]);
+						$(timeline).trigger('opacityEnd.lsd', [event.layerId, event.opacity]);
 					break;
 					case 'composition':	
 						$(timeline).trigger('changeComposition.lsd', [event.composition]);
@@ -331,6 +334,18 @@
 			var saveAs = false;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
 			
 			timeline.save(saveAs);
+		});
+		
+		$('#deleteButton').click(function () {
+			if (confirm("Delete all recorded tracks? (this cannot be undone)")) {
+				timeline.clearPlaylist();
+				
+				//remove all popcorn events as well.
+				var evs = popcorn.getTrackEvents();
+				for (var i = 0; i < evs.length; i++) {
+					popcorn.removeTrackEvent(evs[i].id);
+				}
+			}
 		});
 		
 		/*
