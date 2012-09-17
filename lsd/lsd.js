@@ -195,7 +195,8 @@ function VidLayer(clip, id) {
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	NOT optional id of user - alphanumeric only.
-   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId) {
+	//  crowd			-	optional CrowdControl object if you want collaborative features.
+   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId, crowd) {
 		var lsd = this;
 		
 		//returns the proper URL for the given screen ID.
@@ -254,9 +255,9 @@ function VidLayer(clip, id) {
 			this.vidClips = newVidClips;
 
 		
-							
-			var crowd = new CrowdControl().init(this, minRating);
-
+			if (crowd) {
+				crowd.init(this, minRating);
+			}
 		
 		
 			var ctx = canvas.getContext('2d');
@@ -317,19 +318,23 @@ function VidLayer(clip, id) {
 			};
 			
 			this.subscribeTo(lsd);
-			this.subscribeTo(crowd);
-
+			
+			if (crowd) {
+				this.subscribeTo(crowd);
+			}
 		
 		
-			var shouldInitClips = (crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
+			var shouldInitClips = (!crowd || crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
-					
-				crowd.makeOnClipChange(i);
-				crowd.makeOnLayerChange(i);
+				
+				if (crowd) {
+					crowd.makeOnClipChange(i);
+					crowd.makeOnLayerChange(i);
+				}
 			}
 				
 			 //GLOBALS!
@@ -611,29 +616,33 @@ function VidLayer(clip, id) {
 					//$("#backgroundCanvasControls .controlPanel").show('fast');
 				});		
 			
-			
-			$("#buttonShare").toggle(function (e) {
-					var shareUrl = getShareURL(crowd.screenId, false, /mobileOnly=true/.test(window.location.href), minRating );
-					$("<div id='shareOverlay' class='dialogControls'>" + 
-						"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
-						"<div class='shareButtons'>" + 
-							'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
-						"</div>" +
-						"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
-						'<h2>odbol.com/lsd</h2>' + 
-						"</div>")
-						.appendTo("body")
-						.click(function () {
-							$("#shareOverlay").remove();
-						});
+			if (crowd) {
+				$("#buttonShare").toggle(function (e) {
+						var shareUrl = getShareURL(crowd.screenId, false, /mobileOnly=true/.test(window.location.href), minRating );
+						$("<div id='shareOverlay' class='dialogControls'>" + 
+							"<h1>Control These Visuals!</h1>" + //fine, I guess we'll dispense with the humor just this once // Join Me on LSD</h1>" + 
+							"<div class='shareButtons'>" + 
+								'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
+							"</div>" +
+							"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
+							'<h2>odbol.com/lsd</h2>' + 
+							"</div>")
+							.appendTo("body")
+							.click(function () {
+								$("#shareOverlay").remove();
+							});
+							
+						toggleShareLogo();
+					}, 
+					function (e) {
+						$("#shareOverlay").remove();
 						
-					toggleShareLogo();
-				}, 
-				function (e) {
-					$("#shareOverlay").remove();
-					
-					toggleShareLogo();
-				});		
+						toggleShareLogo();
+					});		
+			}
+			else { //no crowd
+				$("#buttonShare").hide();
+			}
 			
 			var toggleShareLogo = function () {
 				var sl = $("#shareLogo");
@@ -913,7 +922,7 @@ function VidLayer(clip, id) {
 				
 				
 				//show intro screen
-				if (! /skipIntro=true/.test(window.location.href) ) {
+				if (crowd && ! /skipIntro=true/.test(window.location.href) ) {
 					var startNewScreen = function() {
 						var newScreen = prompt("Choose a name for your screen:", crowd.screenId);
 						if (newScreen && newScreen.length > 0)
@@ -1047,7 +1056,7 @@ function VidLayer(clip, id) {
 				
 				
 				//preload ALL the things!
-				if (enablePreloading && crowd.userStatus == QUEUE_STATUS.MASTER) {
+				if (enablePreloading && (!crowd || crowd.userStatus == QUEUE_STATUS.MASTER)) {
 					var curPreloadedClip = 0; //one at a time, please!
 					var preloadClips = function () {
 						lsd.vidClips[curPreloadedClip++].load(preloadClips);

@@ -80,6 +80,10 @@
 	position:relative;
 }
 	
+	#timeline #timelineLayers {
+		clear:both;
+	}
+	
 	#timeline .timelineLayer {
 		position: relative;
 		width: 100%;
