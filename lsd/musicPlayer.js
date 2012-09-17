@@ -86,7 +86,7 @@
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='shareRButton' class='share button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-extlink'>Share</span></li><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>" + '<div id="playhead"></div>' + layersHTML + '</div>');
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='shareRButton' class='share button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-extlink'>Share</span></li><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>" + '<div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div>');
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
@@ -133,7 +133,8 @@
 		},
 		
 		render : function render(item) {
-			var event = item.event,
+			var timeline = this,
+				event = item.event,
 				left = (item.time / this.totalTime) * 100;//* this.width;// percents don't work well in chrome
 		
 			this.width = $('#timeline').width();
@@ -142,34 +143,81 @@
 				case 'clip':	
 					var clip = this.lsd.getVidClipById(event.clipId);
 						
-					item$el = $('<div class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
+					item$el = $('<div id="timelineItem_' + item.idx + '" class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
 				break;
 				case 'layer':	
 					var height = event.opacity * 100
 						width = event.duration || 10; 
 					
-					item$el = $('<div class="layerOpacity"></div>')
+					item$el = $('<div id="timelineItem_' + item.idx + '"class="layerOpacity"></div>')
 						.css('height', Math.round(height) + '%')
 						.css('width', Math.round(width) + 'px')
 						;//.css('borderTopLeftRadius', (width - 10) + 'px');
 				break;
 				case 'composition':	
-					item$el = $('<div class="composition"><span>' + event.composition + '</span></div>');
+					item$el = $('<div id="timelineItem_' + item.idx + '"class="composition"><span>' + event.composition + '</span></div>');
 				break;
 			}
 			
 			if (item$el) {
 				item$el
 						.appendTo('#timelineLayer_' + event.layerId)
-						.css('left', Math.round(left) + '%');
+						.css('left', Math.round(left) + '%')
+						//.data('timelineItem', item)
+						
+						//start draggables
+						.draggable({ 
+							containment: "#timelineLayers", 
+							scroll: false, 
+							snap: ".timelineLayer",
+							snapMode: 'inner',
+							stop: timeline.makeOnDragStop(timeline, item$el, item)
+						});
 			}
 		},
 		
-		add : function add(item) {
-			this.render(item);			
-			this.playlist.push(item);
+		//returns an event handler for dropping the timeline item.
+		makeOnDragStop : function makeOnDragStop(timeline, item$el, item) {
+				return function (e, ui) {
+					var left = item$el.position().left,
+						layerId = parseInt(item$el.parent()
+							.attr('id').replace('timelineLayer_', ''));
+					
+					//find total time from PIXELS, not percent as it is set originally
+					item.time = (left / $('#timeline').width()) * timeline.totalTime;
+					item.event.layerId = layerId;
+					
+console.log('ondragstop: ', item.idx, item.time, layerId);
+					
+					timeline.update(item);
+				};
+		}, 
+		
+		unrender : function unrender(item) {
+			$('timelineItem_' + item.idx)
+				.unbind()
+				.detach()
+				.draggable("destroy");
+		},
+		
+		add : function add(item) {			
+			item.idx = this.playlist.push(item);
+			
+			this.render(item);
 			
 			$(this).trigger('added.timeline', [item]);
+		},
+		
+		update : function update(item) {			
+			$(this).trigger('updated.timeline', [item]);
+		},
+		
+		remove : function add(item) {			
+			this.playlist.splice(item.idx, 1);
+			
+			this.unrender(item);
+			
+			$(this).trigger('removed.timeline', [item]);
 		},
 		
 		save : function save(saveAs) {			
@@ -258,7 +306,7 @@
 			},
 			
 			//cue timeline events
-			cueEvent = function cueEvent(event) {
+			cueEvent = function cueEvent(event) {		
 				switch (event.type) {
 					case 'clip':	
 						$(timeline).trigger('changeClip.lsd', [event.layerId, event.clipId]);
@@ -273,17 +321,34 @@
 			},
 			
 			//catch timeline events
+			
+			//this works for both adding and updating, since popcorn handles the updating of the same id.
 			onEventAdded = function (ev, item) {
 				//if (lastEventItem != item) { //protect against infinite loop event triggering. TODO: how to fix this???
 					//wait a little bit in case you cue the event and popcorn triggers 
 					setTimeout(function () {
+						var id = "timelineItem_" + item.idx;
+							
 						popcorn.cue(item.time, function() {
+console.log('cueEvent: ', item.idx, item.time, item.event.layerId);							
 							cueEvent(item.event);
 						});
 					}, 1000);
 					lastEventItem = item;
 				//}
-			};
+			}
+			/*,onEventRemoved = function (ev, item) {
+				//if (lastEventItem != item) { //protect against infinite loop event triggering. TODO: how to fix this???
+					//wait a little bit in case you cue the event and popcorn triggers 
+					setTimeout(function () {
+						var id = "timelineItem_" + item.idx;
+						popcorn.removeTrackEvent(id, function() {
+							cueEvent(item.event);
+						});
+					}, 1000);
+					lastEventItem = item;
+				//}
+			}*/;
 
 		//bind to lsd's event changes, and it to ours
 		lsd.subscribeTo(timeline);
@@ -388,7 +453,8 @@
 			
 		//bind to timline events
 		$(timeline)
-			.bind('added.timeline', onEventAdded);
+			.bind('added.timeline', onEventAdded)
+			.bind('updated.timeline', onEventAdded); //adding/updating doesn't matter!
 			
 	};
    
