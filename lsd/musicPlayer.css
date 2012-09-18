@@ -147,6 +147,12 @@
 	display:none;
 }
 
+.error {
+	background-color: #a00;
+	color: #fff;
+	padding: 2em;
+}
+
 body div.intro {
 	width: 650px;
 	margin: 30px auto;

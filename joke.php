@@ -138,6 +138,8 @@ body .element {
 		</noscript>
 	</div>
 	
+	<script type="text/javascript" src="_js/modernizr.min.js"></script>
+	
 	<script type="text/javascript">
 		//the end-all test
 		var isMobile = (/android.+webkit/i).test(navigator.userAgent) || (/iPad|iPhone|iPod/).test(navigator.platform);
@@ -464,11 +466,20 @@ new VidClip('images/mixer/gif_sorted/_pop/zoidberg.gif', 'images/mixer/gif_sorte
 			$().musicPlayer('/joke/Battlehooch/Battlehooch%20-%20Joke.mp3', lsd);
 		}
 		
+		// capabilities check
+		if ( Modernizr.canvas &&
+			(Modernizr.audio.mp3 /*|| Modernizr.audio.ogg*/) &&
+			(Modernizr.video.h264 /*|| Modernizr.video.webm*/) ) {
 		
-		$('#startButtons .button').click(function () {
+			$('#startButtons .button').click(function () {
 			
-			init();
-		});
+				init();
+			});
+		}
+		else {
+			$('#startButtons').hide()
+				.after('<p class="error">Sorry, your browser is not compatible. Please download the latest Chrome or Safari browser for the best performance.</p>');
+		}
 		
 		});
 	</script>	
