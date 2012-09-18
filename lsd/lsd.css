@@ -2,6 +2,8 @@
 
 #backgroundHolder {
 	position: absolute;
+	left: 0;
+	top: 0;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
@@ -20,6 +22,38 @@
 	width: 100%;
 	height: 100%;
 }
+
+
+body div a.poweredBy {
+	display:block !important;
+	position:relative;		
+	width: 57px;
+	height: 57px;
+  	margin: 0 auto;
+}
+	.poweredBy .power {
+	 	font-size: 10px;
+		font-style: italic;
+	  	left: -25px;
+		position: absolute;
+		top: 2px;
+		z-index: 3;
+		
+		color: rgba(255, 255, 255, 0.9);
+		text-shadow: 1px 2px 1px #000;
+	}
+	.poweredBy .name {
+		position: absolute;
+		right: 0;
+		top: 0;
+		display:inline-block;
+		width: 57px;
+		height: 57px;
+		
+		background: url("/joke/icons/stamp-lsd-57.png") no-repeat scroll 0 0;
+		text-indent: -9999px;
+		z-index: 2;
+	}
 
 
 #intro,

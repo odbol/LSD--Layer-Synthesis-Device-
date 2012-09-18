@@ -138,3 +138,48 @@
 		overflow:hidden;
 		z-index: 20;
 	}
+	
+	
+	
+/***** intro screen ******/
+
+.licenseText {
+	display:none;
+}
+
+body div.intro {
+	width: 650px;
+	margin: 30px auto;
+	float:none;
+	text-align:center;
+	white-space: normal;
+}
+
+	body .intro .musicLogo a {
+	  background: url("http://battlehooch.com/images/organic/battlehooch.png") no-repeat scroll 0 0 transparent;
+	  display: block;
+	  height: 82px;
+	  overflow: hidden;
+	  padding: 2px;
+	  width: 418px;
+	  text-indent: -9999px;
+	  font-size: 0;
+	  margin: 0 auto;
+	}
+	
+	
+	.intro #startButtons {
+		margin: 2em 0;
+	}
+	
+		.intro #startButtons .button {
+			height: auto;
+			width: 270px;
+		}
+			.intro #startButtons .button:hover {
+				background-color: #a00;
+			}
+		
+			.intro #startButtons .button h3 {
+				font-size: 20px;
+			}
