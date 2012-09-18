@@ -464,6 +464,41 @@ new VidClip('images/mixer/gif_sorted/_pop/zoidberg.gif', 'images/mixer/gif_sorte
 			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd);				
 
 			$().musicPlayer('/joke/Battlehooch/Battlehooch%20-%20Joke.mp3', lsd);
+			
+			//auto hide on mouse idle
+			var lastMouseMovement = new Date(),
+				idleCheckInterval = false,
+				isHidden = false,
+				checkMouseIdle = function () {
+					if (lastMouseMovement.getTime() < new Date().getTime() - 3000) {
+						lsd.hide();
+						clearInterval(idleCheckInterval);
+						idleCheckInterval = false;
+					}
+				};
+			$('canvas').mousemove(function (ev) {
+				if (!idleCheckInterval) {
+					lsd.show();
+					idleCheckInterval = setInterval(checkMouseIdle, 3000);
+				}
+				
+				lastMouseMovement = new Date();
+			});
+			
+			/*$('canvas').hover(function (ev) {
+					console.log(ev);
+					
+					if (idleCheckInterval)
+						clearInterval(idleCheckInterval);
+						
+					lastMousePos = null;			
+				},
+				function (ev) {
+					lastMousePos = [ev.clientX, ev.clientY];
+					
+					idleCheckInterval = setInterval(function () {
+				});
+				*/
 		}
 		
 		// capabilities check

@@ -87,6 +87,8 @@ var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
 var CLIP_PAGE_SIZE = 9;
 
+// lets you minimize LSD and brings up the original page body over the canvas, so LSD is a background
+var ENABLE_BACKGROUNDING = false;
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
 var enableBlendEffectOnClick = !isMobile;
@@ -565,7 +567,9 @@ function VidLayer(clip, id) {
 				//toggle fullscreen
 				if (isFullscreen) {
 					hideControls();
-					$("#backgroundHolder").css("zIndex", 1);
+					if (ENABLE_BACKGROUNDING) {
+						$("#backgroundHolder").css("zIndex", 1);
+					}
 				}
 				else {
 					minimizeControls();
@@ -597,6 +601,8 @@ function VidLayer(clip, id) {
 				}
 				*/
 			};
+			this.hide = hideUI;
+			this.show = reviveUI;
 			var toggleUI = function () {
 				if ($(".dialogControls").eq(0).css('display') == 'none') {
 					reviveUI();
