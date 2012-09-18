@@ -69,18 +69,30 @@
 			});
 		},
 		
-		setPlaylist : function (playlistId, playlist) {
-			playlistId = playlistId || this.playlistId;
+		/***
+		 	Saves a playlist.
+		 	
+		 	@param onSaved {Function(error, playlistId)} - callback
+		***/
+		setPlaylist : function (playlist, onSaved) {
+			var self = this,
+				clipRef = new Firebase(FIREBASE_ROOT_BASE),
+				playlistRef = clipRef.push( playlist, function (isSaved) {
+					if (isSaved) {
+						self.playlistId = playlistRef.name();
+					}
+					
+					onSaved && onSaved(isSaved ? false : 'Could not save', self.playlistId);
+				});
+				
 			
-			var clipRef = new Firebase(FIREBASE_ROOT_BASE + '/' + playlistId);
-			clipRef.set( playlist );
 		}
 	};
 
 	/**
 		the timeline gui
 	**/
-	var Timeline = function(lsd, totalTime) {
+	var Timeline = function(lsd, totalTime, songAttribution) {
 		var layersHTML = '';
 		for (var i = 0; i < 3; i++) {
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
@@ -90,6 +102,7 @@
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
+		this.songAttribution = songAttribution;
 		
 		this._playlistRepo = new PlaylistRepo().init();
 	};
@@ -97,6 +110,10 @@
 	Timeline.prototype = {
 		totalTime : 0,
 		width : 0,
+		songAttribution : new Attribution(),
+		
+		// true when there are changes that need saving
+		isDirty : false,
 		
 		//reference to LSD
 		lsd : null,
@@ -127,6 +144,9 @@
 				for (var i = 0; i < playlist.length; i++) {
 					that.add(playlist[i]);
 				}
+				
+				// reset since add() makes things dirty
+				isDirty = false;
 				
 				$(document).trigger('playlistLoaded.timeline', [this.playlist]);
 			});
@@ -203,28 +223,42 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 		add : function add(item) {			
 			item.idx = this.playlist.push(item);
 			
-			this.render(item);
+			this.isDirty = true;
 			
+			this.render(item);
+						
 			$(this).trigger('added.timeline', [item]);
 		},
 		
-		update : function update(item) {			
+		update : function update(item) {		
+			this.isDirty = true;
+				
 			$(this).trigger('updated.timeline', [item]);
 		},
 		
 		remove : function add(item) {			
 			this.playlist.splice(item.idx, 1);
 			
+			this.isDirty = true;
+			
 			this.unrender(item);
 			
 			$(this).trigger('removed.timeline', [item]);
 		},
 		
-		save : function save(saveAs) {			
-			this._playlistRepo.setPlaylist(saveAs, {
-				title: "Joke",
-				playlist: this.playlist
-			});
+		save : function save(author, callback) {
+			if (this.isDirty) {	
+				this._playlistRepo.setPlaylist({
+					credits: this.songAttribution,
+					author: author,
+					playlist: this.playlist
+				}, callback);
+				
+				this.isDirty = false;
+			}
+			else {
+				callback && callback('Nothing to save.', this._playlistRepo.playlistId);
+			}
 		},
 	
 		movePlayhead : function movePlayhead(time) {
@@ -240,11 +274,12 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 	//installs and runs the music player 
 	//	audio		- the URL to the audio file
 	//	lsd 		- LSD object	
-	$.fn.musicPlayer = function (audioUrl, lsd) {
+	//  songAttribution - Attribution object of the song's info
+	$.fn.musicPlayer = function (audioUrl, lsd, songAttribution) {
 		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div>' + MUSIC_CONTROLS_END);
 		
 		var popcorn = Popcorn( "#music" ),
-			timeline = new Timeline(lsd, popcorn.duration());
+			timeline = new Timeline(lsd, popcorn.duration(), songAttribution);
 			isRecording = false,
 			
 			//controls
@@ -269,7 +304,24 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 			
 			onPause = function () {
 				$('#musicControls').removeClass('playing').addClass('paused');
-			}
+			},
+			
+			showShareScreen = function showShareScreen(playlistId) {
+				var shareUrl = 'http://odbol.com/joke.php?playlist=' + playlistId;
+				
+				$('<div id="shareTrackScreen" class="dialogControls"><h2>Share this video</h2><label for="shareTrackUrl">Link:</label><input id="shareTrackUrl" type="text" value="' +
+					 shareUrl + '" />' +
+					 "<div class='shareButtons'>" +
+					 	'<div class="shareButton tweet"><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(shareUrl) + '&amp;via=odbol&amp;count=none&amp;text=' + encodeURIComponent(songAttribution.toString()) + '" style="width:130px; height:21px;"></iframe></div>' +
+						'<div class="shareButton facebook"><iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe></div>' +
+					"</div><br class='clear' /><div class='dialogButton button close'>Close</div></div>")
+					
+					.appendTo('body')
+					.find('.close')
+						.click(function () {
+							$('#shareTrackScreen').remove();
+						});
+			},
 			
 			//for recording LSD events:
 			lastEventItem = null,
@@ -399,6 +451,18 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 			var saveAs = false;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
 			
 			timeline.save(saveAs);
+		});
+		
+		$('#shareRButton').click(function () {
+			var saveAs = false;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
+			
+			timeline.save(saveAs, function (error, playlistId) {
+				/*if (error) {
+					alert('Your recording could not be saved: ' + error);
+				}*/
+				
+				showShareScreen(playlistId);
+			});
 		});
 		
 		$('#deleteButton').click(function () {

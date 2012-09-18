@@ -189,3 +189,56 @@ body div.intro {
 			.intro #startButtons .button h3 {
 				font-size: 20px;
 			}
+			
+			
+			
+			
+/*** share screen ****/
+#shareTrackScreen {
+	z-index:1100;
+	position:absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -200px;
+
+	padding: 20px;
+	text-align: center;
+	
+	
+	width: 400px;
+	height: 175px;
+	
+	opacity: 1.0;
+	
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+	#shareTrackScreen h1 {
+		float: none;
+		font-size: 28px;
+		margin: 0 0 20px 0;
+		padding: 0;
+	}
+	
+	#shareTrackScreen h2 {
+		font-size: 26px;
+		margin-top: 10px;
+	}
+	
+	#shareTrackScreen input {
+		width:350px;
+	}
+	
+	#shareTrackScreen .shareButtons {
+		margin: 2em auto;
+		width: 140px;
+	}
+	
+		#shareTrackScreen .shareButtons .shareButton {
+			float:left;
+			width: 70px;
+		}
+	
+	#shareTrackScreen .close {
+		margin-top: 20px;
+	}

@@ -191,6 +191,7 @@ a.dialogButton:active,
 	font-size: 10px;
 	text-align:right;
 	
+	border-radius: 5px;
 }
 
 #backgroundCanvasControls {

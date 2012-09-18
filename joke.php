@@ -463,7 +463,7 @@ new VidClip('images/mixer/gif_sorted/_pop/zoidberg.gif', 'images/mixer/gif_sorte
 	
 			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd);				
 
-			$().musicPlayer('/joke/Battlehooch/Battlehooch%20-%20Joke.mp3', lsd);
+			$().musicPlayer('/joke/Battlehooch/Battlehooch%20-%20Joke.mp3', lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'));
 		}
 		
 		// capabilities check

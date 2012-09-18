@@ -187,6 +187,26 @@ function VidLayer(clip, id) {
 	return this;
 }  
 
+/****
+	Attribution Class
+	
+	Holds author credits for something.
+	 
+***/
+function Attribution(author, title, link) {
+	this.author = author;
+	this.title = title; 
+	this.link = link;
+}
+Attribution.prototype = {
+	author: '',
+	title: '',
+	link: '',
+	toString: function toString() {
+		return this.title + (this.author ? ' - ' + this.author : '');
+	}
+};
+
 
 (function( $ ){
 //$(function(){
@@ -767,7 +787,7 @@ function VidLayer(clip, id) {
 							'dragend': [function (data) {
 								//change local immediately, and only send final value to crowd so the rest can tween
 								
-console.log(i + 'lsd opacity end: ' + data.value);								
+//console.log(i + 'lsd opacity end: ' + data.value);								
 								$(lsd).trigger('opacityEnd.lsd', [i, parseFloat(data.value) ]);
 
 							}]
