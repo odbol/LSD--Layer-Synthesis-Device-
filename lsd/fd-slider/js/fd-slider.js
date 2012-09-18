@@ -463,6 +463,15 @@ var fdSlider = (function() {
                                 // Use the input value
                                 valueToPixels(forceValue ? getWorkingValueFromInput() : (tagName == "select" ? inp.selectedIndex : parseFloat(inp.value)));
                                 
+                                
+                                // sometimes the element is hidden when redraw() is called,
+                                // so we'll wait until it's not hidden!
+                                // otherwise, the slider won't move at all via user input or otherwise.
+                                // - Tyler Freeman
+                                if (mPx == 0 || isNaN(stepPx)) {
+                                	setTimeout(redraw, 2000);
+                                }
+                                
                         } catch(err) {};
                         callback("redraw");
                 };
@@ -852,7 +861,7 @@ var fdSlider = (function() {
                         	tweenCurVal = tweenCurVal + ( (tweenDest - tweenCurVal) * TWEEN_RATE );
                         else
                         	t = d;
-//console.log("tweening: " + tweenCurVal + " to " + tweenDest);                    
+//console.log(inp.id + " tweening: " + tweenCurVal + " to " + tweenDest);                    
                         valueToPixels(t == d ? tweenDest : tweenCurVal);
 
                         
@@ -888,7 +897,7 @@ var fdSlider = (function() {
                 			TWEEN_RATE = 0.35;
                 		
  
-//console.log("start tween: " + tweenCurVal + " to " + tweenDest);     
+//console.log(inp.id + "start tween: " + tweenCurVal + " to " + tweenDest);     
 
                         kbEnabled = false;
 
@@ -969,7 +978,7 @@ var fdSlider = (function() {
                 // Calculates value according to pixel position of slider handle
                 function pixelsToValue(px) {                                                                                            
                         var val = getValidValue(scale ? percentToValue(pixelsToPercent(px)) : vertical ? max - (Math.round(px / stepPx) * step) : min + (Math.round(px / stepPx) * step));                                                                                                                                                                         
-                        
+//console.log(inp.id + "pixelsToValue: " + px+ ": " + val);                      
                         handle.style[vertical ? "top" : "left"] = (px || 0) + "px";
                         redrawRange();                                      
                         setInputValue((tagName == "select" || step == 1) ? Math.round(val) : val);                         
@@ -988,7 +997,7 @@ var fdSlider = (function() {
                         } else {                               
                                 value = checkValue(val);                                   
                         };
-                        
+//console.log(inp.id + "valueToPixels moving slider " + val + " = " + value);                        
                         handle.style[vertical ? "top" : "left"] = (scale ? percentToPixels(valueToPercent(value)) : vertical ? Math.round(((max - value) / step) * stepPx) : Math.round(((value - min) / step) * stepPx)) + "px"; 
                         redrawRange();                          
                         setInputValue(clearVal ? "" : value);                                                                                                                                                                       
@@ -1136,9 +1145,11 @@ var fdSlider = (function() {
                 };
                 
                 function redrawRange() {
+//console.log(inp.id + " redrawRange:  " + noRangeBar);               
                         if(noRangeBar) {
                                 return;
                         };
+//console.log(inp.id + " redrawRange: " + vertical + ": " + handle.offsetTop);
                         if(vertical) {                       
                                 rangeBar.style["height"] = Math.max(1, (bar.offsetHeight - handle.offsetTop)) + "px";
                         } else {                                
@@ -1173,7 +1184,8 @@ var fdSlider = (function() {
                         handle.setAttribute("aria-valuetext", valTxt);
                 };
                 
-                function onInputChange(e) {                       
+                function onInputChange(e) {    
+//console.log(inp.id + " onInputChange:" + inp.value );                                   
                         userSet = true;
                         valueToPixels(tagName == "input" ? parseFloat(inp.value) : inp.selectedIndex);
                         updateAriaValues();                                                 
