@@ -239,6 +239,11 @@ body div.intro {
 			width: 70px;
 		}
 	
+	#shareTrackScreen .record {
+		margin-top: 20px;
+		background-color: #a00;
+	}
+	
 	#shareTrackScreen .close {
 		margin-top: 20px;
 	}

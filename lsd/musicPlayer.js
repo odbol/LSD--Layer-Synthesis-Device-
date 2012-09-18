@@ -307,17 +307,20 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 			},
 			
 			showShareScreen = function showShareScreen(playlistId) {
+				playlistId = playlistId || timeline._playlistRepo.playlistId;
+				
 				var shareUrl = 'http://odbol.com/joke.php?playlist=' + playlistId;
 				
-				$('<div id="shareTrackScreen" class="dialogControls"><h2>Share this video</h2><label for="shareTrackUrl">Link:</label><input id="shareTrackUrl" type="text" value="' +
+				$('<div id="shareTrackScreen" class="dialogControls" style="display:none"><h2>Share this video</h2><label for="shareTrackUrl">Link: </label><input id="shareTrackUrl" type="text" value="' +
 					 shareUrl + '" />' +
 					 "<div class='shareButtons'>" +
 					 	'<div class="shareButton tweet"><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(shareUrl) + '&amp;via=odbol&amp;count=none&amp;text=' + encodeURIComponent(songAttribution.toString()) + '" style="width:130px; height:21px;"></iframe></div>' +
 						'<div class="shareButton facebook"><iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe></div>' +
-					"</div><br class='clear' /><div class='dialogButton button close'>Close</div></div>")
+					"</div><br class='clear' /><div class='dialogButton record button'>Record your own video</div><div class='dialogButton button close'>Close</div></div>")
 					
 					.appendTo('body')
-					.find('.close')
+					.fadeIn('slow')
+					.find('.button')
 						.click(function () {
 							$('#shareTrackScreen').remove();
 						});
@@ -421,12 +424,10 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 			.on('play', function () {
 				$('#musicControls').removeClass('paused').addClass('playing');
 			})
-			.on('pause', onPause);
-			/*.on('ended', function () {
-				if (isRecording) {
-					toggleRecord();
-				}
-			});*/
+			.on('pause', onPause)
+			.on('ended', function () {
+				showShareScreen();
+			});
 
 		$('#playButton').click(function () {
 			if (popcorn.paused() ) {
@@ -437,7 +438,7 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 			}
 		});
 		
-		$('#recordButton').click(function () {
+		$('body').delegate('.record', 'click', function () {
 			if (!isRecording) {
 				if (popcorn.paused() ) {
 					play();
