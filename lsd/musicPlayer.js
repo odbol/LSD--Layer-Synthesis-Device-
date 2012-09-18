@@ -445,6 +445,32 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 			});	
 		
 		
+		//auto hide on mouse idle
+		var lastMouseMovement = new Date(),
+			idleCheckInterval = false,
+			checkMouseIdle = function () {
+				if (lastMouseMovement.getTime() < new Date().getTime() - 3000) {
+					lsd.hide();
+					clearInterval(idleCheckInterval);
+					idleCheckInterval = false;
+				}
+			};
+		$('canvas').mousemove(function (ev) {
+			if (!idleCheckInterval) {
+				lsd.show();
+				idleCheckInterval = setInterval(checkMouseIdle, 3000);
+			}
+			
+			lastMouseMovement = new Date();
+		})
+		.mouseout(function (ev) {
+			clearInterval(idleCheckInterval);
+			idleCheckInterval = false;
+		});
+		
+		
+		
+		
 		//bind to LSD events and record them
 		$(lsd)
 			.bind('changeClip.lsd', onChangeClip)

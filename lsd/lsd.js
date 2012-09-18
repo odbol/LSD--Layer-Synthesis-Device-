@@ -767,7 +767,7 @@ function VidLayer(clip, id) {
 							'dragend': [function (data) {
 								//change local immediately, and only send final value to crowd so the rest can tween
 								
-								
+console.log(i + 'lsd opacity end: ' + data.value);								
 								$(lsd).trigger('opacityEnd.lsd', [i, parseFloat(data.value) ]);
 
 							}]
