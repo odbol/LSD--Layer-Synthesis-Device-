@@ -27,9 +27,12 @@
 (function( $ ){
 
 	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li></ul>",
-		MUSIC_CONTROLS_END = '</div>';
+		MUSIC_CONTROLS_END = '</div>',
 
-	var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists';
+		FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists'
+		
+		// number of seconds ahead of time to preload a clip before it's cued up.
+		PRELOAD_DELAY = 10;
 
 
 	/**
@@ -293,9 +296,13 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 				isRecording = !isRecording; //(isRecordOn !== false && isRecordOn === true) || !isRecording;
 				if (isRecording) {
 					$('#musicControls').addClass('recording');
+					
+					lsd.showControls();
 				}
 				else {
 					$('#musicControls').removeClass('recording');
+					
+					lsd.hideControls();
 				}
 			},
 			saveRecording = function () {
@@ -336,7 +343,11 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 					};
 					
 					timeline.add(item);
+					
+					return item;
 				}
+				
+				return null;
 			},
 			onChangeClip = function (event, layerId, val) {
 				addPlaylistEvent({
@@ -345,12 +356,21 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 					clipId: val
 				});
 			},
+			curLayerChanges = {},
 			onChangeLayer = function (event, layerId, val) {
-				addPlaylistEvent({
-					type: 'layer',
-					layerId: layerId,
-					opacity: val
-				});			
+				// try to track when they started and ended the event so we can figure out a tween rate. 
+				if (curLayerChanges[layerId]) {
+					curLayerChanges[layerId].event.rate = popcorn.currentTime() - curLayerChanges[layerId].time;
+					
+					delete curLayerChanges[layerId];
+				}
+				else {
+					curLayerChanges[layerId] = addPlaylistEvent({
+						type: 'layer',
+						layerId: layerId,
+						opacity: val
+					});
+				}
 			},
 			onChangeComposition = function (event, val) {
 				addPlaylistEvent({
@@ -366,14 +386,18 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 					case 'clip':	
 						$(timeline).trigger('changeClip.lsd', [event.layerId, event.clipId]);
 					break;
-					case 'layer':	
-						$(timeline).trigger('opacityEnd.lsd', [event.layerId, event.opacity]);
+					case 'layer':						
+						$(timeline).trigger('opacityEnd.lsd', [event.layerId, event.opacity, event.rate]);
 					break;
 					case 'composition':	
 						$(timeline).trigger('changeComposition.lsd', [event.composition]);
 					break;
 				}
 			},
+			//cue timeline events
+			cuePreloadEvent = function cuePreloadEvent(event) {		
+				$(timeline).trigger('preloadClip.lsd', [event.clipId]);
+			}
 			
 			//catch timeline events
 			
@@ -388,6 +412,17 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 console.log('cueEvent: ', item.idx, item.time, item.event.layerId);							
 							cueEvent(item.event);
 						});
+						
+						// also cue a preload event
+						if (item.event.type == 'clip') {
+							var preloadTime = Math.max(0, item.time - PRELOAD_DELAY);
+							
+							popcorn.cue(preloadTime, function() {
+console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);							
+								cuePreloadEvent(item.event);
+							});
+						}						
+						
 					}, 1000);
 					lastEventItem = item;
 				//}
@@ -408,6 +443,8 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 		//bind to lsd's event changes, and it to ours
 		lsd.subscribeTo(timeline);
 
+		//hide lsd until they start recording
+		lsd.hideControls();
 
 		//******UI*******
 
@@ -540,6 +577,7 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 		$(lsd)
 			.bind('changeClip.lsd', onChangeClip)
 			.bind('opacityEnd.lsd', onChangeLayer)
+			.bind('opacityStart.lsd', onChangeLayer)
 			.bind('changeComposition.lsd', onChangeComposition)
 			
 		//bind to timline events

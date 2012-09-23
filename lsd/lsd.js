@@ -310,31 +310,41 @@ Attribution.prototype = {
 			var sliders = new Array(numLayers);
 
 			var changeClipById = function(event, layerId, clipId) {
-				//if (event.name
-				var clip = lsd.getVidClipById(clipId);
-				if ( clip ) {
-					var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
-					changeClip( layers[layerId], layerControl, clip );	
-	
-				}
-			}; 
-			
-			var changeLayerOpacity = function(event, layerId, val) {
-				//layers[layerId].opacity = val; //parseFloat(snapshot.val());
-						
-				//TODO: update slider val!
-				sliders[layerId].tweenTo(val);
-			};
-						
-			var onChangeComposition = function (event, value) {		
-					compositeIndex = value;
-					$("#compositionSelector").val(compositeIndex);
+					//if (event.name
+					var clip = lsd.getVidClipById(clipId);
+					if ( clip ) {
+						var layerControl = $("#backgroundCanvasControls .layerControl").eq(layerId);
+						changeClip( layers[layerId], layerControl, clip );	
+		
+					}
+				},
+				preloadClipById = function preloadClipById(event, clipId) {
+					var clip = lsd.getVidClipById(clipId);
+					if ( clip ) {
+						clip.load(function (img) {
+							console.log('preloaded TODO: make sure its not preloading already loaded clips', img);
+						});
+					}
+				},
+				
+				changeLayerOpacity = function(event, layerId, val, rate) {
+					//layers[layerId].opacity = val; //parseFloat(snapshot.val());
+							
+					//TODO: update slider val!
+					sliders[layerId].tweenTo(val, rate);
+				},
+							
+				onChangeComposition = function (event, value) {		
+						compositeIndex = value;
+						$("#compositionSelector").val(compositeIndex);
 				};
 
 			//binds to all related events triggered by given publisher
 			this.subscribeTo = function(publisher) { 
 				$(publisher)
 					.bind('changeClip.lsd', changeClipById)
+					.bind('preloadClip.lsd', preloadClipById)
+					//.bind('opacityStart.lsd', changeLayerOpacity)
 					.bind('opacityEnd.lsd', changeLayerOpacity)	
 					.bind('changeComposition.lsd', onChangeComposition);
 			};
@@ -579,8 +589,12 @@ Attribution.prototype = {
 				//$("#backgroundCanvasControls").switchClass("minimized", "maximized", 500);
 				$("#backgroundCanvasControls").animate({width:"187px"}, 100);
 	
+				$("#backgroundCanvasControls .controlPanel, #buttonHelp, #buttonStop").show('fast');
+					
 				$("#backgroundCanvasControls .aboutBox").hide('fast'); //about only shown in maximized!
 			};
+			this.hideControls = hideControls;
+			this.showControls = minimizeControls;
 			
 			var isFullscreen = false;
 			$("#buttonFullscreen").click(function (e) {
@@ -593,7 +607,6 @@ Attribution.prototype = {
 				}
 				else {
 					minimizeControls();
-					$("#backgroundCanvasControls .controlPanel, #buttonHelp, #buttonStop").show('fast');
 					$("#backgroundHolder").css("zIndex", 500);
 				}
 				isFullscreen = !isFullscreen;
@@ -790,6 +803,13 @@ Attribution.prototype = {
 //console.log(i + 'lsd opacity end: ' + data.value);								
 								$(lsd).trigger('opacityEnd.lsd', [i, parseFloat(data.value) ]);
 
+							}],
+							'dragstart': [function (data) {
+								//change local immediately, and only send final value to crowd so the rest can tween
+								
+//console.log(i + 'lsd opacity start: ' + data.value);								
+								$(lsd).trigger('opacityStart.lsd', [i, parseFloat(data.value) ]);
+
 							}]
         				  }
 						});
@@ -871,7 +891,7 @@ Attribution.prototype = {
 						
 					ctx.globalAlpha = 1.0;
 					
-					//ctx.fillStyle = '#000';
+					//ctx.fillStyle = 'rgba(0,0,0,0)';
 					ctx.clearRect(0, 0, canvas.width, canvas.height);
 						
 				
