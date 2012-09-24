@@ -95,6 +95,14 @@
 		/*overflow:hidden; interferes with draggables*/
 	}
 	
+		#timeline .ui-draggable {
+			opacity: 0.7;
+		}
+		
+		#timeline .ui-draggable:hover {
+			opacity: 0.96;
+		}
+			
 	#timeline .clipThumb, 
 	#timeline .clipThumb img {
 		height: 45px;
@@ -128,6 +136,13 @@
 		opacity: 0.65;
 		z-index: 10;
 	}
+	
+		#timeline .layerOpacity.up {
+			border-top-left-radius: 97%;
+		}
+		#timeline .layerOpacity.down {
+			border-top-right-radius: 97%;
+		}
 	
 	#timeline .composition {
 		position:absolute;

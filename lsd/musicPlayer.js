@@ -169,10 +169,16 @@
 					item$el = $('<div id="timelineItem_' + item.idx + '" class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
 				break;
 				case 'layer':	
-					var height = event.opacity * 100
-						width = event.duration || 10; 
+					var height = event.opacity * 100.0,
+						width = event.duration ? (event.duration / this.totalTime) * this.width : 5,
+						delta = event.startOpacity ? event.startOpacity - event.opacity : 0,
+						cssClass = delta > 0 ? "down" : "up"; 
 					
-					item$el = $('<div id="timelineItem_' + item.idx + '"class="layerOpacity"></div>')
+					if (height < 10 && event.startOpacity) {
+						height = event.startOpacity * 100.0;
+					}
+					
+					item$el = $('<div id="timelineItem_' + item.idx + '"class="layerOpacity ' + cssClass + '"></div>')
 						.css('height', Math.round(height) + '%')
 						.css('width', Math.round(width) + 'px')
 						;//.css('borderTopLeftRadius', (width - 10) + 'px');
@@ -217,10 +223,15 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 		}, 
 		
 		unrender : function unrender(item) {
-			$('timelineItem_' + item.idx)
+			$('#timelineItem_' + item.idx)
 				.unbind()
 				.detach()
 				.draggable("destroy");
+		},
+		
+		redraw : function redraw(item) {
+			this.unrender(item);
+			this.render(item);
 		},
 		
 		add : function add(item) {			
@@ -358,10 +369,15 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 			},
 			curLayerChanges = {},
 			onChangeLayer = function (event, layerId, val) {
-				// try to track when they started and ended the event so we can figure out a tween rate. 
+				// try to track when they started and ended the event so we can figure out a tween duration. 
 				if (curLayerChanges[layerId]) {
-					curLayerChanges[layerId].event.rate = popcorn.currentTime() - curLayerChanges[layerId].time;
+					curLayerChanges[layerId].event.duration = popcorn.currentTime() - curLayerChanges[layerId].time;
+					curLayerChanges[layerId].event.startOpacity = curLayerChanges[layerId].event.opacity;
+					curLayerChanges[layerId].event.opacity = val;
 					
+					timeline.redraw(curLayerChanges[layerId]);
+					
+					// delete from cue but not from the playlist (since it's already added.)
 					delete curLayerChanges[layerId];
 				}
 				else {
@@ -387,7 +403,7 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 						$(timeline).trigger('changeClip.lsd', [event.layerId, event.clipId]);
 					break;
 					case 'layer':						
-						$(timeline).trigger('opacityEnd.lsd', [event.layerId, event.opacity, event.rate]);
+						$(timeline).trigger('opacityEnd.lsd', [event.layerId, event.opacity, event.duration * 1000.0]);
 					break;
 					case 'composition':	
 						$(timeline).trigger('changeComposition.lsd', [event.composition]);

@@ -327,11 +327,11 @@ Attribution.prototype = {
 					}
 				},
 				
-				changeLayerOpacity = function(event, layerId, val, rate) {
+				changeLayerOpacity = function(event, layerId, val, duration) {
 					//layers[layerId].opacity = val; //parseFloat(snapshot.val());
 							
 					//TODO: update slider val!
-					sliders[layerId].tweenTo(val, rate);
+					sliders[layerId].tweenTo(val, duration);
 				},
 							
 				onChangeComposition = function (event, value) {		
