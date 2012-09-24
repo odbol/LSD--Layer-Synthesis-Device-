@@ -96,15 +96,31 @@
 		the timeline gui
 	**/
 	var Timeline = function(lsd, totalTime, songAttribution) {
-		var layersHTML = '';
+		var timeline = this,
+			layersHTML = '';
 		for (var i = 0; i < 3; i++) {
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li>" //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
 			+ '</ul><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div>')
 			.children('.buttons')
 				.append("<li id='shareRButton' class='share button dialogButton'>Share</li>");
+		
+		$( "#deleteButton" ).droppable({
+			activeClass: "ui-state-active",
+			hoverClass: "ui-state-hover",
+			drop: function( event, ui ) {
+				var idx = parseInt(ui.draggable
+								.attr('id').replace('timelineItem_', ''));
+console.log("removing item " + idx);				
+				if (idx > 0) 
+					timeline.remove(timeline.playlist[idx]);
+					
+				// just in case
+				$('#timeline').removeClass('dragging');
+			}
+		});
 		
 		
 		this.lsd = lsd;
@@ -139,24 +155,29 @@
 			$('#timeline .timelineLayer').each(function () {
 				$(this).empty();
 			});
+			
+			
+			$(this).trigger('cleared.timeline', [this.playlist]);
 		}, 
 		
 		load : function load() {
 			var that = this;
 			
 			this._playlistRepo.getPlaylist(function (song) {
-				var playlist = song.playlist;
+				that.loadPlaylist(song.playlist);
 				
-				that.clearPlaylist();
-				for (var i = 0; i < playlist.length; i++) {
-					that.add(playlist[i]);
-				}
-				
-				// reset since add() makes things dirty
-				isDirty = false;
-				
-				$(document).trigger('playlistLoaded.timeline', [this.playlist]);
+				$(that).trigger('playlistLoaded.timeline', [that.playlist]);
 			});
+		},
+		
+		loadPlaylist : function loadPlaylist(playlist) {
+			this.clearPlaylist();
+			for (var i = 0; i < playlist.length; i++) {
+				this.add(playlist[i]);
+			}
+			
+			// reset since add() makes things dirty
+			this.isDirty = false;
 		},
 		
 		render : function render(item) {
@@ -200,37 +221,51 @@
 						
 						//start draggables
 						.draggable({ 
-							containment: "#timelineLayers", 
+							containment: "#timeline", 
 							scroll: false, 
-							snap: ".timelineLayer",
+							snap: ".timelineLayer, .delete",
 							snapMode: 'inner',
-							stop: timeline.makeOnDragStop(timeline, item$el, item)
+							stop: timeline.makeOnDragStop(timeline, item$el, item),
+							start: timeline.onDragStart
 						});
 			}
+		},
+		
+		onDragStart : function onDragStart() {
+			$('#timeline').addClass('dragging');
 		},
 		
 		//returns an event handler for dropping the timeline item.
 		makeOnDragStop : function makeOnDragStop(timeline, item$el, item) {
 				return function (e, ui) {
-					var left = item$el.position().left,
-						layerId = parseInt(item$el.parent()
-							.attr('id').replace('timelineLayer_', ''));
+					var parent = item$el.parent();
 					
-					//find total time from PIXELS, not percent as it is set originally
-					item.time = (left / $('#timeline').width()) * timeline.totalTime;
-					item.event.layerId = layerId;
+					if (parent.hasClass('delete')) {
+						timeline.remove(item);
+					}
+					else {
+						var left = item$el.position().left,
+							layerId = parseInt(parent
+								.attr('id').replace('timelineLayer_', ''));
+						
+						//find total time from PIXELS, not percent as it is set originally
+						item.time = (left / $('#timeline').width()) * timeline.totalTime;
+						item.event.layerId = layerId;
+						
+	console.log('ondragstop: ', item.idx, item.time, layerId);
+						
+						timeline.update(item);
+					}
 					
-console.log('ondragstop: ', item.idx, item.time, layerId);
-					
-					timeline.update(item);
+					$('#timeline').removeClass('dragging');
 				};
 		}, 
 		
 		unrender : function unrender(item) {
 			$('#timelineItem_' + item.idx)
+				.draggable("destroy")
 				.unbind()
-				.detach()
-				.draggable("destroy");
+				.remove();
 		},
 		
 		redraw : function redraw(item) {
@@ -239,7 +274,7 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 		},
 		
 		add : function add(item) {			
-			item.idx = this.playlist.push(item);
+			item.idx = this.playlist.push(item) - 1;
 			
 			this.isDirty = true;
 			
@@ -254,14 +289,19 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 			$(this).trigger('updated.timeline', [item]);
 		},
 		
-		remove : function add(item) {			
+		remove : function remove(item) {		
+			// do trigger first since that event item will have an old index.	
+			$(this).trigger('removed.timeline', [item]);
+			
 			this.playlist.splice(item.idx, 1);
 			
-			this.isDirty = true;
-			
 			this.unrender(item);
-			
-			$(this).trigger('removed.timeline', [item]);
+					
+			// redraw all for now since we need to re-index all the items and change their idx property.
+			this.loadPlaylist(this.playlist);
+		
+			// since loadPlaylist() marks as not dirty.
+			this.isDirty = true;
 		},
 		
 		save : function save(author, callback) {
@@ -318,6 +358,18 @@ console.log('ondragstop: ', item.idx, item.time, layerId);
 					$('#musicControls').removeClass('recording');
 					
 					lsd.hideControls();
+					
+					// delete the previous recording, if it's the original from the page?
+					/*
+					if (!timeline.isDirty) {
+						timeline.clearPlaylist();
+						
+						if (popcorn.paused() ) {
+							console.log("#TODO: rewind to begining?"); 
+							popcorn.currentTime(0);
+						}
+					}
+					*/	
 				}
 			},
 			saveRecording = function () {
@@ -526,12 +578,6 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 		$('#deleteButton').click(function () {
 			if (confirm("Delete all recorded tracks? (this cannot be undone)")) {
 				timeline.clearPlaylist();
-				
-				//remove all popcorn events as well.
-				var evs = popcorn.getTrackEvents();
-				for (var i = 0; i < evs.length; i++) {
-					popcorn.removeTrackEvent(evs[i].id);
-				}
 			}
 		});
 		
@@ -603,7 +649,14 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 		//bind to timline events
 		$(timeline)
 			.bind('added.timeline', onEventAdded)
-			.bind('updated.timeline', onEventAdded); //adding/updating doesn't matter!
+			.bind('updated.timeline', onEventAdded) //adding/updating doesn't matter!
+			.bind('cleared.timeline', function () {
+				//remove all popcorn events as well.
+				var evs = popcorn.getTrackEvents();
+				for (var i = 0; i < evs.length; i++) {
+					popcorn.removeTrackEvent(evs[i].id);
+				}
+			}); 
 			
 	};
    

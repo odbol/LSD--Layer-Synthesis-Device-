@@ -80,6 +80,7 @@ body #musicControls #shareRButton {
 	color: #fff;
 }
 
+
 /***** timeline ******/
 #timeline {
 	width: 99%;
@@ -172,6 +173,35 @@ body #musicControls #shareRButton {
 		float:right;
 		display:block;
 	}
+	
+	/* for dragging to trash */	
+	#timeline #deleteButton {
+		width: auto;
+	}
+		
+		#timeline #deleteButton .ui-icon {
+			float:right;
+		}
+	
+	#timeline .deleteMsg {
+		display:none;
+		text-transform: uppercase;
+		font-size: 10px;
+		color: #fff;
+		padding: 2px;
+		
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		-o-transition: all 0.3s ease;
+		transition: all  0.3s ease;
+	}
+	
+	#timeline.dragging .deleteMsg {
+		display:block;
+		width: 130px;
+		float: left;
+	}
+
 	
 	
 /***** intro screen ******/
