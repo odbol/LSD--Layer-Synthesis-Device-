@@ -101,7 +101,11 @@
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='shareRButton' class='share button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-extlink'>Share</span></li><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li><li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li></ul>" + '<div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div>');
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-trash'>Delete</span></li>" //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
+			+ '</ul><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div>')
+			.children('.buttons')
+				.append("<li id='shareRButton' class='share button dialogButton'>Share</li>");
+		
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
@@ -567,7 +571,7 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 		var lastMouseMovement = new Date(),
 			idleCheckInterval = false,
 			checkMouseIdle = function () {
-				if (lastMouseMovement.getTime() < new Date().getTime() - 3000) {
+				if (lastMouseMovement.getTime() < new Date().getTime() - 2000) {
 					lsd.hide();
 					clearInterval(idleCheckInterval);
 					idleCheckInterval = false;
@@ -576,7 +580,7 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 		$('canvas').mousemove(function (ev) {
 			if (!idleCheckInterval) {
 				lsd.show();
-				idleCheckInterval = setInterval(checkMouseIdle, 3000);
+				idleCheckInterval = setInterval(checkMouseIdle, 2000);
 			}
 			
 			lastMouseMovement = new Date();

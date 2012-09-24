@@ -4,7 +4,7 @@
 	bottom: 5px;
 	z-index: 910;
 	
-	width: 72px; /*default to hiding the music player*/
+	width: 105px; /*default to hiding the music player*/
 	height: 32px;
 	overflow:hidden;
 	
@@ -22,7 +22,7 @@
 
 	#musicHolder {
 		position:absolute;
-		left:72px; /*hide the play button so we use our own. yes this is very sketchy*/
+		left:105px; /*hide the play button so we use our own. yes this is very sketchy*/
 		z-index:10;
 	}
 
@@ -70,8 +70,15 @@
 	background: url("../_js/jquery-ui/css/vader/images/ui-bg_highlight-soft_60_dddddd_1x100.png") repeat-x scroll 50% 50% #DDDDDD;
 }
 
-
-
+body #musicControls #shareRButton {
+	font-size: 10px;
+	text-transform: uppercase;
+	padding: 2px 7px;
+}
+#shareRButton:hover {
+	background-color: #a00;
+	color: #fff;
+}
 
 /***** timeline ******/
 #timeline {
@@ -155,6 +162,16 @@
 		z-index: 20;
 	}
 	
+	
+	#timeline .buttons {
+		float:right;
+		display:none;
+	}
+	
+	.recording #timeline .buttons {
+		float:right;
+		display:block;
+	}
 	
 	
 /***** intro screen ******/
