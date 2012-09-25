@@ -293,7 +293,7 @@ body div.intro {
 	}
 	
 	#shareTrackScreen .shareButtons {
-		margin: 2em auto;
+		margin: 2em auto 5em auto;
 		width: 140px;
 	}
 	
@@ -338,6 +338,10 @@ body div.intro {
 	font-style: italic;
 	color: #aaa;
 	margin-left: 0.7em;
+}
+
+#interactiveToggle {
+	display:none;
 }
 
 /*

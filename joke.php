@@ -469,12 +469,12 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 				]); //copy array and add more!
 	
 	
-		var init = function init() {
+		var init = function init(isHd) {
 	  		//this module allows collaborative VJing with other users.
    			//var crowd = new CrowdControl();
    			var crowd = false;
 	
-			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false);				
+			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false, isHd ? {width: 640, height: 480} : null);				
 
 			$().musicPlayer('/music/Battlehooch%20-%20Joke.mp3', lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'));
 		}
@@ -485,8 +485,21 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 			(Modernizr.video.h264 /*|| Modernizr.video.webm*/) ) {
 		
 			$('#startButtons .button').click(function () {
-			
-				init();
+				var isHd = false && $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
+				
+				//HD/SD setting
+				if (isHd) {
+					for (var i = 0; i < vidClips.length; i++) {
+						if (vidClips[i].isVideo()) {
+							var srcs = vidClips[i].src;
+							for (var j = 0; j < srcs.length; j++) { 
+								srcs[j].url = srcs[j].url.replace('/240p/', '/480p/');
+							}
+						}
+					}
+				}
+				
+				init(isHd);
 			});
 		}
 		else {

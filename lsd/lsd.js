@@ -223,16 +223,35 @@ Attribution.prototype = {
 (function( $ ){
 //$(function(){
 
+   var LSD = function LSD() {
    
+   }
+   
+   LSD.prototype = {
+		isPaused: false,
+		crowd: null,
+		vidClips : [],
+		getVidClipById : function(clipId) {
+			for (var j in this.vidClips) {
+				if ( this.vidClips[j].id == clipId ) {
+					return this.vidClips[j];
+				}
+			}
+			
+			return null;
+		},
+	
 	//installs and runs LSD in the background of your page content
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	optional id of user - alphanumeric only.
 	//  crowd			-	optional CrowdControl object if you want collaborative features.
-	//  shouldInitClips -   bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
-   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips) {
-		var lsd = this;
+	//  shouldInitClips -   optional bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
+	//  resolution		-	optional Object giving dimensions of canvas. default {width: 320, height: 240}
+   init : function init(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips, resolution) {
+		var lsd = this,
+			resolution = resolution || {width: 320, height: 240};
 		
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
@@ -258,7 +277,7 @@ Attribution.prototype = {
 			.find("#realbody div")
 				.replaceWith($("body").children(":not(#realbody, script)"));
 		$("body")
-			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='320' height='240'></canvas></div>");
+			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
 		var canvas = document.getElementById('backgroundCanvas');
 		if (canvas.getContext){
@@ -1151,32 +1170,15 @@ Attribution.prototype = {
 		}
 		
 		
-	}	
-	
-	LSD.prototype = {
-		isPaused: false,
-		crowd: null,
-		vidClips : [],
-		getVidClipById : function(clipId) {
-			for (var j in this.vidClips) {
-				if ( this.vidClips[j].id == clipId ) {
-					return this.vidClips[j];
-				}
-			}
-			
-			return null;
-		}
-	};
-	
+		return this;	
+	}
+  };
 	
 	//installs and runs LSD in the background of your page content
-	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
-	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
-	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
-	//  userId			-	NOT optional id of user - alphanumeric only.
-   $.fn.takeLSD = function(vidClips, compositeTypes, numLayers, userId) {
-   		return new LSD(vidClips, compositeTypes, numLayers, userId);
-   }
+	$.fn.takeLSD = function() {
+		var lsd = new LSD();
+		return lsd.init.apply(lsd, arguments);
+	}
    
 			
 
