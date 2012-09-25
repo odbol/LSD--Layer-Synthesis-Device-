@@ -849,27 +849,48 @@ var fdSlider = (function() {
 				//use this to tween between values instead of pixels.  
 				var tweenDest = 0, 
 					tweenCurVal = 0,
-					TWEEN_RATE = 0.35;
+					tweenOrigin = 0,
+					tweenDuration = 0,
+					tweenStartTime = new Date().getTime(),
+					TWEEN_FRAME_INTERVAL = 20,
+					TWEEN_RATE = 0.35,
+					
+					//t is time, b is beginning position, c is the total change in position, and d is the duration of the tween
+					easeInQuad = function (t, b, c, d) { 
+						return c*(t/=d)*t + b;
+					},
+					easeOutQuad = function (t, b, c, d) { 
+						return -c * (t/=d)*(t-2) + b;
+					},
 
-				var tweenValue = function(){
+					tweenValue = function(){
  						frame++;
                         var c = tweenC,
                             d = 20,
-                            t = frame;       
+                            t = frame,
+                            isDone = false,//(t == d),
+                            totalChange = tweenDest - tweenOrigin;       
                         
-                        if (tweenCurVal != tweenDest)
-                        	tweenCurVal = tweenCurVal + ( (tweenDest - tweenCurVal) * TWEEN_RATE );
+                        if ( (totalChange > 0 && (tweenCurVal < tweenDest) ) ||
+                        	 (totalChange < 0 && (tweenCurVal > tweenDest) ) ) {
+                        	//tweenCurVal = tweenCurVal + ( (tweenDest - tweenCurVal) * TWEEN_RATE );
+                        
+                        	var time = new Date().getTime() - tweenStartTime;
+                        	// easeOutQuad doesn't seem to work - overshoots then goes back down. 
+                        	tweenCurVal = easeInQuad(time, tweenOrigin, totalChange, tweenDuration);
+console.log(inp.id + " tweening: " + tweenCurVal + " to " + tweenDest, totalChange, tweenDuration, tweenOrigin,time);                        	
+                        }
                         else
-                        	t = d;
+                        	isDone = true;
 //console.log(inp.id + " tweening: " + tweenCurVal + " to " + tweenDest);                    
-                        valueToPixels(t == d ? tweenDest : tweenCurVal);
+                        valueToPixels(isDone ? tweenDest : tweenCurVal);
 
                         
                         
-                        if(t!=d) {
+                        if(!isDone) {
                                 // Call the "move" callback on each animation increment
                                 callback("move");
-                                timer = setTimeout(tweenValue, 20);
+                                timer = setTimeout(tweenValue, TWEEN_FRAME_INTERVAL);
                         } else {
                                 clearTimeout(timer);
                                 timer     = null;
@@ -883,18 +904,25 @@ var fdSlider = (function() {
                         };
                 };
 
-                function tweenValueTo(tx, rate){
+				//takes a value to tween to over duration miliseconds
+                function tweenValueTo(tx, duration){
                 		//don't tween if we're already there!
                 		if (getWorkingValueFromInput() == tx)
                 			return;
                     
                 		tweenDest = parseFloat(tx, 10);
-                		tweenCurVal = getWorkingValueFromInput();
+                		tweenCurVal = tweenOrigin = getWorkingValueFromInput();
                 		
-                		if (rate)
-                			TWEEN_RATE = Math.min(Math.abs(rate), 1);
+                		tweenStartTime = new Date().getTime();
+                 		
+                		if (duration) {
+                			tweenDuration = Math.max(Math.abs(duration), TWEEN_FRAME_INTERVAL);
+                			
+                			//tweenCurVal = tweenCurVal + ( (tweenDest - tweenCurVal) * TWEEN_RATE );
+                			
+                		}
                 		else
-                			TWEEN_RATE = 0.35;
+                			tweenDuration = 700;
                 		
  
 //console.log(inp.id + "start tween: " + tweenCurVal + " to " + tweenDest);     
@@ -903,7 +931,7 @@ var fdSlider = (function() {
 
                         if(!timer) { 
 							frame = 0;
-                            timer = setTimeout(tweenValue, 20);
+                            timer = setTimeout(tweenValue, TWEEN_FRAME_INTERVAL);
                         };
                 };
 
