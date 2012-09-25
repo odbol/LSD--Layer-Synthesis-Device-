@@ -49,6 +49,13 @@
 			var screenIdMatch = (/playlist=([^&#]+)/).exec(window.location.href);
 			if (screenIdMatch && screenIdMatch.length > 1)
 				this.playlistId = screenIdMatch[1];
+			else {
+				// querystring didn't work, try the url rewritten version
+				screenIdMatch = (/\/\w+\/\w+\/([^?&#\/]+)/).exec(window.location.href);
+				
+				if (screenIdMatch && screenIdMatch.length > 1)
+					this.playlistId = screenIdMatch[1];
+			}
 			if (!this.playlistId)
 				this.playlistId = 'default';
 			this.fireBaseRoot += '/' + this.playlistId;
