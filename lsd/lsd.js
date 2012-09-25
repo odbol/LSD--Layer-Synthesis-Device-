@@ -218,7 +218,8 @@ Attribution.prototype = {
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	NOT optional id of user - alphanumeric only.
 	//  crowd			-	optional CrowdControl object if you want collaborative features.
-   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId, crowd) {
+	//  shouldInitClips -   bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
+   var LSD = function LSD(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips) {
 		var lsd = this;
 		
 		//returns the proper URL for the given screen ID.
@@ -355,13 +356,16 @@ Attribution.prototype = {
 				this.subscribeTo(crowd);
 			}
 		
-		
-			var shouldInitClips = (!crowd || crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
+			if (typeof(shouldInitClips) === 'undefined') {
+				shouldInitClips = (!crowd || crowd.screenId != 'lounge'); //workaround until get firebase to always load defaults?? TODO
+			}
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
-				if (compositeTypes[compositeIndex] == "lighter")
+				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter")
 					layers[i].opacity = 0.7;
+				else
+					layers[i].opacity = 0.0;
 				
 				if (crowd) {
 					crowd.makeOnClipChange(i);
@@ -889,6 +893,9 @@ Attribution.prototype = {
 					if (!(e = lastEvent))
 						return;
 						
+					if (lsd.isPaused)
+						return;
+						
 					ctx.globalAlpha = 1.0;
 					
 					//ctx.fillStyle = 'rgba(0,0,0,0)';
@@ -1135,6 +1142,7 @@ Attribution.prototype = {
 	}	
 	
 	LSD.prototype = {
+		isPaused: false,
 		crowd: null,
 		vidClips : [],
 		getVidClipById : function(clipId) {

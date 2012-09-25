@@ -122,6 +122,29 @@ console.log("removing item " + idx);
 			}
 		});
 		
+		// let them drag LSD clips to the timeline. OO? Where we're going we don't need OO.
+		/*
+		$( "#backgroundCanvasControls .clipThumbs .clipThumb" ).draggable({ 
+			revert: true,
+			helper: "clone"
+		});
+		
+		$( ".timelineLayer" ).droppable({
+			activeClass: "ui-state-active",
+			hoverClass: "ui-state-hover",
+			drop: function( event, ui ) {
+				var idx = parseInt(ui.draggable
+								.attr('id').replace('timelineItem_', ''));
+console.log("removing item " + idx);				
+				if (idx > 0) 
+					timeline.remove(timeline.playlist[idx]);
+					
+				// just in case
+				$('#timeline').removeClass('dragging');
+			}
+		});
+		*/
+		
 		
 		this.lsd = lsd;
 		this.totalTime = totalTime;
@@ -336,6 +359,8 @@ console.log("removing item " + idx);
 	$.fn.musicPlayer = function (audioUrl, lsd, songAttribution) {
 		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div>' + MUSIC_CONTROLS_END);
 		
+		lsd.isPaused = true; // wait until they start the vid!
+		
 		var popcorn = Popcorn( "#music" ),
 			timeline = new Timeline(lsd, popcorn.duration(), songAttribution);
 			isRecording = false,
@@ -376,8 +401,16 @@ console.log("removing item " + idx);
 				timeline.save();
 			},
 			
+			onPlay = function () {
+				$('#musicControls').removeClass('paused').addClass('playing');
+				lsd.isPaused = false;
+			},
+			
 			onPause = function () {
 				$('#musicControls').removeClass('playing').addClass('paused');
+				
+				// pausing doesn't render opacity changes! TODO
+				//lsd.isPaused = true;
 			},
 			
 			showShareScreen = function showShareScreen(playlistId) {
@@ -530,9 +563,7 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 			.on('timeupdate', function () {
 				timeline.movePlayhead(popcorn.currentTime());
 			})						
-			.on('play', function () {
-				$('#musicControls').removeClass('paused').addClass('playing');
-			})
+			.on('play', onPlay)
 			.on('pause', onPause)
 			.on('ended', function () {
 				showShareScreen();

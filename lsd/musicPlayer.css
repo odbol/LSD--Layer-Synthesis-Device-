@@ -310,3 +310,20 @@ body div.intro {
 	#shareTrackScreen .close {
 		margin-top: 20px;
 	}
+	
+	
+	
+	
+/* LSD additions: */
+#buttonStop {
+	display:none;
+}
+#buttonFullscreen {
+	border-radius: 0;
+	border: none;
+	margin-top: 3px;
+}
+
+#buttonFullscreen .ui-icon {
+	background: url(/joke/icons/stamp-lsd-16.png) no-repeat 0 0
+}
