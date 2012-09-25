@@ -324,6 +324,24 @@ body div.intro {
 	margin-top: 3px;
 }
 
-#buttonFullscreen .ui-icon {
-	background: url(/joke/icons/stamp-lsd-16.png) no-repeat 0 0
+	#buttonFullscreen .ui-icon {
+		background: url(/joke/icons/stamp-lsd-16.png) no-repeat 0 0
+	}
+	
+	
+#backgroundCanvasControls > h1 .name {
+
 }
+
+#backgroundCanvasControls > h1 .attribTitle {
+	font-size: 10px;
+	font-style: italic;
+	color: #aaa;
+	margin-left: 0.7em;
+}
+
+/*
+#backgroundCanvasControls > h1 .attribTitle:before {
+	content: " - ";
+}
+*/

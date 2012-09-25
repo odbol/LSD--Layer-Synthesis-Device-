@@ -202,8 +202,20 @@ Attribution.prototype = {
 	author: '',
 	title: '',
 	link: '',
-	toString: function toString() {
-		return this.title + (this.author ? ' - ' + this.author : '');
+	toString: function toString(isHtml, isLinked) {
+		if (isHtml) {
+			var html =	(this.author ? ' <span class="attribAuthor">' + this.author + '</span>': '')
+				+ '<span class="attribTitle">' + this.title + '</span>';
+			
+			if (isLinked && this.link) {
+				html = '<a href="' + this.link + '">' + html + '</a>';
+			}
+	
+			return '<span class="attribution">' + html + "</span>";
+		}
+		else {
+			return this.title + (this.author ? ' - ' + this.author : '');
+		}
 	}
 };
 
@@ -216,7 +228,7 @@ Attribution.prototype = {
 	//	vidClips		-	array of vidClips for clip library. the first numLayers will be loaded into layer.
 	//	compositeTypes	-	optional array of globalCompositeOperation types to use (default: all)
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
-	//  userId			-	NOT optional id of user - alphanumeric only.
+	//  userId			-	optional id of user - alphanumeric only.
 	//  crowd			-	optional CrowdControl object if you want collaborative features.
 	//  shouldInitClips -   bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
    var LSD = function LSD(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips) {
@@ -386,7 +398,7 @@ Attribution.prototype = {
 				"<li id='buttonShare' title='Share Screen' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-link'></span></li>" +
 				"<li id='buttonHelp' title='Help/About' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-help'></span></li>" +		
 				"<li id='buttonFullscreen' title='Fullscreen Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-arrow-4-diag'></span></li>" +		
-				"<li id='buttonStop' title='Stop Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-closethick'></span></li>" +
+				(ENABLE_BACKGROUNDING ? "<li id='buttonStop' title='Stop Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-closethick'></span></li>" : "") +
 				"</ul>"
 				
 			//build html control for composite

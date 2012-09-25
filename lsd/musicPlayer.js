@@ -361,6 +361,10 @@ console.log("removing item " + idx);
 		
 		lsd.isPaused = true; // wait until they start the vid!
 		
+		// replace lsd logo with song title
+		$('#backgroundCanvasControls > h1')
+			.html(songAttribution.toString(true, false));
+		
 		var popcorn = Popcorn( "#music" ),
 			timeline = new Timeline(lsd, popcorn.duration(), songAttribution);
 			isRecording = false,
