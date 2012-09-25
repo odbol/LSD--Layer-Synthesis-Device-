@@ -420,7 +420,7 @@ console.log("removing item " + idx);
 			showShareScreen = function showShareScreen(playlistId) {
 				playlistId = playlistId || timeline._playlistRepo.playlistId;
 				
-				var shareUrl = 'http://odbol.com/joke.php?playlist=' + playlistId;
+				var shareUrl = 'http://lsd.odbol.com/joke.php?playlist=' + playlistId;
 				
 				$('<div id="shareTrackScreen" class="dialogControls" style="display:none"><h2>Share this video</h2><label for="shareTrackUrl">Link: </label><input id="shareTrackUrl" type="text" value="' +
 					 shareUrl + '" />' +

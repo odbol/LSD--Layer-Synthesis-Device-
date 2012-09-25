@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+#    RewriteBase /lsd
+
+#    RewriteRule /_js/(.*) /_js/$1 [L]
+#    RewriteRule /lsd/(.*) /lsd/$1 [L]
+
+#    RewriteRule    /([^/]+)/([^/]+)/([^?/]+)\??(.*) /joke.php?author=$1&title=$2&playlist=$3&$4    [L]
+    RewriteRule    ^battlehooch/([^/]*)/?([^?/]*)\??(.*)$ /joke.php?author=$1&title=$2&playlist=$3&$4    [L]
+#    RewriteRule   .*battlehooch.* /joke.php    [L]
+ </IfModule>

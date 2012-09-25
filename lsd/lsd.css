@@ -51,7 +51,7 @@ body div a.poweredBy {
 		width: 57px;
 		height: 57px;
 		
-		background: url("/joke/icons/stamp-lsd-57.png") no-repeat scroll 0 0;
+		background: url("icons/stamp-lsd-57.png") no-repeat scroll 0 0;
 		text-indent: -9999px;
 		z-index: 2;
 	}
