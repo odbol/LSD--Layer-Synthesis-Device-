@@ -87,6 +87,15 @@ body #musicControls #shareRButton {
 	min-width: 300px;
 	position:relative;
 }
+	.scrollHolder {
+		overflow: auto;
+		width: 100%;
+	}
+	
+	#timelineHolder {
+		position: relative;
+		width:99%;
+	}
 	
 	#timeline #timelineLayers {
 		clear:both;

@@ -109,10 +109,19 @@
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
-			+ '</ul><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div>')
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" + //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
+			"<li id='zoomInButton' class='zoomIn button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomin'>Zoom In</span></li><li id='zoomOutButton' class='zoomOut button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomout'>Zoom Out</span></li>" + 
+			'</ul><div class="scrollHolder"><div id="timelineHolder"><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div></div></div>')
 			.children('.buttons')
 				.append("<li id='shareRButton' class='share button dialogButton'>Share</li>");
+		
+		$('#zoomInButton').click(function () {
+			timeline.zoomIn();
+		});
+		
+		$('#zoomOutButton').click(function () {
+			timeline.zoomOut();
+		});
 		
 		$( "#deleteButton" ).droppable({
 			activeClass: "ui-state-active",
@@ -160,7 +169,11 @@ console.log("removing item " + idx);
 		this._playlistRepo = new PlaylistRepo().init();
 	};
 	
-	Timeline.prototype = {
+	Timeline.prototype = {	
+		ZOOM_AMOUNT : 300,
+		ZOOM_MIN :  $('#timeline').width(),
+		ZOOM_MAX : 12000,
+		
 		totalTime : 0,
 		width : 0,
 		songAttribution : new Attribution(),
@@ -215,8 +228,8 @@ console.log("removing item " + idx);
 				event = item.event,
 				left = (item.time / this.totalTime) * 100;//* this.width;// percents don't work well in chrome
 		
-			this.width = $('#timeline').width();
-		
+			this.width = $('#timelineHolder').width();
+					
 			switch (event.type) {
 				case 'clip':	
 					var clip = this.lsd.getVidClipById(event.clipId);
@@ -303,6 +316,12 @@ console.log("removing item " + idx);
 			this.render(item);
 		},
 		
+		redrawAll : function redrawAll() {
+			for (var i = 0; i < this.playlist.length; i++) {
+				this.redraw(this.playlist[i]);
+			}
+		},
+		
 		add : function add(item) {			
 			item.idx = this.playlist.push(item) - 1;
 			
@@ -353,6 +372,26 @@ console.log("removing item " + idx);
 			var left = (time / this.totalTime) * 100;
 			
 			$('#playhead').css('left', left + '%');
+		},
+						
+		zoomOut : function zoomOut() {
+			if (!(this.width > 300)) { // first time zooming
+				this.ZOOM_MIN = this.width = $('#timeline').width() - 10;
+			}
+			
+			$('#timelineHolder').css('width', Math.max(this.ZOOM_MIN, this.width - this.ZOOM_AMOUNT));
+		
+			this.redrawAll();
+		},
+		
+		zoomIn : function zoomIn() {
+			if (!(this.width > 300)) { // first time zooming
+				this.ZOOM_MIN = this.width = $('#timeline').width() - 10;
+			}
+		
+			$('#timelineHolder').css('width', Math.min(this.ZOOM_MAX, this.width + this.ZOOM_AMOUNT));
+		
+			this.redrawAll();
 		}
 	};
 
