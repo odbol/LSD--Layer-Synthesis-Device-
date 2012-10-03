@@ -140,7 +140,7 @@ body .element {
 		
 		<div class='waitingDesc'>
 		
-		<p>Supported on Firefox 4+, Safari 4+, Chrome, iPhone, Android (no IE)</p>
+		<p>Supported on Safari 4+, Chrome. Partial support on Firefox 4+, iPhone, Android. No love for IE.</p>
 		<p>Code and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
 		<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
@@ -514,8 +514,8 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-32858585-1']);
-  _gaq.push(['_setDomainName', 'odbol.com']);
+  _gaq.push(['_setAccount', 'UA-35080966-1']);
+//  _gaq.push(['_setDomainName', 'odbol.com']);
   _gaq.push(['_trackPageview']);
 
   (function() {
