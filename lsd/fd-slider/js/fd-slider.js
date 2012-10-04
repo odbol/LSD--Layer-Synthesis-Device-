@@ -878,7 +878,7 @@ var fdSlider = (function() {
                         	var time = new Date().getTime() - tweenStartTime;
                         	// easeOutQuad doesn't seem to work - overshoots then goes back down. 
                         	tweenCurVal = easeInQuad(time, tweenOrigin, totalChange, tweenDuration);
-console.log(inp.id + " tweening: " + tweenCurVal + " to " + tweenDest, totalChange, tweenDuration, tweenOrigin,time);                        	
+//console.log(inp.id + " tweening: " + tweenCurVal + " to " + tweenDest, totalChange, tweenDuration, tweenOrigin,time);                        	
                         }
                         else
                         	isDone = true;

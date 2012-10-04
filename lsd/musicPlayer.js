@@ -414,7 +414,11 @@ console.log("removing item " + idx);
 		
 		update : function update(item) {		
 			this.isDirty = true;
-				
+			
+			//updating don't work right with popocorn - need to clear all and re-add	
+			this.remove(item);
+			this.add(item);
+			
 			$(this).trigger('updated.timeline', [item]);
 		},
 		
