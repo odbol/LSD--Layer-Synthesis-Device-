@@ -119,6 +119,15 @@ body #musicControls #shareRButton {
 		#timeline .ui-draggable:hover {
 			opacity: 0.96;
 		}
+		
+		#timeline .timelineLayer,	
+		#timeline .timelineLayer > div {
+			background-image: -webkit-linear-gradient(rgba(0, 0, 0, .0) 15%, rgba(255, 255, 255, 0.2) 100%);
+			background-image: -moz-linear-gradient(rgba(0, 0, 0, .0) 15%, rgba(255, 255, 255, 0.2) 100%);
+			background-image: -ms-linear-gradient(rgba(0, 0, 0, .0) 15%, rgba(255, 255, 255, 0.2) 100%);
+			background-image: -o-linear-gradient(rgba(0, 0, 0, .0) 15%, rgba(255, 255, 255, 0.2) 100%);
+			background-image: linear-gradient(rgba(0, 0, 0, .0) 15%, rgba(255, 255, 255, 0.2) 100%);
+		}
 			
 	#timeline .clipThumb, 
 	#timeline .clipThumb img {
@@ -159,6 +168,30 @@ body #musicControls #shareRButton {
 		}
 		#timeline .layerOpacity.down {
 			border-top-right-radius: 97%;
+		}
+		
+		#timeline .layerOpacityNode {
+			position:absolute;
+			bottom:0;
+			display:block;
+			width: 10px;
+			height: 10px;
+			margin-bottom: -5px;
+			border-radius: 98%;
+			background-color:#d00;
+			
+			background-image: -webkit-linear-gradient(rgba(0, 0, 0, .0) 0%, rgba(255, 255, 255, 0.7) 99%);
+			background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+			background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+			background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+			background-image: linear-gradient(rgba(255, 255, 255, 0.7) 5%, rgba(0, 0, 0, .0) 50%, rgba(255, 255, 255, 0.7) 100%);
+		}
+		
+		#timeline .layerOpacityNode.start {
+			left:-5px;
+		}
+		#timeline .layerOpacityNode.end {
+			right:-5px;
 		}
 	
 	#timeline .composition {

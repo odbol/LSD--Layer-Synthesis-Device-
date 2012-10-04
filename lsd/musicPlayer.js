@@ -99,6 +99,90 @@
 		}
 	};
 
+
+
+
+	/**
+		opacity timeline items
+	
+		Creates timeline opacity change in the DOM from given playlist item
+	**/
+	var OpacityItem = function OpacityItem(timeline, item) {
+		var event = item.event,
+			left = (item.time / this.totalTime) * 100, //* this.width;// percents don't work well in chrome
+			height = event.opacity * 100.0,
+			width = event.duration ? (event.duration / timeline.totalTime) * timeline.width : 5,
+			delta = event.startOpacity ? event.startOpacity - event.opacity : 0,
+			cssClass = delta > 0 ? "down" : "up"; 
+				
+		if (height < 10 && event.startOpacity >= 0) {
+			height = event.startOpacity * 100.0;
+		}
+	
+		this.$el = $('<div id="timelineItem_' + item.idx + '"class="layerOpacity ' + cssClass + '"></div>')
+			.css('height', Math.round(height) + '%')
+			.css('width', Math.round(width) + 'px')
+			;//.css('borderTopLeftRadius', (width - 10) + 'px');
+			
+		this.item = item;
+	};
+	// static : gets 
+	OpacityItem.svg = null;
+	OpacityItem.init = function init(timeline) {
+		/*OpacityItem.width = $("#timeline").width();
+		OpacityItem.height = $("#timeline").height();
+		OpacityItem.offset = $("#timeline").height()
+				
+		OpacityItem.svg = Raphael($("#timelineHolder") 320, 200);*/
+	};
+	OpacityItem.prototype = {
+		$el : null,
+		
+		//this item's rapheael object belonging to container layer
+		svg : null,
+		
+		render : function render() {
+			var parent = this.$el.parent();
+			
+			if (!this.svg) {
+				this.svg = parent.data('svg');
+				
+				if (!this.svg) {
+					this.svg = Raphael(parent.get(0), parent.width(), parent.height());
+					parent.data('svg', this.svg);
+				}
+			}
+			
+			var event = this.item.event,
+				left = (this.item.time / this.totalTime) * 100, //* this.width;// percents don't work well in chrome
+				endTop = startTop = event.opacity * 100.0,
+				width = event.duration ? (event.duration / timeline.totalTime) * timeline.width : 5,
+				delta = event.startOpacity ? event.startOpacity - event.opacity : 0,
+				cssClass = delta > 0 ? "down" : "up"; 
+				
+			if (event.startOpacity >= 0) {
+				startTop = event.startOpacity * 100.0;
+			}
+			else {
+				console.log('WARNING: got event with no startOpacity ' + this.item.idx);
+			}
+			
+			this.$el.css('height', '100%');
+			
+			$('<div id="timelineItem_' + this.item.idx + '_start" class="layerOpacityNode start"></div>')
+				.appendTo(this.$el)
+				.css('bottom', startTop + '%');
+				
+			$('<div id="timelineItem_' + this.item.idx + '_end" class="layerOpacityNode end"></div>')
+				.appendTo(this.$el)
+				.css('bottom', endTop + '%');
+		}
+	};
+
+
+
+
+
 	/**
 		the timeline gui
 	**/
@@ -167,6 +251,8 @@ console.log("removing item " + idx);
 		this.songAttribution = songAttribution;
 		
 		this._playlistRepo = new PlaylistRepo().init();
+		
+		OpacityItem.init(this);
 	};
 	
 	Timeline.prototype = {	
@@ -225,6 +311,7 @@ console.log("removing item " + idx);
 		
 		render : function render(item) {
 			var timeline = this,
+				opacityItem = null,
 				event = item.event,
 				left = (item.time / this.totalTime) * 100;//* this.width;// percents don't work well in chrome
 		
@@ -236,20 +323,9 @@ console.log("removing item " + idx);
 						
 					item$el = $('<div id="timelineItem_' + item.idx + '" class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
 				break;
-				case 'layer':	
-					var height = event.opacity * 100.0,
-						width = event.duration ? (event.duration / this.totalTime) * this.width : 5,
-						delta = event.startOpacity ? event.startOpacity - event.opacity : 0,
-						cssClass = delta > 0 ? "down" : "up"; 
-					
-					if (height < 10 && event.startOpacity) {
-						height = event.startOpacity * 100.0;
-					}
-					
-					item$el = $('<div id="timelineItem_' + item.idx + '"class="layerOpacity ' + cssClass + '"></div>')
-						.css('height', Math.round(height) + '%')
-						.css('width', Math.round(width) + 'px')
-						;//.css('borderTopLeftRadius', (width - 10) + 'px');
+				case 'layer':
+					opacityItem	= new OpacityItem(timeline, item);
+					item$el = opacityItem.$el;
 				break;
 				case 'composition':	
 					item$el = $('<div id="timelineItem_' + item.idx + '"class="composition"><span>' + event.composition + '</span></div>');
@@ -271,6 +347,10 @@ console.log("removing item " + idx);
 							stop: timeline.makeOnDragStop(timeline, item$el, item),
 							start: timeline.onDragStart
 						});
+						
+				if (opacityItem) {
+					opacityItem.render();
+				}
 			}
 		},
 		
@@ -292,7 +372,7 @@ console.log("removing item " + idx);
 								.attr('id').replace('timelineLayer_', ''));
 						
 						//find total time from PIXELS, not percent as it is set originally
-						item.time = (left / $('#timeline').width()) * timeline.totalTime;
+						item.time = (left / $('#timelineHolder').width()) * timeline.totalTime;
 						item.event.layerId = layerId;
 						
 	console.log('ondragstop: ', item.idx, item.time, layerId);

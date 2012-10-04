@@ -175,7 +175,7 @@ body .element {
 	<!-- for music integration -->
 	<script type="text/javascript" src="http://popcornjs.org/code/dist/popcorn.min.js"></script>
 	<script type="text/javascript" src="/lsd/musicPlayer.js"></script>
-	
+	<script type="text/javascript" src="/_js/raphael-min.js"></script>
 
 	<script type="text/javascript">
 		$(function(){
