@@ -485,10 +485,12 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 			(Modernizr.video.h264 /*|| Modernizr.video.webm*/) ) {
 		
 			$('#startButtons .button').click(function () {
-				var isHd = false && $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
+				var isHd = $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
 				
 				//HD/SD setting
 				if (isHd) {
+					PRELOAD_DELAY = 55; // this guarantees we'll load a ton of videos before starting, which hopefully will help.
+				
 					for (var i = 0; i < vidClips.length; i++) {
 						if (vidClips[i].isVideo()) {
 							var srcs = vidClips[i].src;

@@ -350,13 +350,30 @@ Attribution.prototype = {
 		
 					}
 				},
+				
+				numClipsLoading = 0,
+				
 				preloadClipById = function preloadClipById(event, clipId) {
 					var clip = lsd.getVidClipById(clipId);
 					if ( clip ) {
+						numClipsLoading++;
+						$('body').addClass('preloading');
+						$('.preloaderProgress').html(numClipsLoading);
+						
+						
 						clip.load(function (img) {
-							console.log('preloaded TODO: make sure its not preloading already loaded clips', img);
+							$(lsd).trigger('preloadClipFinished.lsd', [clipId, --numClipsLoading]);
 						});
 					}
+				},
+				
+				// for loading screen
+				onPreloadClipFinished = function onPreloadClipFinished(event, clipId) {
+					if (numClipsLoading <= 0) {
+						$('body').removeClass('preloading');
+					}
+					
+					$('.preloaderProgress').html(numClipsLoading);
 				},
 				
 				changeLayerOpacity = function(event, layerId, val, duration) {
@@ -376,6 +393,7 @@ Attribution.prototype = {
 				$(publisher)
 					.bind('changeClip.lsd', changeClipById)
 					.bind('preloadClip.lsd', preloadClipById)
+					.bind('preloadClipFinished.lsd', onPreloadClipFinished)
 					//.bind('opacityStart.lsd', changeLayerOpacity)
 					.bind('opacityEnd.lsd', changeLayerOpacity)	
 					.bind('changeComposition.lsd', onChangeComposition);
@@ -651,10 +669,10 @@ Attribution.prototype = {
 			var reviveUI = function () {
 				$(canvas).unbind("mousedown.lsdUIHide");
 			
-				$(".dialogControls").fadeIn();
+				$(".dialogControls").not('.permanent').fadeIn();
 			};
 			var hideUI = function (e) {
-				$(".dialogControls").fadeOut();
+				$(".dialogControls").not('.permanent').fadeOut();
 				
 				$(canvas).bind("mousedown.lsdUIHide", reviveUI);
 			
@@ -672,7 +690,7 @@ Attribution.prototype = {
 			this.hide = hideUI;
 			this.show = reviveUI;
 			var toggleUI = function () {
-				if ($(".dialogControls").eq(0).css('display') == 'none') {
+				if ($(".dialogControls").not('.permanent').eq(0).css('display') == 'none') {
 					reviveUI();
 				}
 				else {
@@ -1137,6 +1155,12 @@ Attribution.prototype = {
 					}
 				}
 
+				// we're finally done loading! that took a while...
+				$('body').addClass('lsdLoaded');
+				
+				if (!ENABLE_BACKGROUNDING) {
+					$('#realbody').hide();
+				}
 				
 				
 				//preload ALL the things!

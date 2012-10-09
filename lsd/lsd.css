@@ -236,6 +236,24 @@ a.dialogButton:active,
 #buttonHelp { display:none; }
 
 
+#buttonFullscreen {
+	border-radius: 0;
+	border: none;
+	margin-top: 3px;
+}
+
+	#buttonFullscreen .ui-icon {
+		background: url(icons/stamp-lsd-16.png) no-repeat 0 0
+	}
+	
+	.preloading #buttonFullscreen {
+		background-color: transparent;
+	}
+	
+	.preloading #buttonFullscreen .ui-icon {
+		background: url(icons/stamp-lsd-loading-16.gif) no-repeat 0 0
+	}
+
 /* controls */
 
 #backgroundCanvasControls .controlPanel,

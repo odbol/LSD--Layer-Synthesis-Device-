@@ -4,6 +4,7 @@
 	Creates an audio track and triggers LSD events during parts of the audio.
 	
 	Requirements: popcorn.js
+				  Layer Synthesis Device
 	
 	Copyright 2012 Tyler Freeman
 	http://odbol.com
@@ -24,15 +25,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
+// number of seconds ahead of time to preload a clip before it's cued up. not really a const, may be changed for HD videos
+var	PRELOAD_DELAY = 10;
+
 (function( $ ){
 
 	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-bullet'>Record</span></li></ul>",
-		MUSIC_CONTROLS_END = '</div>',
+		MUSIC_CONTROLS_END = '</div><div class="preloaderMsg dialogControls permanent"><img src="/lsd/blackSpinner.gif" alt="" />Loading <span class="preloaderProgress"></span> clips...</div>',
 
-		FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists'
-		
-		// number of seconds ahead of time to preload a clip before it's cued up.
-		PRELOAD_DELAY = 10;
+		FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey/_playlists';
 
 
 	/**
@@ -501,7 +502,14 @@ console.log("removing item " + idx);
 			
 			//controls
 			play = function() {
-				popcorn.play();
+				if (popcorn.readyState() >= 4 /*HAVE_ENOUGH_DATA*/) {
+					$('body').addClass('playerLoaded');
+					
+					popcorn.play();
+				}
+				else {
+					setTimeout(play, 200);
+				}
 			},
 			pause = function() {
 				popcorn.pause();
@@ -637,8 +645,17 @@ console.log("removing item " + idx);
 			},
 			//cue timeline events
 			cuePreloadEvent = function cuePreloadEvent(event) {		
-				$(timeline).trigger('preloadClip.lsd', [event.clipId]);
-			}
+				$(lsd).trigger('preloadClip.lsd', [event.clipId]);
+			},
+			
+			onPreloadClipFinished = function onPreloadClipFinished(event, clipId, numClipsStillLoading) {
+				if (numClipsStillLoading <= 0) {
+					$(lsd).unbind('numClipsStillLoading.lsd', onPreloadClipFinished); //only do for initial load
+					
+					// autoplay!
+					play();
+				}
+			},
 			
 			//catch timeline events
 			
@@ -812,6 +829,7 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 			.bind('opacityEnd.lsd', onChangeLayer)
 			.bind('opacityStart.lsd', onChangeLayer)
 			.bind('changeComposition.lsd', onChangeComposition)
+			.bind('preloadClipFinished.lsd', onPreloadClipFinished);
 			
 		//bind to timline events
 		$(timeline)
@@ -825,6 +843,8 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 				}
 			}); 
 			
+			
+		popcorn.preload('auto');
 	};
    
 

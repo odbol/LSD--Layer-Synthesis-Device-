@@ -353,22 +353,37 @@ body div.intro {
 		margin-top: 20px;
 	}
 	
-	
-	
+
+.preloaderMsg {
+	display:block;
+	width: 150px;
+	height: 48px;
+	margin: -24px -75px;
+	top: 50%;
+	left: 50%;
+	text-align:center;
+	padding:10px;
+}
+
+	.lsdLoaded.playerLoaded .preloaderMsg {
+		display: none;
+	}
+
+	html .preloading div.preloaderMsg {
+		display:block;
+	}
+
+	.preloaderMsg img {
+		display: block;
+		margin: 0 auto 15px;
+	}
+		
 	
 /* LSD additions: */
 #buttonStop {
 	display:none;
 }
-#buttonFullscreen {
-	border-radius: 0;
-	border: none;
-	margin-top: 3px;
-}
 
-	#buttonFullscreen .ui-icon {
-		background: url(icons/stamp-lsd-16.png) no-repeat 0 0
-	}
 	
 	
 #backgroundCanvasControls > h1 .name {
