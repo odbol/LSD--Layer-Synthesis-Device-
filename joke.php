@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>LSD - tim leary meets tim berners-lee - odbol productions</title>
+<title>Battlehooch - Joke | a remixable music video</title>
 <link href="/odbol_gear.css" rel="stylesheet" type="text/css" title="Default" />
 <link rel="stylesheet" type="text/css" href="/global.css" />
 
@@ -38,6 +38,20 @@ html body {
 
 .poemRight p {
 	margin-top: 0;
+}
+
+a,
+a:link,
+a:hover,
+a:visited,
+a:active {
+	font-weight: bold;
+	color: #6A9AAE;
+	text-decoration:none;
+}
+
+a:hover {
+	color: #fff;
 }
 -->
 </style>
@@ -95,10 +109,10 @@ body .element {
 
     </style>
     
-    <!-- facebook share tags (screw the like button! I want my thumbnail in the news feed! -->
-    <meta property="og:title" content="Take LSD!" />
-	<meta property="og:description" content="Take LSD directly from your browser! LSD (Layer Synthesis Device) allows you to VJ live video on the web using HTML5. Choose video clips and images and blend them together using the mixer controls or the interactive mouse mode. Create your customized hallucination and share with your friends!" />
-	<meta property="og:image" content="http://odbol.com/lsd/icons/stamp-lsd-114.png" />
+    <!-- facebook share tags (I want my thumbnail in the news feed!) -->
+    <meta property="og:title" content="Battlehooch - Joke | a remixable music video" />
+	<meta property="og:description" content="Watch the video, then remix it in the browser and share with your friends! Choose from a huge library of video clips and images and blend them together using the online video mixer, LSD." />
+	<meta property="og:image" content="http://lsd.odbol.com/lsd/icons/stamp-lsd-114.png" />
 	<!-- end facebook share tags -->
 	
 	<link rel="icon" type="image/png" href="/lsd/icons/stamp-lsd-16.png" />
@@ -123,7 +137,7 @@ body .element {
 <body>
 	<div class='intro element'>
 		<h2 class='musicLogo'><a href='http://battlehooch.com'>Battlehooch</a></h2>
-		<h3><em>Joke</em> interactive music video</h3>
+		<h3><em>Joke</em> remixable music video</h3>
 		
 		<div id='startButtons'>
 			<div class='start button dialogButton sd'>
@@ -140,8 +154,8 @@ body .element {
 		
 		<div class='waitingDesc'>
 		
-		<p>Supported on Safari 4+, Chrome. Partial support on Firefox 4+, iPhone, Android. No love for IE.</p>
-		<p>Code and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
+		<p>Supported on Safari 4+, Chrome. Partial support on Firefox 4+, iPhone, Android.</p>
+		<p><a href='https://github.com/odbol/LSD--Layer-Synthesis-Device-' target='_blank'>Code</a> and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
 		<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
 		</div>
@@ -173,7 +187,7 @@ body .element {
     <script type="text/javascript" src="/lsd/lsd.js"></script>
 
 	<!-- for music integration -->
-	<script type="text/javascript" src="http://popcornjs.org/code/dist/popcorn.min.js"></script>
+	<script type="text/javascript" src="/_js/popcorn.min.js"></script>
 	<script type="text/javascript" src="/lsd/musicPlayer.js"></script>
 	<script type="text/javascript" src="/_js/raphael-min.js"></script>
 
@@ -489,7 +503,7 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 				
 				//HD/SD setting
 				if (isHd) {
-					PRELOAD_DELAY = 55; // this guarantees we'll load a ton of videos before starting, which hopefully will help.
+					PRELOAD_DELAY = 120; // this guarantees we'll load a ton of videos before starting, which hopefully will help.
 				
 					for (var i = 0; i < vidClips.length; i++) {
 						if (vidClips[i].isVideo()) {
