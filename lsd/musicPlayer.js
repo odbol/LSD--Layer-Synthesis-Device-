@@ -58,7 +58,7 @@ var	PRELOAD_DELAY = 10;
 					this.playlistId = screenIdMatch[1];
 			}
 			if (!this.playlistId)
-				this.playlistId = '-IcdQogbFkP-Msk6Q5v-';
+				this.playlistId = '-IdbRBMiOXdWRUD334BS';
 			this.fireBaseRoot += '/' + this.playlistId;
 			
 			
