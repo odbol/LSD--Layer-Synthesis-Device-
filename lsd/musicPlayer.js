@@ -58,7 +58,7 @@ var	PRELOAD_DELAY = 10;
 					this.playlistId = screenIdMatch[1];
 			}
 			if (!this.playlistId)
-				this.playlistId = 'default';
+				this.playlistId = '-IcdQogbFkP-Msk6Q5v-';
 			this.fireBaseRoot += '/' + this.playlistId;
 			
 			
@@ -484,11 +484,12 @@ console.log("removing item " + idx);
 
 
 	//installs and runs the music player 
-	//	audio		- the URL to the audio file
+	//	audioUrl	- the URL to the audio file
+	//  audioType	- MIME type of the audioUrl file
 	//	lsd 		- LSD object	
 	//  songAttribution - Attribution object of the song's info
-	$.fn.musicPlayer = function (audioUrl, lsd, songAttribution) {
-		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="audio/mpeg" /></audio></div>' + MUSIC_CONTROLS_END);
+	$.fn.musicPlayer = function (audioUrl, audioType, lsd, songAttribution) {
+		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="' + audioType + '" /></audio></div>' + MUSIC_CONTROLS_END);
 		
 		lsd.isPaused = true; // wait until they start the vid!
 		

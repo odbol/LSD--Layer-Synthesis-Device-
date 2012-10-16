@@ -8,11 +8,29 @@
 */
 
 //set to true once all the browsers get their events in order.
-var USE_MEDIA_OBJECT_EVENTS = true;
+var USE_MEDIA_OBJECT_EVENTS = true,
+
+	// firefox doesn't support animating GIFs in canvas.
+	hasGifSupport = (navigator.userAgent.indexOf('Firefox') < 0);
+
+
+
 
 VidSource.prototype.url = "";
 VidSource.prototype.mimetype = "";
 VidSource.prototype.thumbUrl = "";
+VidSource.prototype.isVideo = function isVideo() {
+	return (this.mimetype.indexOf('image/') < 0);
+};
+// returns an animated GIF source, or falls back on thumbnail if GIF not provided
+VidSource.prototype.getImage = function getImage() {
+	if (this.isVideo()) {
+		return this.thumbUrl; 
+	}
+	else {
+		return this.url;
+	}
+};
 function VidSource(url, type, thumbUrl) {
 	this.url = url;
 	this.mimetype = type;
@@ -29,6 +47,16 @@ VidClip.prototype.image = null; //stores the loaded media for caching
 VidClip.prototype.id = "empty"; //identifies by index
 VidClip.prototype.element = null; //the gui element associated with this clip (not the actual image src!)
 VidClip.prototype.rating = 1000; //default rating, used for filtering
+VidClip.prototype.getGif = function getGif() {
+	// try to find animated GIF version
+	for (var i = 0; i < this.src.length; i++) {
+		
+		if (!this.src[i].isVideo()) {
+			return this.src[i];
+		}
+	}
+	return null;
+}
 VidClip.prototype.load = function (callback) {
 	var parentClip = this;
 	
@@ -36,7 +64,7 @@ VidClip.prototype.load = function (callback) {
 		callback(this.image);
 	}
 	else {
-		var preloader = new ImagePreloader([this.src], function (imgs, numLoaded) {
+		var preloader = new ImagePreloader([this], function (imgs, numLoaded) {
 			parentClip.image = imgs[0];
 			callback(parentClip.image);
 		});
@@ -48,11 +76,25 @@ VidClip.prototype.isVideo = function () {
 function VidClip(mediaSource, thumbnail, rating) {
 	this.thumbnail = thumbnail;
 	
-	//mobile can't handle videos, so just load the thumb as placeholder
-	if ( isMobile && typeof(mediaSource) !== "string" )
-		this.src = thumbnail;
-	else
+	// for backwards compatibility, create a image VidSource from strings of a GIF passed in
+	if (typeof(mediaSource) === "string" ) {
+		this.src = [new VidSource(mediaSource, 'image/gif')];
+	}
+	else {
 		this.src = mediaSource;
+	}
+	
+	//mobile can't handle videos, so find image version
+	if ( isMobile ) {
+		var gifSrc = this.getGif(); // fallback to thumb as placeholder
+
+		if (!gifSrc) {
+			gifSrc = thumbnail;
+		}
+		
+		this.src = gifSrc;
+	}
+
 	
 	this.id = thumbnail; //TODO: use something else?
 	
@@ -75,104 +117,123 @@ ImagePreloader.prototype.isAndroidWebkit = false; //set to true if browser is An
 //ImagePreloader.prototype.imgExtensionRegEx = /\.(jpg|gif|png)$/i;
 //pass single string to load as image, pass array of VidSource objects to load as video, 
 //each array element being another fallback codec.
-ImagePreloader.prototype.preload = function(image)
+ImagePreloader.prototype.preload = function(vidSource)
 {
-	//test if video or image
+	//test if video or image (backwards compaitibility
 	//if (image.test(imgExtensionRegEx)) {
-	if (typeof(image) == "string") {
-		
-			// create new Image object and add to array
-			var oImage = new Image;
-			//this.aImages.push(oImage);
-			
-			// set up event handlers for the Image object
-			oImage.onload = ImagePreloader.prototype.onload;
-			oImage.onerror = ImagePreloader.prototype.onerror;
-			oImage.onabort = ImagePreloader.prototype.onabort;
-			
-			// assign pointer back to this.
-			oImage.oImagePreloader = this;
-			//oImage.bLoaded = false;
-			
-			// assign the .src property of the Image object
-			oImage.src = image;
-
-			//this doesn't work in safari/webkit for animated gifs
-			//so must have image being shown
-			var tagId = "vidPreload_" + getUniqueNumber();
-			var vidTag = "<img id='" + tagId + "'";
-			if (isDebug) {
-				vidTag += " style='position:absolute;z-index:100000;'";
-			}
-			else {
-				vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
-			}
-			vidTag += " src='" + image + "' />"
-
-			$("body").append(vidTag);
-			//var vid = document.getElementById(tagId);
-			this.aImages.push( document.getElementById(tagId) );
+	if (typeof(vidSource) == "string") {
+		this.loadGif(vidSource);
 	}	
 	else {
-	 	//video: do some wacky HTML5 stuff here.
-	 	var tagId = "vidPreload_" + getUniqueNumber();
-		var vidTag = "<video";
-		if (isDebug) {
-			vidTag += " style='position:absolute;z-index:100000;' controls";
+		// load GIFs if we have them (since that usually indicates they are original source),
+		// unless its firefox. firefox doesn't support animating GIFs in canvas.
+		var gif = vidSource.getGif();
+		
+		if (gif && hasGifSupport) {
+			this.loadGif(gif.src);
 		}
 		else {
-			vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
+			this.loadVideos(vidSource.src);
 		}
-		
-		vidTag += " id='" + tagId + "' autoplay='true' loop='true'>"
-		
-		for (i in image) {
+	}
+};
+
+ImagePreloader.prototype.loadGif = function loadGif(image) {
+	// create new Image object and add to array
+	var oImage = new Image;
+	//this.aImages.push(oImage);
+	
+	// set up event handlers for the Image object
+	oImage.onload = ImagePreloader.prototype.onload;
+	oImage.onerror = ImagePreloader.prototype.onerror;
+	oImage.onabort = ImagePreloader.prototype.onabort;
+	
+	// assign pointer back to this.
+	oImage.oImagePreloader = this;
+	//oImage.bLoaded = false;
+	
+	// assign the .src property of the Image object
+	oImage.src = image;
+
+	//this doesn't work in safari/webkit for animated gifs
+	//so must have image being shown
+	var tagId = "vidPreload_" + getUniqueNumber();
+	var vidTag = "<img id='" + tagId + "'";
+	if (isDebug) {
+		vidTag += " style='position:absolute;z-index:100000;'";
+	}
+	else {
+		vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
+	}
+	vidTag += " src='" + image + "' />"
+
+	$("body").append(vidTag);
+	//var vid = document.getElementById(tagId);
+	this.aImages.push( document.getElementById(tagId) );
+};
+
+ImagePreloader.prototype.loadVideos = function loadVideos(image) {
+	//video: do some wacky HTML5 stuff here.
+	var tagId = "vidPreload_" + getUniqueNumber();
+	var vidTag = "<video";
+	if (isDebug) {
+		vidTag += " style='position:absolute;z-index:100000;' controls";
+	}
+	else {
+		vidTag += " style='position:absolute;z-index:-1;width:10px;height:10px;'"; //display:none'";
+	}
+	
+	vidTag += " id='" + tagId + "' autoplay='true' loop='true'>"
+	
+	for (i in image) {
+		if (image[i].isVideo()) {
 			vidTag += "<source src='" + image[i].url + "'";
 			if (!this.isAndroidWebkit  //apparently android 2.2 doesn't play video if you include the type attribute. WEAK (src: http://www.broken-links.com/2010/07/08/making-html5-video-work-on-android-phones/)
 				&& image[i].mimetype.length > 0)
 				vidTag += " type='" + image[i].mimetype + "'";
 			vidTag += " />";
 		}
-		vidTag += "</video>"
+	}
+	vidTag += "</video>"
 
-		$("body").append(vidTag);
-		var vid = document.getElementById(tagId);
-		this.aImages.push(vid);
+	$("body").append(vidTag);
+	var vid = document.getElementById(tagId);
+	this.aImages.push(vid);
 
-		// set up event handlers for the Image object
-		//who has implemented these yet?
-		if (USE_MEDIA_OBJECT_EVENTS) {
-			// assign pointer back to this.
-			vid.oImagePreloader = this;
+	// set up event handlers for the Image object
+	//who has implemented these yet?
+	if (USE_MEDIA_OBJECT_EVENTS) {
+		// assign pointer back to this.
+		vid.oImagePreloader = this;
+		
+	/*
+		$("#" + tagId).bind('play', ImagePreloader.prototype.onload)
+			.bind('error', ImagePreloader.prototype.onerror)
+			.bind('abort', ImagePreloader.prototype.onabort);
+			*/
+		vid.addEventListener("play", ImagePreloader.prototype.onload, false);
+		vid.addEventListener("error", ImagePreloader.prototype.onerror, false);
+		vid.addEventListener("abort", ImagePreloader.prototype.onabort, false);
+
+		//fix for FF 3.5 loop broken (https://bugzilla.mozilla.org/show_bug.cgi?id=449157)
+		if (!vid.loop) {
+			vid.loop = true; //FF just doesn't get it!
 			
-		/*
-			$("#" + tagId).bind('play', ImagePreloader.prototype.onload)
-				.bind('error', ImagePreloader.prototype.onerror)
-				.bind('abort', ImagePreloader.prototype.onabort);
-				*/
-			vid.addEventListener("play", ImagePreloader.prototype.onload, false);
-			vid.addEventListener("error", ImagePreloader.prototype.onerror, false);
-			vid.addEventListener("abort", ImagePreloader.prototype.onabort, false);
-
-			//fix for FF 3.5 loop broken (https://bugzilla.mozilla.org/show_bug.cgi?id=449157)
-			if (!vid.loop) {
-				vid.loop = true; //FF just doesn't get it!
-				
-				$(vid).bind('ended',{},function() {
-					if (this.loop) {
-				  		$(this).trigger('play');
-				  	}
-				});
-			}
-			
-			if (this.isAndroidWebkit)
-				vid.play(); //autoload! (also fixes android 2.2 bug)
-		}
-		else {
-			//hack past it and hope it's loaded in time!
-			ImagePreloader.prototype.onload();
+			$(vid).bind('ended',{},function() {
+				if (this.loop) {
+					$(this).trigger('play');
+				}
+			});
 		}
 		
+		if (this.isAndroidWebkit)
+			vid.play(); //autoload! (also fixes android 2.2 bug)
+	}
+	else {
+		//hack past it and hope it's loaded in time!
+		ImagePreloader.prototype.onload();
+	}
+	
 		
 		
 /*
@@ -191,7 +252,6 @@ if(!isNaN(video.duration)){
 			video.currentTime = 0;
 		}
 		*/
-	}
 };
  
 ImagePreloader.prototype.onComplete = function(e)
@@ -219,7 +279,7 @@ ImagePreloader.prototype.onabort = function(e)
    this.oImagePreloader.onComplete();
 };
 
-
+/* accepts an array of VidSource objects to preload */
 function ImagePreloader(images, callback)
 {
    // store the callback
