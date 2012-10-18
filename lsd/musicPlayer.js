@@ -568,7 +568,7 @@ console.log("removing item " + idx);
 					"</div><br class='clear' />" +
 					'<label for="shareTrackUrl">Link: </label><input id="shareTrackUrl" type="text" value="' +
 					 shareUrl + '" />' +
-					 "<div class='dialogButton record button'>Record your own video</div><div class='dialogButton button close'>Close</div></div>")
+					 "<div class='dialogButton record button'>Remix your own video</div><div class='dialogButton button close'>Close</div></div>")
 					
 					.appendTo('body')
 					.fadeIn('slow')
