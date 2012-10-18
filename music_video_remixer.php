@@ -139,6 +139,22 @@ body .element {
 		<h2 class='musicLogo'><a href='http://battlehooch.com'>Battlehooch</a></h2>
 		<h3><em>Joke</em> remixable music video</h3>
 		
+		<div class='flowButtons'>
+			<div class='arrow_box right button'>
+				<h3>Watch</h3>
+				<p>Watch the original video</p>
+			</div>
+			<div class='arrow_box right button'>
+				<h3>Remix</h3>
+				<p>Hit remix to add video clips and transitions</p>
+			</div>
+			<div class='arrow_box down button'>
+				<h3>Share</h3>
+				<p>Share your remix with your friends</p>
+			</div>
+			<br class='clear' />
+		</div>
+				
 		<div id='startButtons'>
 			<div class='start button dialogButton sd'>
 				<h3>Standard Quality</h3>
@@ -157,7 +173,7 @@ body .element {
 		<p>Supported on Safari 4+, Chrome. Partial support on Firefox 4+, iPhone, Android.</p>
 		<p><a href='https://github.com/odbol/LSD--Layer-Synthesis-Device-' target='_blank'>Code</a> and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
-		<br />GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
+		<br />Animated GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
 		</div>
 		
 		<noscript>

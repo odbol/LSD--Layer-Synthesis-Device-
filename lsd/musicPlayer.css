@@ -267,7 +267,7 @@ body div.intro {
 }
 
 	body .intro .musicLogo a {
-	  background: url("http://battlehooch.com/images/organic/battlehooch.png") no-repeat scroll 0 0 transparent;
+	  background: url("http://battlehooch.com/images/joke/battlehooch_logo-joke.png") no-repeat scroll 0 0 transparent;
 	  display: block;
 	  height: 82px;
 	  overflow: hidden;
@@ -295,8 +295,35 @@ body div.intro {
 				font-size: 20px;
 			}
 			
-			
-			
+	
+.flowButtons {
+	width: 480px;
+	margin: 35px auto 20px;
+}
+
+	.flowButtons .button {
+		width: 130px;
+		height: 85px;
+		float: left;
+	}
+	
+		.flowButtons .button h3 {
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+			text-transform: uppercase;
+		}
+		
+		.flowButtons .button p {
+			font-size:10px;
+			font-weight:normal;
+			color: #ccc;
+		}
+	
+	/* thank you http://cssarrowplease.com/ */
+	.arrow_box { position: relative; background: #660000; border: 4px solid #C00; }
+	
+		.right.arrow_box { margin-right: 32px; } .right.arrow_box:after, .right.arrow_box:before { left: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } .right.arrow_box:after { border-color: rgba(102, 0, 0, 0); border-left-color: #660000; border-width: 30px; top: 50%; margin-top: -30px; } .right.arrow_box:before { border-color: rgba(204, 0, 0, 0); border-left-color: #C00; border-width: 36px; top: 50%; margin-top: -36px; }
+
+		.down.arrow_box { margin-bottom: 32px;} .down.arrow_box:after, .down.arrow_box:before { top: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } .down.arrow_box:after { border-color: rgba(102, 0, 0, 0); border-top-color: #660000; border-width: 30px; left: 50%; margin-left: -30px; } .down.arrow_box:before { border-color: rgba(204, 0, 0, 0); border-top-color: #C00; border-width: 36px; left: 50%; margin-left: -36px; }
 			
 /*** share screen ****/
 #shareTrackScreen {
