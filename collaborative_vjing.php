@@ -492,7 +492,9 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 		
 		// capabilities check
 		if ( Modernizr.canvas &&
-			(Modernizr.video.h264 || Modernizr.video.ogg) ) {
+			(Modernizr.video.h264 || Modernizr.video.ogg 
+				|| isMobile ) // since android doesn't support h264 but those are disabled anyway in mobile mode
+			) {
 		
 			if ($('#startButtons .button').click(function () {
 					var isHd = $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
