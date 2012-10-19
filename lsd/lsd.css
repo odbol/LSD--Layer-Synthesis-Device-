@@ -135,6 +135,8 @@ body div a.poweredBy {
 	#screenList li.loading {
 		height:34px;
 		background: url("blackSpinner.gif") no-repeat scroll center bottom transparent;
+		position: relative;
+		width: auto;
 	}
 
 .dialogButton {
