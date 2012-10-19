@@ -560,7 +560,7 @@ console.log("removing item " + idx);
 				
 				var shareUrl = 'http://lsd.odbol.com/battlehooch/joke/' + playlistId; //joke.php?playlist=' + playlistId;
 				
-				$('<div id="shareTrackScreen" class="dialogControls" style="display:none"><h2>Share this video</h2>' +
+				$('<div id="shareTrackScreen" class="dialogControls permanent" style="display:none"><h2>Share this video</h2>' +
 					 "<div class='shareButtons'>" +
 					 	'<div class="shareButton tweet"><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(shareUrl) + '&amp;via=ODDDevice&amp;count=none&amp;text=' + encodeURIComponent(songAttribution.toString()) + '" style="width:130px; height:21px;"></iframe></div>' +
 						'<div class="shareButton facebook"><iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe></div>' +
@@ -795,32 +795,6 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 							$('#musicControls').animate({ width: musicControlsWidth + 'px' }, 300) 
 					}, 100);
 			});	
-		
-		
-		//auto hide on mouse idle
-		var lastMouseMovement = new Date(),
-			idleCheckInterval = false,
-			checkMouseIdle = function () {
-				if (lastMouseMovement.getTime() < new Date().getTime() - 2000) {
-					lsd.hide();
-					clearInterval(idleCheckInterval);
-					idleCheckInterval = false;
-				}
-			};
-		$('canvas').mousemove(function (ev) {
-			if (!idleCheckInterval) {
-				lsd.show();
-				idleCheckInterval = setInterval(checkMouseIdle, 2000);
-			}
-			
-			lastMouseMovement = new Date();
-		})
-		.mouseout(function (ev) {
-			clearInterval(idleCheckInterval);
-			idleCheckInterval = false;
-		});
-		
-		
 		
 		
 		//bind to LSD events and record them

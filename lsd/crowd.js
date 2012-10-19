@@ -6,6 +6,11 @@ var QUEUE_STATUS = {
 	'MASTER':	3
 };
 
+/***
+	This is my database... please do not use it! 
+	Sign up for your own at http://firebase.com if you would
+	like to rehost or modify LSD.
+***/
 var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
 
 //sanitizes any text for insertion as HTML
