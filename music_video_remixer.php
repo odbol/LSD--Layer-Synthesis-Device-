@@ -240,7 +240,6 @@ for ($i = 0; $i < 3; $i++) {
 
 
 
-
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-AJ4.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ben.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Fadeout.jpg', 1111),
@@ -263,12 +262,6 @@ new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012203
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220356.oni-shitty_loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220356.oni-shitty_loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord89201220356.oni-shitty_loop.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012204-4AAAE.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE_cells.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE_cells.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012204-4AAAE_cells.jpg', 1111),
-
-
-
-
-
-
 
 
 					new VidClip([new VidSource("/images/mixer/240p/fish_jelly_purple.mp4", "video/mp4"), 
