@@ -5,7 +5,13 @@
 #    RewriteRule /_js/(.*) /_js/$1 [L]
 #    RewriteRule /lsd/(.*) /lsd/$1 [L]
 
+     RewriteRule ^live(.*) /collaborative_vjing.php$1
+
 #    RewriteRule    /([^/]+)/([^/]+)/([^?/]+)\??(.*) /joke.php?author=$1&title=$2&playlist=$3&$4    [L]
     RewriteRule    ^battlehooch/([^/]*)/?([^?/]*)\??(.*)$ /joke.php?author=$1&title=$2&playlist=$3&$4    [L]
 #    RewriteRule   .*battlehooch.* /joke.php    [L]
+
+#just redirect EVERYTHING to bhooch for now
+#    RewriteRule    ^([^?]*)\??(.*)$ /joke.php?author=Battlehooch&title=Joke&$1    [L]
+
  </IfModule>

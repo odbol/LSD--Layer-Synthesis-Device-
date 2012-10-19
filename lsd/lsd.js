@@ -260,7 +260,7 @@ Attribution.prototype = {
 			//sanitize screenId 
 			screenId = screenId.replace(/^\d+|\W/g, '');
 		
-			return "http://odbol.com/lsd.php?screen=" + encodeURIComponent(screenId) + 
+			return "http://lsd.odbol.com/live?screen=" + encodeURIComponent(screenId) + 
 					/* if master sharer is on mobile, don't allow anyone to use videos - only GIFs */
 					((isMobile && forceMobile !== false) || forceMobile ? "&mobileOnly=true" : "") +
 					(skipIntro ? "&skipIntro=true" : "") +
