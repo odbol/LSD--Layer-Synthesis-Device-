@@ -649,8 +649,9 @@ Attribution.prototype = {
 			this.hideControls = hideControls;
 			this.showControls = minimizeControls;
 			
-			var isFullscreen = false;
-			$("#buttonFullscreen").click(function (e) {
+			
+			var isFullscreen = false,
+				toggleFullscreen = function (e) {
 				//toggle fullscreen
 				if (isFullscreen) {
 					hideControls();
@@ -663,7 +664,8 @@ Attribution.prototype = {
 					$("#backgroundHolder").css("zIndex", 500);
 				}
 				isFullscreen = !isFullscreen;
-			});
+			};
+
 			var drawFrameIntervalId = 0;
 			
 			var reviveUI = function () {
@@ -697,6 +699,18 @@ Attribution.prototype = {
 					hideUI();
 				}
 			};
+			
+			$("#buttonFullscreen").click(toggleUI);
+			
+			/*
+			if (isMobile) {
+				$("#buttonFullscreen").click(toggleUI);
+			}
+			else {
+				$("#buttonFullscreen").click(toggleFullscreen);
+			}
+			*/
+						
 			$("#buttonStop").click(hideUI);
 			$("#buttonHelp").toggle(function (e) {
 					//$("#backgroundCanvasControls .controlPanel").hide('fast');
@@ -1006,7 +1020,7 @@ Attribution.prototype = {
 				}
 				
 				
-				$("#buttonFullscreen").click();
+				toggleFullscreen();
 				
 				
 				//hide url bar on mobile.
@@ -1177,6 +1191,35 @@ Attribution.prototype = {
 					//}
 				}
 			//});
+			
+			
+				//auto hide on mouse idle
+				var lastMouseMovement = new Date(),
+					idleCheckInterval = false,
+					checkMouseIdle = function () {
+						if (lastMouseMovement.getTime() < new Date().getTime() - 2000) {
+							lsd.hide();
+							clearInterval(idleCheckInterval);
+							idleCheckInterval = false;
+						}
+					},
+					startMouseIdle = function startMouseIdle(ev) {
+						if (!idleCheckInterval) {
+							lsd.show();
+							idleCheckInterval = setInterval(checkMouseIdle, 2000);
+						}
+						
+						lastMouseMovement = new Date();
+					},
+					cancelMouseIdle = function cancelMouseIdle(ev) {
+						clearInterval(idleCheckInterval);
+						idleCheckInterval = false;
+					};
+				$('canvas').mousemove(startMouseIdle)
+					.mouseout(cancelMouseIdle);
+				$(window)
+					.mouseenter(cancelMouseIdle)
+					.mouseout(startMouseIdle); 
 			
 			
 			//return an object they can play around with
