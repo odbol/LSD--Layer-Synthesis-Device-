@@ -4,7 +4,7 @@
 	bottom: 5px;
 	z-index: 910;
 	
-	width: 105px; /*default to hiding the music player*/
+	width: 115px; /*default to hiding the music player*/
 	height: 32px;
 	overflow:hidden;
 	
@@ -17,12 +17,12 @@
 #musicControls.recording {
 	height: 200px;
 	width: 90% !important;
-	min-width: 400px;
+	min-width: 410px;
 }
 
 	#musicHolder {
 		position:absolute;
-		left:105px; /*hide the play button so we use our own. yes this is very sketchy*/
+		left:120px; /*hide the play button so we use our own. yes this is very sketchy*/
 		z-index:10;
 	}
 
@@ -61,21 +61,15 @@
 	background-image: url("../_js/jquery-ui/css/vader/images/ui-icons_cd0a0a_256x240.png")
 }
 
-#recordButton.ui-state-default,
-#recordButton:hover {
-	background: #333;
-}
-#recordButton:hover,
-.recording #recordButton {
-	background: url("../_js/jquery-ui/css/vader/images/ui-bg_highlight-soft_60_dddddd_1x100.png") repeat-x scroll 50% 50% #DDDDDD;
-}
-
-body #musicControls #shareRButton {
+body #musicControls ul.icons .dialogButton {
 	font-size: 10px;
 	text-transform: uppercase;
-	padding: 2px 7px;
+	padding: 2px;
 }
-#shareRButton:hover {
+
+.recording #recordButton,
+body #musicControls .dialogButton:hover
+ {
 	background-color: #a00;
 	color: #fff;
 }
