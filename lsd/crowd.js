@@ -11,7 +11,7 @@ var QUEUE_STATUS = {
 	Sign up for your own at http://firebase.com if you would
 	like to rehost or modify LSD.
 ***/
-var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/gif_jockey';
+var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/lsd';
 
 //sanitizes any text for insertion as HTML
 function htmlEncode(value){
@@ -62,7 +62,6 @@ CrowdControl.prototype = {
 			this.screenId = 'lounge';
 		this.fireBaseRoot += '/' + this.screenId;
 	
-		//var fireRef = new Firebase('http://angelhack.firebase.com/gif_jockey');
 		var presenceRef = new Firebase(this.fireBaseRoot + '/queue/' + userId + '/online');
 		
 		//Make sure if I lose my connection I am marked as offline.
