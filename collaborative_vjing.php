@@ -502,7 +502,7 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 					init(isHd);
 				}).length == 0) { // if there's no start button, start automatically!
 			
-				init(false);
+				init(~window.location.href.indexOf('hd=true'));
 			};
 		}
 		else {
