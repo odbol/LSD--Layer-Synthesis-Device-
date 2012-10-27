@@ -61,16 +61,17 @@ a:hover {
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-	<link rel="stylesheet" type="text/css" media="screen, projection" href="/lsd/fd-slider/fd-slider.min.css" />   
-    <script src="/lsd/fd-slider/js/fd-slider.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen, projection" href="/doc/fd-slider/fd-slider.min.css" />   
+    <script src="/doc/fd-slider/js/fd-slider.js"></script>
     
 	<!--script type="text/javascript" src="http://odbol.com/_js/jquery.js"></script-->
-	<script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+	<!--script src="http://code.jquery.com/jquery-1.5.min.js"></script-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	
 	<link type="text/css" href="/_js/jquery-ui/css/vader/jquery-ui-1.8.5.custom.css" rel='stylesheet' />	
 	<script type="text/javascript" src="/_js/jquery-ui/js/jquery-ui.js"></script>
 
-	<!-- script src="/lsd/jqswipe.js" type="text/javascript"></script-->
+	<!-- script src="/doc/jqswipe.js" type="text/javascript"></script-->
 
 <!--
 <script type='text/javascript'>	
@@ -80,12 +81,12 @@ $(document).bind("mobileinit", function(){
 	});
 
 </script>	
-<link href="/lsd/verticalSlider.css" rel="stylesheet" type="text/css" />
+<link href="/doc/verticalSlider.css" rel="stylesheet" type="text/css" />
 
 <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.js"></script>
-<script src="/lsd/verticalSlider.js"></script>
+<script src="/doc/verticalSlider.js"></script>
 	-->
-	<link type="text/css" href="/lsd/lsd.css" rel='stylesheet' />
+	<link type="text/css" href="/doc/lsd.css" rel='stylesheet' />
     <style type="text/css">
 /* odbol fixes for LSD*/
 body {
@@ -112,26 +113,29 @@ body .element {
     <!-- facebook share tags (I want my thumbnail in the news feed!) -->
     <meta property="og:title" content="Battlehooch - Joke | a remixable music video" />
 	<meta property="og:description" content="Watch the video, then remix it in the browser and share with your friends! Choose from a huge library of video clips and images and blend them together using the online video mixer, LSD." />
-	<meta property="og:image" content="http://lsd.odbol.com/lsd/icons/stamp-lsd-114.png" />
+	<meta property="og:image" content="http://lsd.odbol.com/doc/icons/stamp-lsd-114.png" />
 	<!-- end facebook share tags -->
 	
-	<link rel="icon" type="image/png" href="/lsd/icons/stamp-lsd-16.png" />
+	<link rel="icon" type="image/png" href="/doc/icons/stamp-lsd-16.png" />
 	
 	<!-- iphone app icons -->
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<link rel="apple-touch-icon-precomposed" href="/lsd/icons/stamp-lsd-57.png" />
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/lsd/icons/stamp-lsd-72.png" />
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/lsd/icons/stamp-lsd-114.png" />
-	<link rel="apple-touch-startup-image" href="/lsd/icons/stamp-lsd-startup.png">
+	<link rel="apple-touch-icon-precomposed" href="/doc/icons/stamp-lsd-57.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/doc/icons/stamp-lsd-72.png" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/doc/icons/stamp-lsd-114.png" />
+	<link rel="apple-touch-startup-image" href="/doc/icons/stamp-lsd-startup.png">
 	
 	<!-- END iphone app icons -->	
 	
     <!-- END used for LSD -->
 
 	<!--- for music player -->
-	<link type="text/css" href="/lsd/musicPlayer.css" rel='stylesheet' />
+	<link type="text/css" href="/doc/musicPlayer.css" rel='stylesheet' />
 
+
+	<!-- documentationeer -->
+	<link type="text/css" href="/_js/documentationeer/documentationeer.css" rel='stylesheet' media='all' />
 </head>
 
 <body>
@@ -195,17 +199,22 @@ body .element {
 	
 	<!-- collaborative support -->
 	<script type='text/javascript' src='http://static.firebase.com/v0/firebase.js'></script>
-    <script type="text/javascript" src="/lsd/crowd.js"></script>
+    <script type="text/javascript" src="/doc/crowd.js"></script>
 	
 
-    <script type="text/javascript" src="/lsd/image_preloader.js"></script>
-    <script type="text/javascript" src="/lsd/imageSlider.js"></script> 
-    <script type="text/javascript" src="/lsd/lsd.js"></script>
+    <script type="text/javascript" src="/doc/image_preloader.js"></script>
+    <script type="text/javascript" src="/doc/imageSlider.js"></script> 
+    <script type="text/javascript" src="/doc/lsd.js"></script>
 
 	<!-- for music integration -->
 	<script type="text/javascript" src="/_js/popcorn.min.js"></script>
-	<script type="text/javascript" src="/lsd/musicPlayer.js"></script>
+	<script type="text/javascript" src="/doc/musicPlayer.js"></script>
 	<script type="text/javascript" src="/_js/raphael-min.js"></script>
+
+	<!-- documentationeer -->
+	<!--script type="text/javascript" src="/_js/documentationeer/lib/jquery.simpletip-1.3.1.js"></script-->
+	<script src="/_js/documentationeer/lib/jquery.tools.min.js"></script>
+	<script type="text/javascript" src="/_js/documentationeer/documentationeer.js"></script>
 
 	<script type="text/javascript">
 		$(function(){
@@ -231,7 +240,7 @@ for ($i = 0; $i < 3; $i++) {
 		$clipType = $_GET["type$i"];
 		$clipThumb = $_GET["img$i"];
 		if (!$clipThumb)
-			$clipThumb = "/lsd/lsd_thumb.jpg";
+			$clipThumb = "/doc/lsd_thumb.jpg";
 		
 		print "\n\t\t\tnew VidClip([new VidSource('$clipUrl', '$clipType')], '$clipThumb'),";
 	}
@@ -509,6 +518,66 @@ new VidClip('/images/mixer/gif_sorted/_pop/zoidberg.gif', '/images/mixer/gif_sor
 			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false, isHd ? {width: 640, height: 480} : null);				
 
 			$().musicPlayer('/music/Battlehooch%20-%20Joke.mp3', lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'));
+			
+			var doc = $().documentate([
+				// each Step object can launch a cascading help tutorial of many steps. 
+				// this one will be our root object to launch the tutorial
+				{
+					// an id to reference via the event system
+					name: 'tutorial',
+					
+					// this takes a jQuery selector of the element that will trigger this tutorial,
+					// only the first time it is clicked.
+					once: '#recordButton, .helpButton',
+					
+					// jQuery selector of all the help tooltips or dialogs to show when triggered
+					elements: '.step_1, #layerControl_0 .clipThumb',
+					
+					delay: 2000,
+					
+					cssClass: 'hideable arrow right',
+					
+					// this is passed directly to the tooltip.dynamic plugin
+					placement: { left: { direction: 'right', bounce: true } },
+					
+					// options for the underlying tooltip object
+					tooltip: { 
+						position: 'top left',
+						offset: [5, -32]
+					},
+					
+					// once the user has dismissed or completed all the tutorial elements above,
+					// the `done` event is triggered. Can either be the `name` of another Step object,
+					// or a Step object itself.
+					done: {
+						name: 'step_2',
+						elements: '.step_2',
+						
+						// note the `once` event handler is optional here since it's triggered by 
+						// the parent step
+						
+						done: {
+							name: 'step_3',
+							elements: '.step_3'
+						}			
+					}
+				},
+				{
+					// an id to reference via the event system
+					name: 'teaser',
+					
+					cssClass: 'hideable arrow down',
+					
+					// jQuery selector of all the help tooltips or dialogs to show when triggered
+					elements: '.step_0',
+					
+					placement: { top: { direction: 'down', bounce: true } },
+					tooltip: { 
+						position: 'top center',
+						offset: [-32, 13]
+					},
+				}
+			]);
 		}
 		
 		// capabilities check
