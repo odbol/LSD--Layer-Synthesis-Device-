@@ -30,7 +30,7 @@ var	PRELOAD_DELAY = 10;
 
 (function( $ ){
 
-	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton'>Remix</li></ul>",
+	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton step_0' title='Remix the video while watching it'>Remix</li></ul>",
 		MUSIC_CONTROLS_END = '</div><div class="preloaderMsg dialogControls permanent"><img src="/lsd/blackSpinner.gif" alt="" />Loading <span class="preloaderProgress"></span> clips...</div>',
 
 		FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/lsd/_playlists';
@@ -816,8 +816,12 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 				for (var i = 0; i < evs.length; i++) {
 					popcorn.removeTrackEvent(evs[i].id);
 				}
+											
+				// add documentation triggers
+				popcorn.cue(10, function () {
+					$().documentate().show('teaser');
+				});
 			}); 
-			
 			
 		popcorn.preload('auto');
 	};

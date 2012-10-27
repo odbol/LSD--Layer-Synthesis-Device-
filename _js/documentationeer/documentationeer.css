@@ -1,0 +1,78 @@
+.docTooltip { 
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3000;
+	width: 150px;
+	height: auto;
+	background-color: black;
+	color: #CCC;
+	text-align: center;
+	padding: 10px 5px;
+	font-weight: bold;
+}
+
+	.docTooltip.arrow.right {
+		position: relative;
+		background: #600;
+		border: 4px solid #c00;
+		margin-top: 45px;
+	}
+	.docTooltip.arrow.right:after, .docTooltip.arrow.right:before {
+		left: 100%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+	
+	.docTooltip.arrow.right:after {
+		border-color: rgba(102, 0, 0, 0);
+		border-left-color: #c00;
+		border-width: 20px;
+		top: 50%;
+		margin-top: -20px;
+	}
+	.docTooltip.arrow.right:before {
+		border-color: rgba(204, 0, 0, 0);
+		border-left-color: #c00;
+		border-width: 26px;
+		top: 50%;
+		margin-top: -26px;
+	}
+	
+	.docTooltip.arrow.down {
+		position: relative;
+		background: #c00;
+		border: 4px solid #c00;
+	}
+	.docTooltip.arrow.down:after, .docTooltip.arrow.down:before {
+		top: 100%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+	
+	.docTooltip.arrow.down:after {
+		border-color: rgba(102, 0, 0, 0);
+		border-top-color: #c00;
+		border-width: 20px;
+		left: 50%;
+		margin-left: -20px;
+	}
+	.docTooltip.arrow.down:before {
+		border-color: rgba(204, 0, 0, 0);
+		border-top-color: #c00;
+		border-width: 26px;
+		left: 50%;
+		margin-left: -26px;
+	}
+
+.doc {
+	display:none;
+}

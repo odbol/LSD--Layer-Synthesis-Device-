@@ -449,7 +449,7 @@ Attribution.prototype = {
 				"</div>"
 			
 			
-			sliderHTML += "<div class='layerSliders'>";
+			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
 				if (enableHTML5Range)
@@ -457,11 +457,11 @@ Attribution.prototype = {
 				else
 					sliderHTML += "<div class='slider'></div>";
 				
-				sliderHTML += "<div class='clipThumb'></div></div>";
+				sliderHTML += "<div class='clipThumb' title='Click the layer icon to change its video clip'></div></div>";
 			}
 			//sliderHTML += "</div>";
 			
-			sliderHTML += "<div class='sharedControls'>" + compHTML;
+			sliderHTML += "<br class='clear' /><div class='sharedControls'>" + compHTML;
 			
 			//add video thumbs
 			sliderHTML += "<div class='clipThumbs imageSlider'>" +
@@ -672,9 +672,13 @@ Attribution.prototype = {
 				$(canvas).unbind("mousedown.lsdUIHide");
 			
 				$(".dialogControls").not('.permanent').fadeIn();
+				
+				$('body').removeClass('uiHidden');
 			};
 			var hideUI = function (e) {
 				$(".dialogControls").not('.permanent').fadeOut();
+				
+				$('body').addClass('uiHidden');
 				
 				$(canvas).bind("mousedown.lsdUIHide", reviveUI);
 			
@@ -1198,6 +1202,7 @@ Attribution.prototype = {
 					idleCheckInterval = false,
 					checkMouseIdle = function () {
 						if (lastMouseMovement.getTime() < new Date().getTime() - 2000) {
+	console.log('checkMouseIdle');	
 							lsd.hide();
 							clearInterval(idleCheckInterval);
 							idleCheckInterval = false;
@@ -1208,10 +1213,11 @@ Attribution.prototype = {
 							lsd.show();
 							idleCheckInterval = setInterval(checkMouseIdle, 2000);
 						}
-						
+console.log('startMouseIdle' +ev.target);						
 						lastMouseMovement = new Date();
 					},
 					cancelMouseIdle = function cancelMouseIdle(ev) {
+console.log('cancelMouseIdle');					
 						clearInterval(idleCheckInterval);
 						idleCheckInterval = false;
 					};

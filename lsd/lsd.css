@@ -178,6 +178,18 @@ a.dialogButton:active,
 	text-decoration:none;
 }
 
+.hideable {
+	visibility: visible;
+
+	-webkit-transition: visibility 0.3s ease;
+	-moz-transition: visibility 0.3s ease;
+	-o-transition: visibility 0.3s ease;
+	transition: visibility  0.3s ease;
+}
+
+.uiHidden .hideable {
+	visibility: hidden;
+}
 
 #backgroundCanvasControls,
 .dialogControls {

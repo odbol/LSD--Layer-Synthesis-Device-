@@ -295,17 +295,24 @@ body div.intro {
 	margin: 35px auto 20px;
 }
 
+	body .docTooltip {
+		font-size: 10px;
+		color: #fff;
+	}
+
 	.flowButtons .button {
 		width: 130px;
 		height: 85px;
 		float: left;
 	}
-	
+		
+		.docTooltip h3,
 		.flowButtons .button h3 {
 			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 			text-transform: uppercase;
 		}
 		
+		.docTooltip p,
 		.flowButtons .button p {
 			font-size:10px;
 			font-weight:normal;
@@ -313,7 +320,7 @@ body div.intro {
 		}
 	
 	/* thank you http://cssarrowplease.com/ */
-	.arrow_box { position: relative; background: #660000; border: 4px solid #C00; }
+	body .arrow_box { position: relative; background: #660000; border: 4px solid #C00; }
 	
 		.right.arrow_box { margin-right: 32px; } .right.arrow_box:after, .right.arrow_box:before { left: 100%; border: solid transparent; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; } .right.arrow_box:after { border-color: rgba(102, 0, 0, 0); border-left-color: #660000; border-width: 30px; top: 50%; margin-top: -30px; } .right.arrow_box:before { border-color: rgba(204, 0, 0, 0); border-left-color: #C00; border-width: 36px; top: 50%; margin-top: -36px; }
 
