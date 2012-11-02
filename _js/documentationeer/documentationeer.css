@@ -30,7 +30,7 @@
 	
 	.docTooltip.arrow.right:after {
 		border-color: rgba(102, 0, 0, 0);
-		border-left-color: #c00;
+		border-left-color: #600;
 		border-width: 20px;
 		top: 50%;
 		margin-top: -20px;
@@ -45,7 +45,7 @@
 	
 	.docTooltip.arrow.down {
 		position: relative;
-		background: #c00;
+		background: #600;
 		border: 4px solid #c00;
 	}
 	.docTooltip.arrow.down:after, .docTooltip.arrow.down:before {
@@ -60,7 +60,7 @@
 	
 	.docTooltip.arrow.down:after {
 		border-color: rgba(102, 0, 0, 0);
-		border-top-color: #c00;
+		border-top-color: #600;
 		border-width: 20px;
 		left: 50%;
 		margin-left: -20px;
