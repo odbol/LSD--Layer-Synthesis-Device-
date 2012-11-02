@@ -668,7 +668,8 @@ Attribution.prototype = {
 
 			var drawFrameIntervalId = 0;
 			
-			var reviveUI = function () {
+			var reviveUI = function (e) {
+console.log('reviveUI', e);
 				$(canvas).unbind("mousedown.lsdUIHide");
 			
 				$(".dialogControls").not('.permanent').fadeIn();
@@ -676,6 +677,7 @@ Attribution.prototype = {
 				$('body').removeClass('uiHidden');
 			};
 			var hideUI = function (e) {
+console.log('hideUI', e);
 				$(".dialogControls").not('.permanent').fadeOut();
 				
 				$('body').addClass('uiHidden');
@@ -1209,24 +1211,28 @@ Attribution.prototype = {
 						}
 					},
 					startMouseIdle = function startMouseIdle(ev) {
+console.log('startMouseIdle', ev.target, this);		
+						if (ev.target != this && 
+							!(this == window && ev.target.id == 'backgroundCanvas')) return	true;
+					
 						if (!idleCheckInterval) {
 							lsd.show();
 							idleCheckInterval = setInterval(checkMouseIdle, 2000);
-						}
-console.log('startMouseIdle' +ev.target);						
+						}				
 						lastMouseMovement = new Date();
 					},
 					cancelMouseIdle = function cancelMouseIdle(ev) {
-console.log('cancelMouseIdle');					
+console.log('cancelMouseIdle', ev.target);					
 						clearInterval(idleCheckInterval);
 						idleCheckInterval = false;
 					};
 				$('canvas').mousemove(startMouseIdle)
 					.mouseout(cancelMouseIdle);
+/* omg crhome is retsrded 
 				$(window)
-					.mouseenter(cancelMouseIdle)
-					.mouseout(startMouseIdle); 
-			
+					.on('mouseenter.win', cancelMouseIdle)
+					.on('mouseout.win', startMouseIdle); 
+			*/
 			
 			//return an object they can play around with
 			/*return {

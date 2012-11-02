@@ -171,6 +171,8 @@ var _ = {};
 		},
 	
 		show: function show(name) {
+			if (!name) return; // protect against stupid jQuery event trigger calling willy-nilly any function of the same name.
+			
 			this.steps[name].show();
 									
 			$(this).trigger('show.doc', [name]);
