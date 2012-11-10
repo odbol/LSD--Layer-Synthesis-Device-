@@ -194,9 +194,9 @@ var	PRELOAD_DELAY = 10;
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" + //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
+		$('#musicControls').append('<div id="timeline" class="step_2" title="The timeline tracks your actions and records them">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all step_4' title='Click here to start fresh'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" + //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
 			"<li id='zoomInButton' class='zoomIn button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomin'>Zoom In</span></li><li id='zoomOutButton' class='zoomOut button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomout'>Zoom Out</span></li>" + 
-			'</ul><div class="scrollHolder"><div id="timelineHolder"><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div></div></div>')
+			'</ul><div class="scrollHolder"><div id="timelineHolder" class="step_3" title="Drag and drop clips and transitions you&apos;ve recorded"><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div></div></div>')
 			.children('.buttons')
 				.append("<li id='shareRButton' class='share button dialogButton'>Share</li>");
 		
@@ -760,7 +760,7 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 		});
 		
 		$('#deleteButton').click(function () {
-			if (confirm("Delete all recorded tracks? (this cannot be undone)")) {
+			if (confirm("Clear all recorded tracks and start new remix?")) {
 				timeline.clearPlaylist();
 			}
 		});

@@ -1,0 +1,160 @@
+body {
+	background-color: #1B0A0A;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-attachment: fixed;
+	background-image: url(images/gear.jpg);
+	background-repeat: no-repeat;
+	background-position: 630px 0px;
+	vertical-align: bottom;
+}
+body,td,th {
+	color: #FFFFFF;
+}
+.pageHolder {
+
+}
+/* NAVBAR */
+.title {
+	font-size: 36px;
+	color: #CFA994;	
+}
+.navlist {
+	padding: 0;
+	list-style-type: none;
+}
+.navbar {
+	/*align:left;*/
+	z-index: 3;
+	position: absolute;
+	left:630px;
+	top:60px;
+	width:135px;
+	background-color:#1B0A0A;
+	filter:alpha(opacity=89);-moz-opacity:.89;opacity:.89;
+	border-bottom-width: thin;
+	border-bottom-style: ridge;
+	border-bottom-color: #999999;
+	border-top-width: thin;
+	border-top-style: ridge;
+	border-top-color: #999999;	
+}
+.navlist li {
+	display: block;
+	list-style-type: none;
+}
+.navlist a,
+.navlist a:link,
+.navlist a:visited,
+.navlist a:hover 
+{
+	list-style-type: none;
+	color: #CFA994;
+	text-decoration: none;
+	font-weight: bold;
+}
+.navlist a:hover {
+	color: #FFCC00;
+	font-size: 24px;
+	font-weight: normal;
+}
+.title a:hover {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.socialLinks {
+	padding:0;
+}
+.socialLinks img {
+	border:0;
+	width:30px;
+}
+.socialLinks li {
+	padding: 0 1px;
+}
+.socialLinks li,
+.socialLinks li a,
+.socialLinks li a:visited,
+.socialLinks li a:hover,
+.socialLinks li a:active {
+	display: inline;
+	margin:0;
+}
+
+/* CONTENT FRAME */
+.content {
+	position:absolute;
+	vertical-align: top;
+	top: 0px;
+	left: 0px;
+height:100%;
+	width: 100%;
+	overflow: auto;
+	padding: 0px;
+	margin: 0px 0px 0px;
+}
+.elements {
+	width:610px;
+}
+.element {
+
+	width: 600px;
+	border-bottom: thin solid #CCCCCC;
+	float: left;
+	background-color: #1B0A0A;
+	padding: 5px;
+	margin: 10px 0px 0px;
+	white-space: nowrap;
+	overflow: auto;
+}
+.element p {
+	white-space: normal;
+}
+.element img {
+	margin: 0px;
+	padding: 5px 10px;
+}
+.element h2 {
+	white-space: normal;
+	display: inline;
+}
+.element a:link {
+	display: inline;
+	list-style-type: none;
+	color: #6A9AAE;
+	text-decoration: none;
+	font-weight: bold;
+}
+.element a:visited {
+	display: inline;
+	list-style-type: none;
+	color: #CCDCE3;
+	text-decoration: none;
+	font-weight: bold;
+}
+.element a:hover {
+	display: inline;
+	list-style-type: none;
+	color: #FFCC00;
+	text-decoration: underline;
+	font-weight: bold;
+}
+.element ul {
+	white-space: normal;
+}
+.right {
+	display: inline;
+	float:right;
+}
+.left {
+	display: inline;
+	float:left;
+}
+
+#logo {
+	left: 630px;
+	top: 10px;
+	position: absolute;
+	z-index: 10;
+	width:136px;
+}

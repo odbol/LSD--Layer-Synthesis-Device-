@@ -1,0 +1,217 @@
+/* shows page, video page */
+
+body {
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+body .pageHolder { 
+	z-index: 50;
+}
+
+img {
+	border: none;
+}
+
+.storyHolder {
+	color: #FFFFFF;
+	background-color: #1B0A0A;
+}
+.credit, 
+.showDate {
+	display:block;
+	font-size:10px;
+}
+.credit a {
+	color:#CCCCCC;
+	text-decoration:none;
+} 
+.shows #pageContent {
+white-space:normal;
+}
+.shows #pageContent li {
+margin-bottom:10px;
+}
+.viewVid {
+	font-size: 10px;
+	font-style:italic;
+	display:block;
+}
+
+.navbar {
+	font-size: 16px;
+}
+
+.element {
+	font-size: 14px;
+}
+
+.element hr {
+	margin: 5px 100px;
+	height: 1px;
+	clear:both;
+	border-right: none 0;
+	border-left: none 0;
+	border-bottom: none 0;
+	border-top: 1px solid #FFF
+}
+
+.loading {
+	background: #1B0A0A url("/images/blackSpinner.gif") no-repeat center center;
+    height: 100%;
+    left: 0;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    width: 620px;
+    z-index: 200;
+}
+
+
+/********* page specific ********/
+
+.contact .elements {
+	width: 100%;
+	position: relative;
+	left: 0px;
+}
+
+.projects .element {
+	white-space:normal;
+}
+
+
+/* home */
+.home .elements {
+	position: relative;
+	left: 0px;
+}
+
+.home .poemLeft, 
+.home .poemRight {
+	float:left;
+}
+.home .poemRight {
+	width: 415px;
+	margin-left: 3px;
+}
+
+.home .poemRight p {
+	margin-top: 0;
+}
+
+
+
+
+.home .element .feature {
+	margin:20px 1% 5px;
+	padding-top:5px;
+}
+
+.home .element .half {
+	width: 48%;
+	float:left;
+}
+
+.home .element .feature {
+	background-image: -webkit-linear-gradient(rgba(106, 154, 174,0.7) 0%, rgba(106, 154, 174,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -moz-linear-gradient(rgba(106, 154, 174,0.7) 0%, rgba(106, 154, 174,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -ms-linear-gradient(rgba(106, 154, 174,0.7) 0%, rgba(106, 154, 174,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -o-linear-gradient(rgba(106, 154, 174,0.7) 0%, rgba(106, 154, 174,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: linear-gradient(rgba(106, 154, 174,0.7) 0%, rgba(106, 154, 174,0) 55%, rgba(0,0,0,.05) 85%);
+	
+		
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.home .element .feature:hover {
+	background-image: -webkit-linear-gradient(rgba(200,0,25,0.7) 0%, rgba(200,0,25,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -moz-linear-gradient(rgba(200,0,25,0.7) 0%, rgba(200,0,25,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -ms-linear-gradient(rgba(200,0,25,0.7) 0%, rgba(200,0,25,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: -o-linear-gradient(rgba(200,0,25,0.7) 0%, rgba(200,0,25,0) 55%, rgba(0,0,0,.05) 85%);
+	background-image: linear-gradient(rgba(200,0,25,0.7) 0%, rgba(200,0,25,0) 55%, rgba(0,0,0,.05) 85%);
+}
+
+.home .element .feature a,
+.home .element .feature a:link,
+/*.home .element .feature a:hover,*/
+.home .element .feature a:visited,
+.home .element .feature a:active {
+	color: #ea0;
+}
+
+
+/* stills */
+.stills .thumbElement {
+	margin: 5px 12px 10px;
+	white-space: normal;
+	overflow: auto;
+}
+.stills .thumbnail {
+	width: 75px;
+	height: 75px;
+	padding: 3px;
+}
+.stills .thumbElement img {
+	border: solid 1px #FFF;
+}
+.stills .thumbElement a:link {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.stills .thumbElement a:visited {
+	color: #CCDCE3;
+	text-decoration: none;
+}
+.stills .thumbElement a:hover {
+	color: #FFCC00;
+	text-decoration: underline;
+}
+
+.stills #photoElements.elements {
+/*	width: 95%;*/
+	position: relative;
+/*	height: 90%;*/
+}
+.stills .storyHolder {
+	color: #FFFFFF;
+	background-color: #1B0A0A;
+}
+
+
+.stills .photoSets {
+	display:block;
+	/*width: 100%;*/
+}
+.stills .photoSet,
+.stills .photoSet_on {
+	text-align: center;
+	display:inline;
+	float:left;
+	margin: 0px;
+	width: 120px;
+	height: 130px;
+	padding: 5px;
+}
+.stills .photoSet:hover {
+	/*background-color:#111;*/
+}
+.stills .photoSet_on {
+	/*background-color:#222;*/
+	/*border: 1px solid #FFCC00;
+	padding: 4px;*/
+}
+.stills .photoSet_on a,
+.stills .photoSet_on a:link,
+.stills .photoSet_on a:hover,
+.stills .photoSet_on a:visited,
+.stills .photoSet_on a:active,
+.stills .photoSet:hover a,
+.stills .photoSet:hover a:link,
+.stills .photoSet:hover a:hover,
+.stills .photoSet:hover a:visited,
+.stills .photoSet:hover a:active
+{ color:#FFCC00;}
+/*.stills .photoSet img {
+	border: solid 1px #FFF;
+}*/
