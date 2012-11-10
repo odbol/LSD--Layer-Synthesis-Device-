@@ -188,6 +188,29 @@ body .element {
 	<script type="text/javascript" src="/_js/modernizr.min.js"></script>
 	
 	<script type="text/javascript">
+	
+/***
+	@const FIREBASE_URL: The root URL of your Firebase server.
+	
+	Available at http://firebase.com
+	
+***/
+var FIREBASE_URL = '';
+if (/lsd.odbol.com/.test(window.location.href)) {
+	/*
+	
+	This is my database... please do not use it! 
+	Sign up for your own at http://firebase.com if you would
+	like to rehost or modify LSD. It's free!
+	
+	*/
+	FIREBASE_URL = 'http://lsd.firebaseio.com';
+}
+
+if (!FIREBASE_URL) {
+	console.log('FIREBASE_URL is not set to a valid Firebase database. Please set the line in the index HTML file to use crowdsourced features.');
+}
+	
 		//the end-all test
 		var isMobile = (/android.+webkit/i).test(navigator.userAgent) || (/iPad|iPhone|iPod/).test(navigator.platform);
 
