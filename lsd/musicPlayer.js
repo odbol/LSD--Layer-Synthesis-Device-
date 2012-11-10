@@ -818,7 +818,9 @@ console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);
 				}
 											
 				// add documentation triggers
-				popcorn.cue(10, function () {
+				// start 4 minutes in, so they watch the original first!
+				popcorn.cue(4 * 60, function () {
+					lsd.show(); //have to show for the tooltip to activate.
 					$().documentate().show('teaser');
 				});
 			}); 

@@ -661,6 +661,11 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				
 			$().musicPlayer(musicUrl, musicType, lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'));
 
+			
+			/***********************
+				INLINE TUTORIAL
+			  with Documentationeer
+			************************/
 			var doc = $().documentate([
 				// each Step object can launch a cascading help tutorial of many steps. 
 				// this one will be our root object to launch the tutorial
@@ -670,7 +675,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 					
 					// this takes a jQuery selector of the element that will trigger this tutorial,
 					// only the first time it is clicked.
-					once: '#recordButton, .helpButton',
+					once: '.record.button, .helpButton',
 					
 					// jQuery selector of all the help tooltips or dialogs to show when triggered
 					elements: '.step_1, #layerControl_0 .clipThumb',
@@ -786,6 +791,9 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				}
 			]);
 		}
+		
+		
+		/***********  ANNNNNNND GO! ***********/
 		
 		// capabilities check
 		// TODO: firefox disabled for now, since looping of OGVs in place of GIfs has a bit of a delay. too bad since Firefox is the only one that gets opacities correct!
