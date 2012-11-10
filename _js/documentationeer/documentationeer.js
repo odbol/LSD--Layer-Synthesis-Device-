@@ -89,19 +89,21 @@ var _ = {};
 			
 			this.$el.each(function () {
 				self.tips.push(
-					$(this).tooltip({
-						tipClass : 'docTooltip ' + opts.cssClass,
-						events : {
-							def:     "focus.tooltip,click.tooltip",
-							tooltip: "none,click.tooltip"
-						},
-						predelay: 30,
-						layout: "<div></div>",
-						onHide: this.onHide,
-						
-						position : opts.tooltip.position,
-						offset : opts.tooltip.offset
-					})
+					$(this)				
+						.tooltip({
+							tipClass : 'docTooltip ' + opts.cssClass,
+							events : {
+								def:     "focus.tooltip,click.tooltip",
+								tooltip: "none,click.tooltip"
+							},
+							predelay: 30,
+							layout: "<div></div>",
+							onHide: self.onHide,
+							effect: 'fade',
+							
+							position : opts.tooltip.position,
+							offset : opts.tooltip.offset
+						})
 						// add dynamic plugin with optional configuration for bottom edge
 						//.dynamic(placement)
 						.data('tooltip')
@@ -111,6 +113,19 @@ var _ = {};
 			
 			if (opts.once) {
 				$(opts.once).click(self.show);
+			}
+			
+			if (opts.closers) {
+				// hide when they use the element
+				$(opts.closers)
+					.on('click', function () {
+						self.hide();
+					})
+			}
+			
+			// register any children
+			if (typeof self.opts.done == 'object') {
+				self.doc.add(self.opts.done);
 			}
 		},
 		
@@ -128,6 +143,14 @@ var _ = {};
 			$(this.doc).triggerHandler('show.doc', [this.opts.name]);
 		},
 		
+		hide : function hide() {
+			var self = this;
+
+			for (var i = 0; i < self.tips.length; i++) {
+				self.tips[i].hide();
+			}
+		},
+		
 		onHide : function onHide() {
 			if (--this.numTipsOpen <= 0) {
 				this.finish();
@@ -143,7 +166,7 @@ var _ = {};
 					this.doc.show(this.opts.done);
 					
 					break;
-				case 'Object':
+				case 'object':
 				
 					this.doc.show(this.opts.done.name);
 					break;
@@ -155,17 +178,22 @@ var _ = {};
 	var	Documentationeer = function Documentationeer(steps) {
 			this.steps = {};
 		
-			this.add(steps);
+			this.addAll(steps);
 		};
 		
 	Documentationeer.prototype = {
-		add: function add(steps) {
+		add:  function add(stepOptions) {
+			var step = new DocStep(this, stepOptions);
+					
+			this.steps[step.name] = step;
+		},
+		
+		addAll: function addAll(steps) {
 			if (steps) {
 				for (var i = 0; i < steps.length; i++) {
-					var stepOptions = steps[i],
-						step = new DocStep(this, stepOptions);
+					var stepOptions = steps[i];
 					
-					this.steps[step.name] = step;
+					this.add(stepOptions);
 				}
 			}
 		},
@@ -193,7 +221,7 @@ var _ = {};
 	// initializes documentation tooltips 
 	$.fn.documentate = function(steps) {
 		if (doc) {
-			doc.add(steps);
+			doc.addAll(steps);
 		}
 		else {
 			doc = new Documentationeer(steps);
