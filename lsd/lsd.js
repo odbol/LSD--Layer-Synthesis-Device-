@@ -473,7 +473,7 @@ Attribution.prototype = {
 				//separate lists in pages for horizontal scrolling
 				if (i > 0 && i % CLIP_PAGE_SIZE == 0) 
 					sliderHTML += "</ul><ul>"
-				sliderHTML += "<li id='vidClip_" + i + "' class='clipThumb'><img src='" + lsd.vidClips[i].thumbnail + "' /></li>";
+				sliderHTML += "<li id='vidClip_" + i + "' class='clipThumb' title='Choose a clip to play. Use the arrows to scroll.'><img src='" + lsd.vidClips[i].thumbnail + "' /></li>";
 			}
 			sliderHTML += "</ul></div></div>" + //end panelHolder
 				//"<br class='clear' />" +
@@ -588,33 +588,36 @@ Attribution.prototype = {
 				};
 			
 			//layer preview thumb
-			$("#backgroundCanvasControls .layerControl .clipThumb")
+			$("#backgroundCanvasControls .layerControl")
 				//.toggle(, hideSharedControls)
-				.click(function (e) {
+				.on('click', '.clipThumb', function (e) {
 					toggleSharedControls(e);
 					setCurrentLayer($(this).parent());
 				});
 
 			//CLIP THUMBS
 			$("#backgroundCanvasControls .clipThumbs .clipThumb")
+				.parent()
+					.on('click', '.clipThumb', function () { 		//load clip's video into current layer
+						if (currentLayer) {
+							var $this = $(this),
+								layerId = currentLayer.id,
+								clipId = $this.data("vidClip").id;
+							
+							//changeClip(currentLayer, currentLayerControl, $this.data("vidClip") );
+	
+							$(lsd).trigger('changeClip.lsd', [layerId, clipId]);
+			
+							
+							hideSharedControls();
+						}
+					})
+				.end()
+			
 				.each(function (i, el) {	//add linkback data from tags to objects
 					$(this).data("vidClip", lsd.vidClips[i]); //assumes they're in the same order as the array. risky....
 					lsd.vidClips[i].element = this;
 					//$(this).data("vidClipIdx", i); //assumes they're in the same order as the array. risky....
-				})
-				.click(function () { 		//load clip's video into current layer
-					if (currentLayer) {
-						var $this = $(this),
-							layerId = currentLayer.id,
-							clipId = $this.data("vidClip").id;
-						
-						//changeClip(currentLayer, currentLayerControl, $this.data("vidClip") );
-
-						$(lsd).trigger('changeClip.lsd', [layerId, clipId]);
-		
-						
-						hideSharedControls();
-					}
 				})
 				.slice(0, 3) //add the thumbs for the first three already-loaded clips into the layers
 					.each(function (i, el) { 
