@@ -672,7 +672,7 @@ Attribution.prototype = {
 			var drawFrameIntervalId = 0;
 			
 			var reviveUI = function (e) {
-console.log('reviveUI', e);
+//console.log('reviveUI', e);
 				$(canvas).unbind("mousedown.lsdUIHide");
 			
 				$(".dialogControls").not('.permanent').fadeIn();
@@ -680,7 +680,7 @@ console.log('reviveUI', e);
 				$('body').removeClass('uiHidden');
 			};
 			var hideUI = function (e) {
-console.log('hideUI', e);
+//console.log('hideUI', e);
 				$(".dialogControls").not('.permanent').fadeOut();
 				
 				$('body').addClass('uiHidden');
@@ -1207,14 +1207,14 @@ console.log('hideUI', e);
 					idleCheckInterval = false,
 					checkMouseIdle = function () {
 						if (lastMouseMovement.getTime() < new Date().getTime() - 2000) {
-	console.log('checkMouseIdle');	
+//	console.log('checkMouseIdle');	
 							lsd.hide();
 							clearInterval(idleCheckInterval);
 							idleCheckInterval = false;
 						}
 					},
 					startMouseIdle = function startMouseIdle(ev) {
-console.log('startMouseIdle', ev.target, this);		
+//console.log('startMouseIdle', ev.target, this);		
 						if (ev.target != this && 
 							!(this == window && ev.target.id == 'backgroundCanvas')) return	true;
 					
@@ -1225,7 +1225,7 @@ console.log('startMouseIdle', ev.target, this);
 						lastMouseMovement = new Date();
 					},
 					cancelMouseIdle = function cancelMouseIdle(ev) {
-console.log('cancelMouseIdle', ev.target);					
+//console.log('cancelMouseIdle', ev.target);					
 						clearInterval(idleCheckInterval);
 						idleCheckInterval = false;
 					};

@@ -112,7 +112,7 @@ var _ = {};
 				
 			
 			if (opts.once) {
-				$(opts.once).click(self.show);
+				$('body').on('click', opts.once, self.show);
 			}
 			
 			if (opts.closers) {

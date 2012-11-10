@@ -6,12 +6,8 @@ var QUEUE_STATUS = {
 	'MASTER':	3
 };
 
-/***
-	This is my database... please do not use it! 
-	Sign up for your own at http://firebase.com if you would
-	like to rehost or modify LSD.
-***/
-var FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/lsd';
+// set FIREBASE_URL before you call any scripts
+var FIREBASE_ROOT_BASE = FIREBASE_URL;
 
 //sanitizes any text for insertion as HTML
 function htmlEncode(value){

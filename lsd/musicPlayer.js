@@ -33,8 +33,7 @@ var	PRELOAD_DELAY = 10;
 	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton step_0' title='Remix the video while watching it'>Remix</li></ul>",
 		MUSIC_CONTROLS_END = '</div><div class="preloaderMsg dialogControls permanent"><img src="/lsd/blackSpinner.gif" alt="" />Loading <span class="preloaderProgress"></span> clips...</div>',
 
-		FIREBASE_ROOT_BASE = 'http://gamma.firebase.com/lsd/_playlists';
-
+		FIREBASE_ROOT_BASE = FIREBASE_URL + '/_playlists';
 
 	/**
 		the storage for playlists
@@ -214,7 +213,7 @@ var	PRELOAD_DELAY = 10;
 			drop: function( event, ui ) {
 				var idx = parseInt(ui.draggable
 								.attr('id').replace('timelineItem_', ''));
-console.log("removing item " + idx);				
+//console.log("removing item " + idx);				
 				if (idx > 0) 
 					timeline.remove(timeline.playlist[idx]);
 					
@@ -236,7 +235,7 @@ console.log("removing item " + idx);
 			drop: function( event, ui ) {
 				var idx = parseInt(ui.draggable
 								.attr('id').replace('timelineItem_', ''));
-console.log("removing item " + idx);				
+//console.log("removing item " + idx);				
 				if (idx > 0) 
 					timeline.remove(timeline.playlist[idx]);
 					
@@ -376,7 +375,7 @@ console.log("removing item " + idx);
 						item.time = (left / $('#timelineHolder').width()) * timeline.totalTime;
 						item.event.layerId = layerId;
 						
-	console.log('ondragstop: ', item.idx, item.time, layerId);
+	//console.log('ondragstop: ', item.idx, item.time, layerId);
 						
 						timeline.update(item);
 					}
@@ -667,7 +666,7 @@ console.log("removing item " + idx);
 						var id = "timelineItem_" + item.idx;
 							
 						popcorn.cue(item.time, function() {
-console.log('cueEvent: ', item.idx, item.time, item.event.layerId);							
+//console.log('cueEvent: ', item.idx, item.time, item.event.layerId);							
 							cueEvent(item.event);
 						});
 						
@@ -676,7 +675,7 @@ console.log('cueEvent: ', item.idx, item.time, item.event.layerId);
 							var preloadTime = Math.max(0, item.time - PRELOAD_DELAY);
 							
 							popcorn.cue(preloadTime, function() {
-console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);							
+//console.log('cueEvent preload: ', item.idx, item.time, item.event.clipId);							
 								cuePreloadEvent(item.event);
 							});
 						}						
