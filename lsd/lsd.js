@@ -108,34 +108,7 @@ function limitNum(min, num, max) {
 	return Math.max(min, Math.min(max, num));
 }
 
-				
-//from http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-// shim layer with setTimeout fallback
-(function() {
-	var lastTime = 0;
-	var vendors = ['ms', 'moz', 'webkit', 'o'];
-	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-		window.cancelAnimationFrame = 
-		  window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-	}
- 
-	if (!window.requestAnimationFrame)
-		window.requestAnimationFrame = function(callback, element) {
-			var currTime = new Date().getTime();
-			var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-			var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-			  timeToCall);
-			lastTime = currTime + timeToCall;
-			return id;
-		};
- 
-	if (!window.cancelAnimationFrame)
-		window.cancelAnimationFrame = function(id) {
-			clearTimeout(id);
-		};
-}());
-						
+					
 
 //////////////////////////////
 // 	VidLayer CLASS
@@ -225,7 +198,7 @@ Attribution.prototype = {
 
    var LSD = function LSD() {
    
-   }
+   };
    
    LSD.prototype = {
 		isPaused: false,
@@ -250,8 +223,9 @@ Attribution.prototype = {
 	//  shouldInitClips -   optional bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
 	//  resolution		-	optional Object giving dimensions of canvas. default {width: 320, height: 240}
    init : function init(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips, resolution) {
-		var lsd = this,
-			resolution = resolution || {width: 320, height: 240};
+		var lsd = this;
+		
+		resolution = resolution || {width: 320, height: 240};
 		
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
@@ -279,8 +253,10 @@ Attribution.prototype = {
 		$("body")
 			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
-		var canvas = document.getElementById('backgroundCanvas');
-		if (canvas.getContext){
+		var renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		if (renderer.getContext()) {
+			var canvas = renderer.getCanvas();
+
 			//disable scrolling on touch devices
 			document.ontouchmove = function(e){
             	e.preventDefault();
@@ -314,14 +290,9 @@ Attribution.prototype = {
 			}
 		
 		
-			var ctx = canvas.getContext('2d');
 			
 			var compositeIndex = 0;
-			if (!compositeTypes)
-				compositeTypes = ['lighter','darker','copy','xor',
-				  'source-over','source-in','source-out','source-atop',
-				  'destination-over','destination-in','destination-out','destination-atop'
-				];
+			compositeTypes = renderer.getBlendModes();
 				
 				
 			//changes the clip in the given layer. TODO: this could be better	
@@ -383,9 +354,11 @@ Attribution.prototype = {
 					sliders[layerId].tweenTo(val, duration);
 				},
 							
-				onChangeComposition = function (event, value) {		
+				onChangeComposition = function (event, value) {
 						compositeIndex = value;
 						$("#compositionSelector").val(compositeIndex);
+
+						renderer.setBlendMode(compositeTypes[compositeIndex]);
 				};
 
 			//binds to all related events triggered by given publisher
@@ -959,72 +932,13 @@ Attribution.prototype = {
 					}
 				});
 		
-				//animates the mixer according to input from lastEvent
-				var drawFrame = function () {
-					//WTF is this?
-					if (!(e = lastEvent))
-						return;
-						
-					if (lsd.isPaused)
-						return;
-						
-					ctx.globalAlpha = 1.0;
-					
-					//ctx.fillStyle = 'rgba(0,0,0,0)';
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
-						
-				
-					
-					/*
-					var compositeIndex = limitNum(0,
-											Math.round((e.clientX / $(canvas).width()) * compositeTypes.length), 
-											compositeTypes.length
-										);
-					*/
-					
-					var rotation = 0;//limitNum(0, (e.clientX / $(canvas).width()) / 5.0, 0.1);
-					var zoom = 0;//limitNum(1, (e.clientX / $(canvas).width()) * 5.0, 1000);
-					
-					//calculate the random shake
-					var walkDistance = limitNum(1, (e.clientX / $(canvas).width()) * 10.0, 10)
-					var walkScaleX = (canvas.width + walkDistance + 1) / canvas.width;
-					var walkScaleY = (canvas.height + walkDistance + 1) / canvas.height;			
-					
-					//layer the images on top of each other
-					ctx.globalCompositeOperation = compositeTypes[compositeIndex];
-					//$msg.html("zoom: " + zoom + " rotation: " + rotation + " opacity: " + ctx.globalAlpha);
-					for (i in layers) {
-						ctx.save();
-						//ctx.scale(zoom, zoom);
-						//ctx.rotate(rotation);
-						
-						//shake the last image
-						if (isInteractiveMode && i == layers.length - 1) {
-							var walkX = Math.random() * walkDistance;
-							var walkY = Math.random() * walkDistance;
-							//$msg.append("walking: " + walkX + ", " + walkY);
-							
-							ctx.scale(walkScaleX, walkScaleY);
-							ctx.translate(-walkX, -walkY);
-						}
-						
-						//ctx.drawImage(layers[i].imageObj, 0, 0, canvas.width, canvas.height);
-						layers[i].draw(ctx, 0, 0, canvas.width, canvas.height);
-						ctx.restore();
-					}
-				};
-				//drawFrameIntervalId = setInterval(drawFrame, DRAW_FRAMERATE);
-				(function animloop(){
-				  window.requestAnimationFrame(animloop);
-				  drawFrame();
-				})();
-				
+				renderer.addLayers(layers);
+				renderer.start();
 				
 				
 				if (enableBlendEffectOnClick) {
 					$(canvas).bind("mousedown.lsd", function () {
-						compositeIndex = (compositeIndex + 1) % compositeTypes.length;
-						$("#compositionSelector").val(compositeIndex);
+						$(lsd).trigger('changeComposition.lsd', [(compositeIndex + 1) % compositeTypes.length]);
 					});
 				}
 				
