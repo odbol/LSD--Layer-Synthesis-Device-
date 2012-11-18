@@ -1,26 +1,14 @@
+/****
+	2d canvas renderer... for mobile and non WebGL.
+
+	@inherits BaseRenderer
+***/
 var CanvasRenderer = function (lsd, layers, canvasId, compositeTypes) {
-	this.layers = layers || [];
-	this.lsd = lsd;
-
-	canvasId = canvasId || 'backgroundCanvas';
-	this.canvas = document.getElementById(canvasId);
-
-	this.compositeTypes = compositeTypes || 
-		['lighter','darker','copy','xor',
-		  'source-over','source-in','source-out','source-atop',
-		  'destination-over','destination-in','destination-out','destination-atop'
-		];
+	BaseRenderer.init.apply(this, arguments);
 };
 
-CanvasRenderer.prototype = {
-	addLayer : function addLayer(layer) {
-		this.layers.push(layer);
-	},
-
-	addLayers : function addLayers(layers) {
-		this.layers = this.layers.concat(layers);
-	},
-
+CanvasRenderer.prototype = {};
+$.extend(CanvasRenderer.prototype, BaseRenderer.prototype, {
 	getContext : function getContext() {
 		if (this.canvas && this.canvas.getContext) {
 			return this.canvas.getContext('2d');
@@ -113,25 +101,5 @@ CanvasRenderer.prototype = {
 		})();
 
 		return true;
-	},
-
-
-	// EFFECTS
-
-	getBlendModes : function getBlendModes() {
-		return this.compositeTypes;
-	},
-
-	getBlendMode : function getBlendMode() {
-		return this._curBlendMode;
-	},
-
-	setBlendMode : function setBlendMode(mode) {
-		this._curBlendMode = mode;
-	},
-
-	getCanvas : function getCanvas() {
-		return this.canvas;
 	}
-
-};
+});
