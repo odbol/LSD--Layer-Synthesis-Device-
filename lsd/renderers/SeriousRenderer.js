@@ -26,7 +26,7 @@ var SeriousRenderer = function SeriousRenderer(lsd, layers, canvasId, compositeT
 				self.onClipLoaded.apply(self, arguments);
 			});
 */
-	};
+	}; 
 
 SeriousLayer.prototype = {
 	onSetOpacity : function onSetOpacity(ev, opacity) {
@@ -73,7 +73,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 			layers = this.layers,
 			seriously = new Seriously(),
 			target = seriously.target(canvas),
-			blenders = [seriously.effect('blend'), seriously.effect('blend')],
+			blenders = [seriously.effect('mixer'), seriously.effect('mixer')],
 			sources = [],
 
 			refresh = function refresh () {
@@ -98,8 +98,19 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 			makeOnSetOpacity = function makeOnSetOpacity(layer, layerIdx) {
 
 				return function makeOnSetOpacity(ev, opacity) {
+					var blenderIdx = layerIdx / 2 | 0,
+						blenderSide = (layerIdx % 2 === 0 && layerIdx < 2 ? 'Bottom' : 'Top' );
+
+					if (blenderIdx > 0) {
+						blenderSide = 'Top';
+
+						// bottom of any connected blenders are always full blast, since opacity is determined by linked blenders
+						blenders[blenderIdx]['opacityBottom'] = 1.0;
+					}
+
 					// do something with sources[layerIdx]
-					blenders[layerIdx / 2 | 0].opacity = opacity;
+					blenders[blenderIdx]['opacity' + blenderSide] = opacity;
+					console.log('blenders opacity: layer: ' + layerIdx + ', blender ' + blenderIdx+ ', opa: ' + 'opacity' + blenderSide);
 				}; 
 			},
 
