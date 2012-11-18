@@ -121,6 +121,18 @@ VidLayer.prototype.image = null; //holds an Image or Video tag source
 //loads a new VidSource object and plays as soon as it's available
 VidLayer.prototype.opacity = 1.0;
 VidLayer.prototype.id = 0;
+
+VidLayer.prototype.getOpacity = function getOpacity() {
+	return this.opacity;
+};
+VidLayer.prototype.setOpacity = function setOpacity(val) {
+	this.opacity = val;
+
+	this.$self.trigger('layerSetOpacity.lsd', [val]);
+};
+VidLayer.prototype.bind = function bind(eventName, cb) {
+	return this.$self.bind(eventName, cb);
+};
 VidLayer.prototype.load = function (clip) {
 	this.clip = clip;
 	//this.image = null; 
@@ -128,7 +140,8 @@ VidLayer.prototype.load = function (clip) {
 	clip.load(function (loadedImage) {
 		if (clip != parentLayer.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
 			return;
-	
+
+
 		if (parentLayer.image != null) { //unload (hide) last vid, for performance (don't want a billion GIFs running at once)
 			parentLayer.image.style.display = 'none';
 			
@@ -142,21 +155,29 @@ VidLayer.prototype.load = function (clip) {
 		
 		if (loadedImage.play) //if video, resume playing
 			loadedImage.play();
+
+
+		// trigger the event first???, so seriously has time before its paused???
+		$(parentLayer).trigger('clipLoaded.lsd', [parentLayer]);
 	});
-}
+};
 //draws the image on context ctx in the coordinates given.
 VidLayer.prototype.draw = function (ctx, x1, y1, x2, y2) {
 	if (this.image) { //check if not loaded yet!
-		ctx.globalAlpha = this.opacity;
+		ctx.globalAlpha = this.getOpacity();
 					
 		ctx.drawImage(this.image, x1, y1, x2, y2);
 	}
-}
+};
 function VidLayer(clip, id) {
 	if (clip)
 		this.load(clip);
 		
 	this.id = id;
+
+	// cache the jQuery ref for quicker event triggering
+	this.$self = $(this);
+	
 	return this;
 }  
 
@@ -253,8 +274,8 @@ Attribution.prototype = {
 		$("body")
 			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
-		var renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
-		if (renderer.getContext()) {
+		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes); // new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
 
 			//disable scrolling on touch devices
@@ -385,9 +406,9 @@ Attribution.prototype = {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter")
-					layers[i].opacity = 0.7;
+					layers[i].setOpacity(0.7);
 				else
-					layers[i].opacity = 0.0;
+					layers[i].setOpacity(0.0);
 				
 				if (crowd) {
 					crowd.makeOnClipChange(i);
@@ -809,7 +830,7 @@ Attribution.prototype = {
 					if (enableHTML5Range) {
 						var onSlide = function (data) {
 							//change local immediately, and only send final value to crowd
-							layers[i].opacity = parseFloat(data.value);
+							layers[i].setOpacity(parseFloat(data.value));
 							
 							interactiveOff(); //turn interactive off if they try to change manually
 						};
@@ -823,7 +844,7 @@ Attribution.prototype = {
 							/*.attr("min", 0.0)
 							.attr("max", 1.0)
 							.attr("step", 0.1)*/
-							.attr("value", layers[i].opacity)
+							.attr("value", layers[i].getOpacity())
 							;//.change(onSlide);
 							
 						sliders[i] = fdSlider.createSlider({
@@ -880,7 +901,7 @@ Attribution.prototype = {
 								max: 1.0,
 								step: 0.1,
 								orientation: 'vertical',
-								value: layers[i].opacity
+								value: layers[i].getOpacity()
 							};
 							
 						if (i > 0) //turn interactive off if they try to change manually
