@@ -17,6 +17,8 @@ var SeriousRenderer = function SeriousRenderer(lsd, layers, canvasId, compositeT
 		this.seriously = seriously;
 		this.layer = vidLayer;
 
+		this.effects = [ this.seriously.effect('ripple') ];
+
 		// EVENT LISTENERS
 		/*vidLayer
 			.bind('setOpacity.lsd', function () {
@@ -25,9 +27,9 @@ var SeriousRenderer = function SeriousRenderer(lsd, layers, canvasId, compositeT
 			.bind('clipLoaded.lsd', function () {
 				self.onClipLoaded.apply(self, arguments);
 			});
-*/
+*/ 
 	}; 
-
+  
 SeriousLayer.prototype = {
 	onSetOpacity : function onSetOpacity(ev, opacity) {
 		this.source.amount = opacity;
@@ -35,17 +37,41 @@ SeriousLayer.prototype = {
 
 	onClipLoaded: function onClipLoaded(ev, layer) {
 		// TODO this won't work.
-		if (!this.source) {
-			this.source = this.seriously.source(layer.image);
-		}
-		else {
-			//this.source.source = layer.image;
-
+		if (this.source) {
 			this.source.destroy();
-			this.source = this.seriously.source(layer.image);
+		}
+
+
+		//this.source.source = layer.image;
+
+		this.source = this.seriously.source(layer.image);
+
+		var firstEffect = this.getEffect(0);
+		if (firstEffect) {
+			firstEffect.source = this.source;
 		}
 
 		this.refresh();
+	},
+
+	getEffect : function getEffect(idx) {
+		var effectLen = this.effects.length;
+
+		if (idx < 0) {
+			idx = effectLen + idx;
+		} else if (!(idx > 0)) {
+			idx = 0;
+		}
+
+		if (effectLen > idx) {
+			return this.effects[idx];
+		}
+
+		return null;
+	},
+
+	getOutput : function getOutput() {
+		return this.getEffect(-1) || this.source;
 	},
 
 	refresh : function refresh() {
@@ -66,7 +92,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 
 		Returns true if successful, false if not supported.
 	***/
-	start : function start() {
+	start : function start() { 
 		var self = this,
 			lsd = this.lsd,
 			canvas = this.canvas,
@@ -83,13 +109,13 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 					var blender = blenders[j];
 
 					if (j % 2 === 0) {
-						blender.bottom = sources[sourceIdx++].source;
+						blender.bottom = sources[sourceIdx++].getOutput();
 					}
 					else {
 						blender.bottom = blenders[j - 1];
 					}
 
-					blender.top = sources[sourceIdx++].source;
+					blender.top = sources[sourceIdx++].getOutput();
 				}
 
 				target.source = blenders[blenders.length - 1];
@@ -115,7 +141,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 			},
 
 			makeOnLoadClip = function makeOnLoadClip(layer, layerIdx) {
-
+ 
 				return function makeOnLoadClip(ev, vidLayer) {
 					layer.onClipLoaded(ev, vidLayer);
 
