@@ -33,6 +33,10 @@ BaseRenderer.prototype = {
 		this.layers = this.layers.concat(layers);
 	},
 
+	getLayer : function getLayer(layerIdx) {
+		return this.layers[layerIdx];
+	},
+
 	getContext : function getContext() {
 		return null;
 	},

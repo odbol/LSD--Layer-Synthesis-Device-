@@ -284,6 +284,7 @@ Attribution.prototype = {
             	return false;
 			};
 
+			var availableEffects = Seriously.effects();
 
 			
 			//filter clips list by rating and mobileOnly flag:
@@ -430,7 +431,7 @@ Attribution.prototype = {
 				"<li id='buttonHelp' title='Help/About' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-help'></span></li>" +		
 				"<li id='buttonFullscreen' title='Fullscreen Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-arrow-4-diag'></span></li>" +		
 				(ENABLE_BACKGROUNDING ? "<li id='buttonStop' title='Stop Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-closethick'></span></li>" : "") +
-				"</ul>"
+				"</ul>";
 				
 			//build html control for composite
 			var compHTML = "<select id='compositionSelector'>";
@@ -439,19 +440,37 @@ Attribution.prototype = {
 			compHTML += "</select>";
 			
 			var sliderHTML = "<div class='globalOptions'>" + 
-				"<label id='interactiveToggle'><input type='checkbox' value='true' />Interactive Mouse Mode</label>" +
-				"</div>"
+				"<label id='interactiveToggle' style='display:none'><input type='checkbox' value='true' />Interactive Mouse Mode</label>" +
+				"</div>",
+				effectsTabHTML = '',
+				availableEffectOptionsHTML = '<option value="">(no effect)</option>';
 			
-			
+
+			for (i in availableEffects) {
+				availableEffectOptionsHTML += '<option value="' + i + '">' + i + '</option>';
+			}
+
+			sliderHTML += 
+				"<div id='controlTabs' class='controlTabs'><ul class='tabButtons'><li id='clipsTabButton' class='button tabButton'><a href='#clipsTab'>Clips</a></li>" +
+				"<li id='effectsTabButton' class='button tabButton'><a href='#effectsTab'>Effects</a></li></ul>" + 
+				'<div class="tabPanels"><div class="tab active" id="clipsTab">';
+
 			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
-				if (enableHTML5Range)
-					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />"
-				else
+				effectsTabHTML +=  "<div class='layerEffects' id='layerEffectsControl_" + i + "'><h3>Layer " + i + ":</h3>";
+
+				if (enableHTML5Range) {
+					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />";
+					//effectsTabHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerEffectsSlider" + i + "' id='layerEffectsSlider" + i + "' />";
+				}
+				else {
 					sliderHTML += "<div class='slider'></div>";
-				
+					//effectsTabHTML += "<div class='slider'></div>";
+				}
+
 				sliderHTML += "<div class='clipThumb' title='Click the layer icon to change its video clip'></div></div>";
+				effectsTabHTML += '<div class="effectPanel"><div class="effectSelector"><select class="effectSelector">' + availableEffectOptionsHTML + '</select></div></div></div>';
 			}
 			//sliderHTML += "</div>";
 			
@@ -480,15 +499,46 @@ Attribution.prototype = {
 		
 		
 			sliderHTML += "</div></div>"; //end sharedCOntrols, layerSliders
-			
+
+			sliderHTML += '</div><div class="tab" id="effectsTab">' + effectsTabHTML + '</div></div></div>'; // end tabPanels, #controlTabs
+
+			 
 			$("body").append("<div id='backgroundCanvasControls' class='dialogControls ui-corner-all'>" + iconsHTML +
 				"<div class='aboutBox'>" + ABOUT_HTML + "</div>" +
 				"<div class='controlPanel'>" + sliderHTML + "</div></div>");
 		
-			
+
 			//////////////////////////////
 			// EVENT BEHAVIORS
 			//////////////////////////////
+
+			// tabs
+			/*$("#effectsTabButton, #clipsTabButton").on('click', function () {
+
+				$('#clipsTab').toggleClass('active');
+				$('#effectsTab').toggleClass('active');
+			});*/
+			$('#controlTabs').tabs();
+ 
+			$('#effectsTab').on('change', 'select', function () {
+				var $this = $(this),
+					effectName = $this.val(),
+					layerId = $this.parents('.layerEffects').attr('id').replace('layerEffectsControl_', ''),
+					layer = renderer.getSeriousLayer && renderer.getSeriousLayer(layerId);
+
+				if (!layer) return;
+
+				if (effectName) {
+					layer.setEffect(effectName);
+				} 
+				else {
+					layer.setEffect(null);
+				}
+
+				renderer.refresh();
+			});
+
+
 			$("#interactiveToggle input")
 				.change(function () {
 					if (isInteractiveMode != INTERACTIVE_MODE.TOGGLED) { //don't change if we're updating GUI programmatically

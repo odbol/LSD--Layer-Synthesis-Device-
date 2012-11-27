@@ -36,20 +36,15 @@ SeriousLayer.prototype = {
 	},
 
 	onClipLoaded: function onClipLoaded(ev, layer) {
+		
 		// TODO this won't work.
 		if (this.source) {
 			this.source.destroy();
 		}
 
-
 		//this.source.source = layer.image;
 
 		this.source = this.seriously.source(layer.image);
-
-		var firstEffect = this.getEffect(0);
-		if (firstEffect) {
-			firstEffect.source = this.source;
-		}
 
 		this.refresh();
 	},
@@ -70,13 +65,36 @@ SeriousLayer.prototype = {
 		return null;
 	},
 
+	setEffect :  function setEffect(effectName) {
+		var theEffect = this.effects[0];
+
+		if (theEffect) {
+			theEffect.destroy();
+			this.effects.pop();
+		}
+
+		if (effectName) {
+			theEffect = this.seriously.effect(effectName);
+			this.effects.push(theEffect);
+		}
+
+		this.refresh();
+
+		return theEffect;
+	},
+
 	getOutput : function getOutput() {
 		return this.getEffect(-1) || this.source;
 	},
 
 	refresh : function refresh() {
+
+		var firstEffect = this.getEffect(0);
+		if (firstEffect) {
+			firstEffect.source = this.source;
+		}
+
 		this.target = null;
-		//this.seriously.
 	}
 
 };
@@ -101,6 +119,10 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 			target = seriously.target(canvas),
 			blenders = [seriously.effect('mixer'), seriously.effect('mixer')],
 			sources = [],
+
+			getSeriousLayer = function getSeriousLayer(layerIdx) {
+				return sources[layerIdx];
+			},
 
 			refresh = function refresh () {
 				// TODO: replace with proper mixer
@@ -167,6 +189,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 		}
 
 		this.refresh = refresh;
+		this.getSeriousLayer = getSeriousLayer;
 		refresh();
 
 		seriously.go();
