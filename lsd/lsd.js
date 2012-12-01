@@ -470,7 +470,7 @@ Attribution.prototype = {
 				}
 
 				sliderHTML += "<div class='clipThumb' title='Click the layer icon to change its video clip'></div></div>";
-				effectsTabHTML += '<div class="effectPanel"><div class="effectSelector"><select class="effectSelector">' + availableEffectOptionsHTML + '</select></div></div></div>';
+				effectsTabHTML += '<div class="effectPanel"><div class="effectSelector"><select class="effectSelector">' + availableEffectOptionsHTML + '</select></div><div class="effectControls"></div></div></div>';
 			}
 			//sliderHTML += "</div>";
 			
@@ -519,24 +519,6 @@ Attribution.prototype = {
 				$('#effectsTab').toggleClass('active');
 			});*/
 			$('#controlTabs').tabs();
- 
-			$('#effectsTab').on('change', 'select', function () {
-				var $this = $(this),
-					effectName = $this.val(),
-					layerId = $this.parents('.layerEffects').attr('id').replace('layerEffectsControl_', ''),
-					layer = renderer.getSeriousLayer && renderer.getSeriousLayer(layerId);
-
-				if (!layer) return;
-
-				if (effectName) {
-					layer.setEffect(effectName);
-				} 
-				else {
-					layer.setEffect(null);
-				}
-
-				renderer.refresh();
-			});
 
 
 			$("#interactiveToggle input")
@@ -1005,6 +987,79 @@ Attribution.prototype = {
 		
 				renderer.addLayers(layers);
 				renderer.start();
+
+				// events for effects
+				var refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
+					var $el = $effectPanel.find('.effectControls'),
+						effect = $effectPanel.data('effect'),
+						// need actually the effect type, not the instantiated effect, so we can parse inputs
+						effectType = Seriously.effects()[effectName],
+						el = $el.get(0),
+						holder,
+						inputElement;
+
+					$el.empty();
+
+					if (effect && effectType) {
+						for (var i in effectType.inputs) {
+
+							if (effectType.inputs[i].type == 'image') continue;
+
+							holder = $("<div class='inputHolder'></div>").appendTo($el);
+							inputElement = Seriously.util.createHTMLInput(effectType.inputs[i], i, holder.get(0));
+
+							// attach the form element directly to the effect's input.
+							effect[i] = inputElement;
+						}
+					}
+				};
+
+				$('#effectsTab')
+					.find('.layerEffects')
+						.each(function(el, i) {
+							var $this = $(this),
+								layerId = $this.attr('id').replace('layerEffectsControl_', ''),
+								layer = renderer.getSeriousLayer && renderer.getSeriousLayer(layerId);
+
+							if (!layer) return;
+
+							$this.data('layer', layer);
+
+	/*
+							$this.find('.effectPanel')
+								.each(function (el, i) {
+									refreshEffectTab($(this));
+								});
+	*/
+						})
+					.end()
+ 
+					.on('change', 'select.effectSelector', function () {
+						var $this = $(this),
+							effectName = $this.val(),
+							effectPanel = $this.parents('.effectPanel'),
+							layer = $this.parents('.layerEffects').data('layer'),
+							effect = null;
+
+						if (!layer) return;
+
+						if (effectName) {
+							effect = layer.setEffect(effectName);
+						} 
+						else {
+							effect = layer.setEffect(null);
+						}
+						effectPanel.data('effect', effect);
+						refreshEffectTab(effectPanel, effectName);
+
+						renderer.refresh();
+					})
+					.on('click', 'h3', function () {
+						$(this).toggleClass('open');
+					});
+
+
+					
 				
 				
 				if (enableBlendEffectOnClick) {
