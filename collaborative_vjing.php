@@ -16,7 +16,7 @@ function mailit(user, domain) {
 }
 </script>
 
-
+ 
 <style type="text/css">
 <!--
 html body {
@@ -162,6 +162,8 @@ body .element {
 	
 	<script type="text/javascript" src="/_js/modernizr.min.js"></script>
 	
+	<script type="text/javascript" src="/_js/jQuery-Knob/js/jquery.knob.js"></script>
+
 	<script type="text/javascript">
 
 /***
@@ -212,6 +214,9 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/heroku.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/effects/generator.interferences.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.mixer.js"></script>
+
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.hue-rotate.js"></script>
+
     <script type="text/javascript" src="/_js/Seriouslyjs/seriously.js"></script>
 
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.ascii.js"></script>

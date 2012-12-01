@@ -145,7 +145,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 
 			makeOnSetOpacity = function makeOnSetOpacity(layer, layerIdx) {
 
-				return function makeOnSetOpacity(ev, opacity) {
+				return function onSetOpacity(ev, opacity) {
 					var blenderIdx = layerIdx / 2 | 0,
 						blenderSide = (layerIdx % 2 === 0 && layerIdx < 2 ? 'Bottom' : 'Top' );
 
@@ -164,7 +164,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 
 			makeOnLoadClip = function makeOnLoadClip(layer, layerIdx) {
  
-				return function makeOnLoadClip(ev, vidLayer) {
+				return function onLoadClip(ev, vidLayer) {
 					layer.onClipLoaded(ev, vidLayer);
 
 					// do something with sources[layerIdx]
