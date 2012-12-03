@@ -458,7 +458,7 @@ Attribution.prototype = {
 			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
-				effectsTabHTML +=  "<div class='layerEffects' id='layerEffectsControl_" + i + "'><h3>Layer " + i + ":</h3>";
+				effectsTabHTML +=  "<div class='layerEffects' id='layerEffectsControl_" + i + "'><h3>Layer " + i + "</h3>";
 
 				if (enableHTML5Range) {
 					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />";
@@ -989,36 +989,59 @@ Attribution.prototype = {
 				renderer.start();
 
 				// events for effects
-				var refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
-					var $el = $effectPanel.find('.effectControls'),
-						effect = $effectPanel.data('effect'),
+				var 
+					setTabAsActive = function setTabAsActive ($effectPanel, effectName, effect, effectType) {
+						var $el = $effectPanel.find('.effectControls');
+							
+						effect = effect || $effectPanel.data('effect');
 						// need actually the effect type, not the instantiated effect, so we can parse inputs
-						effectType = Seriously.effects()[effectName],
-						el = $el.get(0),
-						holder,
-						inputElement;
+						effectType = effectType || Seriously.effects()[effectName];
 
-					$el.empty();
+					},
 
-					if (effect && effectType) {
-						for (var i in effectType.inputs) {
+					refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
+						var $el = $effectPanel.find('.effectControls'),
+							effect = $effectPanel.data('effect'),
+							// need actually the effect type, not the instantiated effect, so we can parse inputs
+							effectType = Seriously.effects()[effectName],
+							el = $el.get(0),
+							holder,
+							inputElement;
 
-							if (effectType.inputs[i].type == 'image') continue;
+						$el.empty();
 
-							holder = $("<div class='inputHolder'></div>").appendTo($el);
-							inputElement = Seriously.util.createHTMLInput(effectType.inputs[i], i, holder.get(0));
+						if (effect && effectType) {
+							for (var i in effectType.inputs) {
 
-							// attach the form element directly to the effect's input.
-							effect[i] = inputElement;
+								if (effectType.inputs[i].type == 'image') continue;
+
+								holder = $("<div class='inputHolder'></div>").appendTo($el);
+								inputElement = Seriously.util.createHTMLInput(effectType.inputs[i], i, holder.get(0)); //holder.find('.input').get(0), holder.find('.label').get(0));
+
+								// attach the form element directly to the effect's input.
+								effect[i] = inputElement;
+							}
+
+							var knobOpts = {
+									width: 50,
+									height: 50,
+									angleOffset: -125,
+									angleArc: 250,
+									bgColor: '#660000',
+									fgColor: '#cc0000'
+								};
+							$el.find('input').knob(knobOpts);
+
+							setTabAsActive($effectPanel, effectName, effect, effectType); 
 						}
-					}
-				};
+					};
 
 				$('#effectsTab')
 					.find('.layerEffects')
 						.each(function(el, i) {
 							var $this = $(this),
 								layerId = $this.attr('id').replace('layerEffectsControl_', ''),
+								// TODO: decide if we can actually display layers (i.e. not mobile)
 								layer = renderer.getSeriousLayer && renderer.getSeriousLayer(layerId);
 
 							if (!layer) return;

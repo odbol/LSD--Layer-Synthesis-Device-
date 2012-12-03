@@ -654,11 +654,25 @@ body .tabButtons .ui-state-active {
 	text-align: left;
 	border-bottom: 1px solid #333;
 	padding: 2px 0 3px;
+	clear: both;
 }
 
 	.layerEffects h3 {
-		margin: 2px 0px 2px
+		margin: 2px 5px 2px 0;
+		float: left;
 	}
+
+	.layerEffects .inputHolder {
+		float: left;
+		width: 50px;
+		margin: 5px 5px;
+	}
+		.layerEffects .inputHolder label {
+			float:left;
+			display: block;
+			text-align: center;
+			margin: 0 0 4px 0;
+		}
 
 
 /****************** Sliding Panel *******************/

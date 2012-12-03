@@ -162,7 +162,7 @@ body .element {
 	
 	<script type="text/javascript" src="/_js/modernizr.min.js"></script>
 	
-	<script type="text/javascript" src="/_js/jQuery-Knob/js/jquery.knob.js"></script>
+	<script type="text/javascript" src="/_js/jQuery-Knob/js/jquery.knob.js"></script> 
 
 	<script type="text/javascript">
 

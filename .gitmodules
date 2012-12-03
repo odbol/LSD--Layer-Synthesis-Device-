@@ -3,4 +3,4 @@
 	url = https://github.com/odbol/Seriously.js.git
 [submodule "_js/jQuery-Knob"]
 	path = _js/jQuery-Knob
-	url = git://github.com/aterrien/jQuery-Knob.git
+	url = https://github.com/odbol/jQuery-Knob
