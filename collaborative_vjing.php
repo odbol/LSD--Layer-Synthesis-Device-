@@ -210,6 +210,9 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
     <script type="text/javascript" src="/lsd/crowd.js"></script>
 	
 
+    <!-- EFFECTS -->
+	<script type="text/javascript" src="/lsd/InputDevices/mouse.js"></script> 
+
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/autowire.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/heroku.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/effects/generator.interferences.js"></script>

@@ -213,6 +213,32 @@ Attribution.prototype = {
 	}
 };
 
+/***
+	Triggers a DOM event without jQuery, since Seriously uses normal events.
+***/
+function triggerEvent(eventName, input) { 
+	if (input.fireEvent) {
+		input.fireEvent("on" + eventName);
+	}
+	else {
+	    var ev = document.createEvent('HTMLEvents');
+	    ev.initEvent(eventName, true, false);
+	    input.dispatchEvent(ev);
+	}
+}
+
+//scales a number to fit within the new extrema.
+//if hardCutoff is true, it will not exceed the extrema
+var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHardCutoff) {
+  var n =  ((num - oldMin) / ((oldMax - oldMin) / (newMax - newMin))) + newMin;
+  if (isHardCutoff) {
+	if (n < newMin) 
+	  n = newMin;
+	else if (n > newMax)
+	  n = newMax;
+  }
+  return n;
+};
 
 (function( $ ){
 //$(function(){
@@ -988,8 +1014,35 @@ Attribution.prototype = {
 				renderer.addLayers(layers);
 				renderer.start();
 
+
+
+
+
+
+
+
+				/***********************
+					EFFECTS
+				***********************/
+
+
 				// events for effects
-				var 
+				var currentInputs = [],
+					updateInput = function updateInput(idx, value, isX) {
+						var input;
+						if (idx < currentInputs.length && value !== false) {
+							input = currentInputs[idx];
+
+							if (input.min !== -Infinity && input.min !== undefined &&
+								input.max !== Infinity && input.max !== undefined) {
+ 
+								value = scaleRange(value, 0, isX ? window.innerWidth : window.innerHeight, parseFloat(input.min), parseFloat(input.max));
+							}
+							input.value = value;
+							triggerEvent('change', input);
+						} 
+					},
+
 					setTabAsActive = function setTabAsActive ($effectPanel, effectName, effect, effectType) {
 						var $el = $effectPanel.find('.effectControls');
 							
@@ -997,6 +1050,34 @@ Attribution.prototype = {
 						// need actually the effect type, not the instantiated effect, so we can parse inputs
 						effectType = effectType || Seriously.effects()[effectName];
 
+						// save these inputs for manipulation later
+						var currentInputsIdx = currentInputs.length;
+						$el.find('input[type="number"]').each(function (el, i) {
+
+							if (currentInputsIdx >= currentInputs.length) {
+								currentInputs.push(this);
+							}
+							else {
+								currentInputs[currentInputsIdx] = this;
+							}
+
+							currentInputsIdx = (currentInputsIdx + 1) % InputDevices.mouse.getNumInputs();
+						});
+						
+
+						$(InputDevices).bind('change.mouse', function (ev, msg) {
+							var path = msg.getPathObj();
+console.log('mosue moved: ', msg);
+							if (path[0] == 'mouse' && path[2] == 'xy') {
+								var button = parseInt(path[1]);
+								
+								// only follow mouse when they clickin
+								if (button > 0) {
+									updateInput(0 + button, msg.value[0], true);
+									updateInput(1 + button, msg.value[1], false);
+								}
+							}
+						});
 					},
 
 					refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
@@ -1052,15 +1133,8 @@ Attribution.prototype = {
 									change: function () {
 										// trigger change handler of original input element, WITHOUT jQUERY - needs to trigger events added with addEventListener()
 										var input = this.$.get(0);
-										 
-										if (input.fireEvent) {
-											input.fireEvent("onchange");
-										}
-										else {
-										    var ev = document.createEvent('HTMLEvents');
-										    ev.initEvent("change", true, false);
-										    input.dispatchEvent(ev);
-										}
+										
+										triggerEvent('change', input);
 									}
 								};
 							$el.find('input').knob(knobOpts);
@@ -1115,7 +1189,17 @@ Attribution.prototype = {
 					});
 
 
-					
+				InputDevices.mouse.start();
+
+				/***********************
+					END EFFECTS
+				***********************/	
+
+
+
+
+
+							
 				
 				
 				if (enableBlendEffectOnClick) {
