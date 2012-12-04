@@ -1033,6 +1033,11 @@ Attribution.prototype = {
 									holder.get(0).appendChild(inputElements[k]);
 
 									holder.append('<label for="' + inputElements[k].id + '">' + name + '</a>');
+
+									// ranges don't work too well with dial. turn them back to number boxes
+									if (inputElements[k].type == 'range') {
+ 										inputElements[k].type = 'number';
+ 									}
 								}
 							} 
 
@@ -1042,7 +1047,21 @@ Attribution.prototype = {
 									angleOffset: -125,
 									angleArc: 250,
 									bgColor: '#660000',
-									fgColor: '#cc0000'
+									fgColor: '#cc0000',
+									allowFractions: true,
+									change: function () {
+										// trigger change handler of original input element, WITHOUT jQUERY - needs to trigger events added with addEventListener()
+										var input = this.$.get(0);
+										 
+										if (input.fireEvent) {
+											input.fireEvent("onchange");
+										}
+										else {
+										    var ev = document.createEvent('HTMLEvents');
+										    ev.initEvent("change", true, false);
+										    input.dispatchEvent(ev);
+										}
+									}
 								};
 							$el.find('input').knob(knobOpts);
 

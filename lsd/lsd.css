@@ -653,6 +653,7 @@ body .tabButtons .ui-state-active {
 .layerEffects {
 	text-align: left;
 	border-bottom: 1px solid #333;
+	margin-bottom: 5px;
 	padding: 2px 0 3px;
 	clear: both;
 }
@@ -662,16 +663,18 @@ body .tabButtons .ui-state-active {
 		float: left;
 	}
 
-	.layerEffects .inputHolder {
+	.layerEffects .inputHolder { 
 		float: left;
 		width: 50px;
 		margin: 5px 5px;
+		padding-top:5px;
 	}
 		.layerEffects .inputHolder label {
-			float:left;
+			float: left;
 			display: block;
 			text-align: center;
-			margin: 0 0 4px 0;
+			width: 100%;
+			margin: -7px 0 0 0;
 		}
 
 
