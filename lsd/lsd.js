@@ -1000,27 +1000,41 @@ Attribution.prototype = {
 					},
 
 					refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
-						var $el = $effectPanel.find('.effectControls'),
+						var vectorVars = ['x','y','s','t'],
+							$el = $effectPanel.find('.effectControls'),
 							effect = $effectPanel.data('effect'),
 							// need actually the effect type, not the instantiated effect, so we can parse inputs
 							effectType = Seriously.effects()[effectName],
 							el = $el.get(0),
 							holder,
-							inputElement;
+							inputElements, input;
 
 						$el.empty();
 
 						if (effect && effectType) {
 							for (var i in effectType.inputs) {
+								input = effectType.inputs[i];
 
-								if (effectType.inputs[i].type == 'image') continue;
+								if (input.type == 'image') continue;
 
-								holder = $("<div class='inputHolder'></div>").appendTo($el);
-								inputElement = Seriously.util.createHTMLInput(effectType.inputs[i], i, holder.get(0)); //holder.find('.input').get(0), holder.find('.label').get(0));
+								inputElements = Seriously.util.createHTMLInput(input, i, false, false); //holder.find('.input').get(0), holder.find('.label').get(0));
 
 								// attach the form element directly to the effect's input.
-								effect[i] = inputElement;
-							}
+								effect[i] = inputElements;
+
+								for (var k in inputElements) {
+									name = input.title || i;
+
+									if (inputElements.length > 1) {
+										name += ' ' + vectorVars[k];
+									}
+
+									holder = $("<div class='inputHolder'></div>").appendTo($el);
+									holder.get(0).appendChild(inputElements[k]);
+
+									holder.append('<label for="' + inputElements[k].id + '">' + name + '</a>');
+								}
+							} 
 
 							var knobOpts = {
 									width: 50,
