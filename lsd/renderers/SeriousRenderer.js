@@ -17,7 +17,7 @@ var SeriousRenderer = function SeriousRenderer(lsd, layers, canvasId, compositeT
 		this.seriously = seriously;
 		this.layer = vidLayer;
 
-		this.effects = [ this.seriously.effect('ripple') ];
+		this.effects = [];//[ this.seriously.effect('ripple') ];
 
 		// EVENT LISTENERS
 		/*vidLayer
