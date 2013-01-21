@@ -1051,7 +1051,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 						effectType = effectType || Seriously.effects()[effectName];
 
 						// save these inputs for manipulation later
-						var currentInputsIdx = currentInputs.length;
+						var currentInputsIdx = 0;
 						$el.find('input[type="number"]').each(function (el, i) {
 
 							if (currentInputsIdx >= currentInputs.length) {
@@ -1067,12 +1067,12 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 						$(InputDevices).bind('change.mouse', function (ev, msg) {
 							var path = msg.getPathObj();
-console.log('mosue moved: ', msg);
+//console.log('mosue moved: ', msg);
 							if (path[0] == 'mouse' && path[2] == 'xy') {
-								var button = parseInt(path[1]);
+								var button = parseInt(path[1]) - 1;
 								
 								// only follow mouse when they clickin
-								if (button > 0) {
+								if (button >= 0) {
 									updateInput(0 + button, msg.value[0], true);
 									updateInput(1 + button, msg.value[1], false);
 								}

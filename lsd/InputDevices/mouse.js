@@ -45,9 +45,9 @@ if (!window.InputDevices) {
 		// TODO: or should it be that the draw func sets them to false to denote it's been used?
 		inputValues = [false, false, false, false],
 
-		onChange = function onChange(buttonIdx) {
+		onChange = function onChange(buttonIdx, arrayIdx) {
 			var path = ['mouse', buttonIdx, 'xy'],
-				value = inputValues.slice(buttonIdx, buttonIdx + 2);
+				value = inputValues.slice(arrayIdx, arrayIdx + 2);
 
 			$(InputDevices).trigger('change.mouse', [new InputDevices.OSCMessage(path, value)]);
 		},
@@ -59,15 +59,19 @@ if (!window.InputDevices) {
 				inputValues[0 + buttonIdx] = ev.clientX;
 				inputValues[1 + buttonIdx] = ev.clientY;
 
-				onChange(ev.which);
+				onChange(ev.which, buttonIdx);
 			},
 		mouseTrackerOnDrag = function (ev) {
+				//buttonIdx = (ev.which - 1) * 2;
+
 				inputValues[0 + buttonIdx] = ev.clientX;
 				inputValues[1 + buttonIdx] = ev.clientY;
 
-				onChange(ev.which);
+				onChange(ev.which, buttonIdx);
 			},		
 		mouseTrackerOnEnd = function (ev) {
+				//buttonIdx = (ev.which - 1) * 2;
+				
 				inputValues[0 + buttonIdx] = false;
 				inputValues[1 + buttonIdx] = false;
 			},

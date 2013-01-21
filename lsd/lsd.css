@@ -677,6 +677,9 @@ body .tabButtons .ui-state-active {
 			margin: -7px 0 0 0;
 		}
 
+		.layerEffects .inputHolder select {
+			margin-bottom: 10px;
+		}
 
 /****************** Sliding Panel *******************/
 
