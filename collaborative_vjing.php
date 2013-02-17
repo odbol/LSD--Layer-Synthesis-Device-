@@ -205,6 +205,10 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 ?>		
 	</script>
 	
+	<!-- webcam support -->
+<script src="http://static.opentok.com/webrtc/v2.0/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="/lsd/webcam.js"></script>
+
 	<!-- collaborative support -->
 	<script type='text/javascript' src='http://static.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="/lsd/crowd.js"></script>
@@ -287,6 +291,11 @@ for ($i = 0; $i < 3; $i++) {
 			
 			//holds all the possible clips to play
 			var vidClips = bgs.concat([
+				new VidClip({
+					isRemoteCam:true, 
+					tagId: 'camSource_publisher'
+				}, "/lsd/icons/stamp-lsd-16.png"),
+
 				new VidClip([new VidSource("/images/mixer/240p/redbuggy_trim.mp4", "video/mp4"), 
 								new VidSource("/images/mixer/240p/redbuggy_trim.ogg", "video/ogg")],
 								"/images/mixer/thumbs/redbuggy.jpg"),

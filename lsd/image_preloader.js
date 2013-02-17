@@ -113,6 +113,17 @@ ImagePreloader.prototype.preload = function(image)
 			//var vid = document.getElementById(tagId);
 			this.aImages.push( document.getElementById(tagId) );
 	}	
+	else if (image.isRemoteCam) {
+		var vid = $('#' + image.tagId).find('video').get(0);
+
+		// assign pointer back to this.
+		this.oImagePreloader = this;
+
+		this.aImages.push(vid);
+	
+		//hack past it and hope it's loaded in time!
+		this.onload();
+	}
 	else {
 	 	//video: do some wacky HTML5 stuff here.
 	 	var tagId = "vidPreload_" + getUniqueNumber();
@@ -170,7 +181,7 @@ ImagePreloader.prototype.preload = function(image)
 		}
 		else {
 			//hack past it and hope it's loaded in time!
-			ImagePreloader.prototype.onload();
+			this.onload();
 		}
 		
 		
