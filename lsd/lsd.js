@@ -313,6 +313,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 		
 		resolution = resolution || {width: 320, height: 240};
 		
+
 		//returns the proper URL for the given screen ID.
 		//if forceMobile is true, or undefined AND if user is already on a mobile device, the requested screen will not contain HTML5 videos, only GIFS
 		//minRating is the minimum clip rating to allow.
@@ -343,6 +344,9 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 		if (!renderer.isSupported()) {
 			renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
 		}
+
+var webcam = new RemoteCam();
+
 
 		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
