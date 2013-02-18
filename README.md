@@ -32,6 +32,14 @@ http://diveintohtml5.org/video.html
 I'd recommend using MPEG Streamclip to convert your videos to H.264 MP4, so you can use them on Chrome and Safari. Firefox uses Ogg; you'll have to encode separate files for both if you want it to work on all browsers.
 The takeLSD() function accepts arrays of VidSource objects in case you have multiple encodings of the same video for different browsers. See the index.html file for an example.
 
+* Animated GIFS no longer animate for me?
+
+Yes, this is a bug in newer versions of Chrome and all versions of Firefox. 
+
+Shame that it used to work on Chrome and they broke it. If you would like them to fix it, please star or re-open these bugs:
+
+Chrome - http://code.google.com/p/chromium/issues/detail?id=161407
+Firefox - https://bugzilla.mozilla.org/show_bug.cgi?id=666855
 
 
 DEVELOPMENT ROADMAP
