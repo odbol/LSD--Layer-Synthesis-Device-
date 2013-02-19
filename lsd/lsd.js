@@ -1621,10 +1621,11 @@ if (!renderer.areEffectsSupported()) {
 				var onWebcamSubscribeCallback = function onWebcamSubscribeCallback(videoElementHolderId) {
 						lsd.addClip(new VidClip({
 								isRemoteCam:true, 
-								tagId: 'camSource_publisher'
+								tagId: videoElementHolderId
 							}, 
-							"/lsd/icons/stamp-lsd-72.png"))
-					},
+							// add the ID to the end of the generic image because this is how Crowd finds the clip!
+							"/lsd/icons/stamp-lsd-72.png?id=" + videoElementHolderId))
+					}, 
 
 					webcam = new RemoteCam(onWebcamSubscribeCallback);
 
