@@ -303,10 +303,6 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 
 
-var webcam = new RemoteCam();
-
-
-
 		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes); // new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
 		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
@@ -352,13 +348,39 @@ var webcam = new RemoteCam();
 				
 			//changes the clip in the given layer. TODO: this could be better	
 			var changeClip = function (currentLayer, currentLayerControl, clip) {
-				if (currentLayer.clip != clip) { //avoid infinite loop
-					currentLayer.load(clip);
-					currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
-				}
-			};
+					if (currentLayer.clip != clip) { //avoid infinite loop
+						currentLayer.load(clip);
+						currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+					}
+				},
+				
+				getClipThumbHTML = function getClipThumbHTML(clip, idx) {
+					return "<li id='vidClip_" + idx + "' class='clipThumb' title='Choose a clip to play. Use the arrows to scroll.'><img src='" + clip.thumbnail + "' /></li>";
+				},
+
+
+				/***
+					Binds a VidClip to the given HTML element (should be a clipThumb)
+	
+				***/
+				attachClipToThumb = function attachClipToThumb(clip, el) {
+					$(el).data("vidClip", clip); 
+					clip.element = el;
+				},
+
+				/*** 
+					Adds the specified VidClip to the end of the list.
+				***/
+				addClip = function addClip(clip) {
+					var clipEl = $(getClipThumbHTML(clip, lsd.vidClips.push(clip) - 1))
+						.appendTo('#clipThumbLists ul:last');
+
+					attachClipToThumb(clip, clipEl.get(0));
+				};
 			
 			
+			lsd.addClip = addClip;
+
 			if (!(numLayers > 0))
 				numLayers = 3;
 			
@@ -513,20 +535,21 @@ var webcam = new RemoteCam();
 			sliderHTML += "<div class='clipThumbs imageSlider'>" +
 				"<div class='ui-widget ui-helper-clearfix'><a href='#' class='previous button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-triangle-1-w'>Previous</span></a><a href='#' class='next button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-triangle-1-e'>Next</span></a></div>" +
 				" <div class='panelHolder'>" +
-				"	<div class='slidingPanel'>" +
+				"	<div id='clipThumbLists' class='slidingPanel'>" +
 						"<ul>";
 			for (i in lsd.vidClips) {
 				//separate lists in pages for horizontal scrolling
 				if (i > 0 && i % CLIP_PAGE_SIZE == 0) 
-					sliderHTML += "</ul><ul>"
-				sliderHTML += "<li id='vidClip_" + i + "' class='clipThumb' title='Choose a clip to play. Use the arrows to scroll.'><img src='" + lsd.vidClips[i].thumbnail + "' /></li>";
+					sliderHTML += "</ul><ul>";
+
+				sliderHTML += getClipThumbHTML(lsd.vidClips[i], i);
 			}
 			sliderHTML += "</ul></div></div>" + //end panelHolder
 				//"<br class='clear' />" +
 				"</div>";
 		
 		
-		
+
 		
 		
 		
@@ -674,8 +697,7 @@ var webcam = new RemoteCam();
 				.end()
 			
 				.each(function (i, el) {	//add linkback data from tags to objects
-					$(this).data("vidClip", lsd.vidClips[i]); //assumes they're in the same order as the array. risky....
-					lsd.vidClips[i].element = this;
+					attachClipToThumb(lsd.vidClips[i], this); //assumes they're in the same order as the array. risky....					
 					//$(this).data("vidClipIdx", i); //assumes they're in the same order as the array. risky....
 				})
 				.slice(0, 3) //add the thumbs for the first three already-loaded clips into the layers
@@ -1388,6 +1410,30 @@ var webcam = new RemoteCam();
 				}
 			//});
 			
+
+
+
+				//*********** START REMOTE WEBCAMS **********
+
+				var onWebcamSubscribeCallback = function onWebcamSubscribeCallback(videoElementHolderId) {
+						lsd.addClip(new VidClip({
+								isRemoteCam:true, 
+								tagId: 'camSource_publisher'
+							}, 
+							"/lsd/icons/stamp-lsd-72.png"))
+					},
+
+					webcam = new RemoteCam(onWebcamSubscribeCallback);
+
+				
+
+				//*********** END REMOTE WEBCAMS **********
+
+
+
+
+
+
 			
 				//auto hide on mouse idle
 				var lastMouseMovement = new Date(),
