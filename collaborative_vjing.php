@@ -304,11 +304,6 @@ for ($i = 0; $i < 3; $i++) {
 			
 			//holds all the possible clips to play
 			var vidClips = bgs.concat([
-				new VidClip({
-					isRemoteCam:true, 
-					tagId: 'camSource_publisher'
-				}, "/lsd/icons/stamp-lsd-16.png"),
-
 				new VidClip([new VidSource("/images/mixer/240p/redbuggy_trim.mp4", "video/mp4"), 
 								new VidSource("/images/mixer/240p/redbuggy_trim.ogg", "video/ogg")],
 								"/images/mixer/thumbs/redbuggy.jpg"),
