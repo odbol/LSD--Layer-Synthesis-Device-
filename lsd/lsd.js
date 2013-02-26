@@ -1029,7 +1029,9 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 				// events for effects
 				var currentInputs = [],
 					updateInput = function updateInput(idx, value, isX) {
-						var input;
+						var input;			
+
+//console.log('updateInputcurrentInputs.length: ' + currentInputs.length, value);			
 						if (idx < currentInputs.length && value !== false) {
 							input = currentInputs[idx];
 
@@ -1038,6 +1040,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
  
 								value = scaleRange(value, 0, isX ? window.innerWidth : window.innerHeight, parseFloat(input.min), parseFloat(input.max));
 							}
+//console.log('updateInput: ', value);
 							input.value = value;
 							triggerEvent('change', input);
 						} 
@@ -1052,7 +1055,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 						// save these inputs for manipulation later
 						var currentInputsIdx = 0;
-						$el.find('input[type="number"]').each(function (el, i) {
+						$el.find('input').each(function (el, i) { // was 'input[type="number"]', but doesn't work in FF mobile.
 
 							if (currentInputsIdx >= currentInputs.length) {
 								currentInputs.push(this);
@@ -1069,7 +1072,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 							var path = msg.getPathObj();
 //console.log('mosue moved: ', msg);
 							if (path[0] == 'mouse' && path[2] == 'xy') {
-								var button = parseInt(path[1]) - 1;
+								var button = parseInt(path[1]);
 								
 								// only follow mouse when they clickin
 								if (button >= 0) {
@@ -1189,7 +1192,9 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 					});
 
 
-				InputDevices.mouse.start();
+				// this is where we init our input devices (e.g. mouse/touch, external OSC, even perhaps a LeapMotion?)
+
+				InputDevices.mouse.start(); // also handles touch events if available.
 
 				/***********************
 					END EFFECTS
