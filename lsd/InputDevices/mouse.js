@@ -35,9 +35,24 @@ if (!window.InputDevices) {
 		}
 	};
 
-	window.InputDevices = {
+	var InputDevices = function () {
+		var devices = {};
+
+		this.registerDevice = function registerDevice(deviceName, device) {
+			devices[deviceName] = device;
+
+			// add shortcut
+			this[deviceName] = device;
+		}; 
+		this.getDevices = function getDevices() {
+			return devices;
+		};
+	};
+	InputDevices.prototype = {
 		OSCMessage: OSCMessage
 	};
+
+	window.InputDevices = new InputDevices();
 }
 
 (function (InputDevices) {
@@ -187,15 +202,21 @@ if (!window.InputDevices) {
 				mouseTracker = initMouseTracker();
 			}
 
+			return this;
+		},
+
+		bind = function bind(eventName, func) {
+			$(InputDevices).bind(eventName + '.mouse', func);
 		};
 
-	InputDevices.mouse = 
+	InputDevices.registerDevice('mouse', 
 		{
 			attachToInput: attachToInput,
 			getNumInputs : function () {
 				return inputValues.length;
 			},
-			start : start
-		};
+			start : start,
+			bind : bind
+		});
 	//};
 })(window.InputDevices);

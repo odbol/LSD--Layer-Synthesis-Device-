@@ -478,7 +478,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 			sliderHTML += 
 				"<div id='controlTabs' class='controlTabs'><ul class='tabButtons'><li id='clipsTabButton' class='button tabButton'><a href='#clipsTab'>Clips</a></li>" +
-				"<li id='effectsTabButton' class='button tabButton'><a href='#effectsTab'>Effects</a></li></ul>" + 
+				"<li id='effectsTabButton' class='button tabButton'><a href='#effectsTab'>Effects</a></li>" +
+				"</ul>" + 
 				'<div class="tabPanels"><div class="tab active" id="clipsTab">';
 
 			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
@@ -544,7 +545,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 				$('#clipsTab').toggleClass('active');
 				$('#effectsTab').toggleClass('active');
 			});*/
-			$('#controlTabs').tabs();
+			var controlTabs = $('#controlTabs').tabs();
 
 
 			$("#interactiveToggle input")
@@ -1028,6 +1029,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 				// events for effects
 				var currentInputs = [],
+					currentInputsIdx = 0,
+
 					updateInput = function updateInput(idx, value, isX) {
 						var input;			
 
@@ -1046,6 +1049,131 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 						} 
 					},
 
+
+					/************ INPUT TAB ***************/
+					getInputsSelectHTML = function getInputsSelectHTML() {
+						var r = '<select>',
+							devs = InputDevices.getDevices();
+
+						for (var i in devs) {
+							var dev = devs[i];
+
+							for (var j = 0 ; j < dev.getNumInputs(); j++) {
+								var devName = i;
+
+								if (Modernizr.touch && devName == 'mouse') {
+									devName = 'touch';
+								}
+
+								r += '<option value="' + i + '_' + j + '">' +
+									 	devName + ' ' + j + '</option>';
+							}
+						}
+
+						return r + '</select>';
+					},
+
+					onInputConfigChange,
+					addInputToConfigTab = function addInputToConfigTab(inputEl, effectName) {
+						/*var inputConfigTab = $('#inputTab');
+
+						if (!inputConfigTab) {
+							inputConfigTab = createInputConfigTab();
+						}*/
+
+						// just swap out actual input for the input config selector, saves space. plus lazy.
+		
+						// only bind once
+						if (!onInputConfigChange) {
+							onInputConfigChange = function onInputConfigChange() {
+								var val = $(this).val()
+									inputIdx = val && val.length > 0 ? val.split('_')[1] : -1;
+
+								if (inputIdx >= 0) {
+									currentInputs[inputIdx] = $(this).data('inputEl');
+								}
+							};
+
+
+
+							var hideInputsTab = function hideInputsTab( ev, ui ) {
+									//ev.preventDefault();
+									//ev.stopPropagation();
+									//ev.stopImmediatePropogation();
+
+									$('#effectsTab')
+										.removeClass('inputsOn');
+								};
+
+							controlTabs.on( "tabsselect", hideInputsTab);
+							$('#effectsTab').on('click', hideInputsTab);
+
+
+							// disbale the Inputs tab, since it's not an actual tab!
+							//controlTabs.tabs('disable', 2);
+	
+
+							$('#effectsTab')
+								.on('change', '.inputConfig select', onInputConfigChange)
+
+								// also unhide the input tab switchy thingy here
+							$("<li id='inputsTabButton' class='button tabButton ui-state-default ui-corner-top'><a href='#inputsTab'>Inputs</a></li>")		
+								.insertAfter('#effectsTabButton')
+								.on("click", function (ev) {
+									ev.preventDefault();
+									ev.stopPropagation();
+									//ev.stopImmediatePropogation();
+
+									$('#effectsTab')
+										.toggleClass('inputsOn');
+
+									// switch to effects tab to show inputs
+									// unfortunately this makes the input tab an actual tab, which we don't want.
+									// TODO: replace all this with backbone.
+									//controlTabs.tabs( "option", "active", 1 );
+
+									return false; // don't actually switch tabs...
+								});
+
+						}
+
+						var inputConfig = $('<div class="inputConfig">' +
+												getInputsSelectHTML() + 
+											'</div>')
+							.prependTo($(inputEl).parents('.inputHolder'))
+							.find('select')
+								.data('inputEl', inputEl);
+
+						// automatically assign the input to the next available device output
+						// if (!isInputChangedManually) {
+							if (currentInputsIdx >= currentInputs.length) {
+								currentInputs.push(inputEl);
+							}
+							else {
+								currentInputs[currentInputsIdx] = inputEl;
+							}
+
+							inputConfig
+								.val('mouse_' + currentInputsIdx)
+								.change();
+
+
+							currentInputsIdx = (currentInputsIdx + 1) % InputDevices.mouse.getNumInputs();
+						// }
+
+					},
+
+					// adds an input for manipulation later, adds to Inputs tab as well
+					addInput = function addInput(inputEl, effectName) {
+
+						addInputToConfigTab.apply(this, arguments);
+					},
+
+
+
+
+					/************ EFFECTS TAB ***************/
+
 					setTabAsActive = function setTabAsActive ($effectPanel, effectName, effect, effectType) {
 						var $el = $effectPanel.find('.effectControls');
 							
@@ -1054,32 +1182,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 						effectType = effectType || Seriously.effects()[effectName];
 
 						// save these inputs for manipulation later
-						var currentInputsIdx = 0;
 						$el.find('input').each(function (el, i) { // was 'input[type="number"]', but doesn't work in FF mobile.
-
-							if (currentInputsIdx >= currentInputs.length) {
-								currentInputs.push(this);
-							}
-							else {
-								currentInputs[currentInputsIdx] = this;
-							}
-
-							currentInputsIdx = (currentInputsIdx + 1) % InputDevices.mouse.getNumInputs();
-						});
-						
-
-						$(InputDevices).bind('change.mouse', function (ev, msg) {
-							var path = msg.getPathObj();
-//console.log('mosue moved: ', msg);
-							if (path[0] == 'mouse' && path[2] == 'xy') {
-								var button = parseInt(path[1]);
-								
-								// only follow mouse when they clickin
-								if (button >= 0) {
-									updateInput(0 + button, msg.value[0], true);
-									updateInput(1 + button, msg.value[1], false);
-								}
-							}
+							addInput(this, effectName);
 						});
 					},
 
@@ -1194,7 +1298,23 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 				// this is where we init our input devices (e.g. mouse/touch, external OSC, even perhaps a LeapMotion?)
 
-				InputDevices.mouse.start(); // also handles touch events if available.
+				// also handles touch events if available.
+				InputDevices.mouse.start() 
+					.bind('change', function (ev, msg) {
+
+						var path = msg.getPathObj();
+//console.log('mosue moved: ', msg);
+						if (path[0] == 'mouse' && path[2] == 'xy') {
+							var button = parseInt(path[1]);
+							
+							// only follow mouse when they clickin
+							if (button >= 0) {
+								updateInput(0 + button, msg.value[0], true);
+								updateInput(1 + button, msg.value[1], false);
+							}
+						}
+					});
+
 
 				/***********************
 					END EFFECTS

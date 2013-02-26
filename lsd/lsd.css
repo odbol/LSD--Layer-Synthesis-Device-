@@ -681,6 +681,17 @@ body .tabButtons .ui-state-active {
 			margin-bottom: 10px;
 		}
 
+	.layerEffects .jKnob,
+	.inputsOn .layerEffects .inputConfig {
+		display: block;
+	}
+	.layerEffects .inputConfig,
+	.inputsOn .layerEffects .jKnob {
+		display: none;
+	}
+
+	
+
 /****************** Sliding Panel *******************/
 
 #backgroundCanvasControls .slidingPanel 
