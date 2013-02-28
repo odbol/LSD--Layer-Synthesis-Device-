@@ -1,5 +1,8 @@
 LSD (Layer Synthesis Device)
+=====================
+
 Collaborative Realtime Video Remixing
+
 http://lsd.odbol.com
 		
 Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls
@@ -10,15 +13,15 @@ Use it on a fast browser like Firefox or Chrome and you will see UI responsivene
 Of course, the browsers still have a long way to get up to the speed of a native application, but it is a promising start.
 (You can even VJ on your phone! Come on, this must be the future already!)
 		
-Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a bummer...)
+*Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android* (no IE, what a bummer...)
 
-Code and content copyright Tyler Freeman, 2010-2013
-Code is licensed under the GPL: please see lsd/COPYING.txt for more info.
-Media Content is licensed under Creative Commons BY-NC-SA ( http://creativecommons.org/licenses/by-nc-sa/3.0/ ) or as marked.
+Code and content copyright Tyler Freeman, 2010-2013  
+Code is licensed under the GPL: please see lsd/COPYING.txt for more info.  
+Media Content is licensed under Creative Commons BY-NC-SA ( http://creativecommons.org/licenses/by-nc-sa/3.0/ ) or as marked.  
 
 
 FAQ
-===================
+-------------------
 
 * How do I play my videos? What codecs are supported? 
 
@@ -32,7 +35,7 @@ The takeLSD() function accepts arrays of VidSource objects in case you have mult
 
 
 DEVELOPMENT ROADMAP
-===================
+-------------------
 
 * Add more InputDevices (VJacket, LeapMotion, Kinect, MIDI, OSC, etc.)
 * Add more Seriously effects (especially Generators)

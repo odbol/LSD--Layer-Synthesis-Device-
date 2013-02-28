@@ -290,7 +290,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 	//  crowd			-	optional CrowdControl object if you want collaborative features.
 	//  shouldInitClips -   optional bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
 	//  resolution		-	optional Object giving dimensions of canvas. default {width: 320, height: 240}
-   init : function init(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips, resolution) {
+	//  minRating		- 	optional int of minimum rating to filter vidClips by
+   init : function init(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips, resolution, minRating) {
 		var lsd = this;
 		
 		resolution = resolution || {width: 320, height: 240};
@@ -339,7 +340,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 			
 			//filter clips list by rating and mobileOnly flag:
-			var minRating = 500;
+			minRating = minRating || 500;
 			var ratingMatch = (/rating=(\d+)/).exec(window.location.href);
 			if (ratingMatch && ratingMatch.length > 1)
 				minRating = parseInt(ratingMatch[1]);
@@ -457,7 +458,9 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
-				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter")
+				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter"
+						// only show the first two images
+						&& i < 2)
 					layers[i].setOpacity(0.7);
 				else
 					layers[i].setOpacity(0.0);
@@ -1535,6 +1538,10 @@ if (!renderer.areEffectsSupported()) {
 								return false;
 							});
 					}
+				}
+				else { // no intro screen
+					
+					$(lsd).trigger('started.lsd', ['noIntro']);
 				}
 
 				// we're finally done loading! that took a while...

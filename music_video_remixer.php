@@ -259,22 +259,6 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 
 			//images to be rendered
 			var bgs = [
-<?php
-//detect clip urls from querystring
-for ($i = 0; $i < 3; $i++) {
-	$clipUrl = $_GET["clip$i"];
-	if ($clipUrl && strlen($clipUrl) > 0) {
-		$clipType = $_GET["type$i"];
-		$clipThumb = $_GET["img$i"];
-		if (!$clipThumb)
-			$clipThumb = "/lsd/lsd_thumb.jpg";
-		
-		print "\n\t\t\tnew VidClip([new VidSource('$clipUrl', '$clipType')], '$clipThumb'),";
-	}
-}
-?>
-
-
 
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-AJ4.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ben.jpg', 1111),

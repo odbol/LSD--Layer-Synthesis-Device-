@@ -273,6 +273,7 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 			var bgs = [
 <?php
 //detect clip urls from querystring
+/* actually, don't. it's insecure.
 for ($i = 0; $i < 3; $i++) {
 	$clipUrl = $_GET["clip$i"];
 	if ($clipUrl && strlen($clipUrl) > 0) {
@@ -284,6 +285,7 @@ for ($i = 0; $i < 3; $i++) {
 		print "\n\t\t\tnew VidClip([new VidSource('$clipUrl', '$clipType')], '$clipThumb'),";
 	}
 }
+*/
 ?>
 
 
