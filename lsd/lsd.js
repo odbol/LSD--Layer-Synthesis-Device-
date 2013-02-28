@@ -13,8 +13,7 @@
 	
 	Copyright 2010 Tyler Freeman
 	http://odbol.com
-	
-	
+
 	-- License --
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +46,7 @@ var TEXT_STEP_EFFECTS_HELP = TEXT_CLICK_VERB + ' and drag anywhere on the video 
 
 
 
-var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
+var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://lsd.odbol.com" rel="dc:source">odbol.com</a>.'
 var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>";
 var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
 			"<p>Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls " +
@@ -96,7 +95,7 @@ var SCREEN_LIST_HOLDER_END =
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 		
-var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
+var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://lsd.odbol.com">lsd.odbol.com</a></div>';
 					
 
 
@@ -320,7 +319,11 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 		$("body")
 			.append("<div id='backgroundHolder' class='step step_effects' title='" + TEXT_STEP_EFFECTS_HELP + "'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
-		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes); // new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		if (!renderer.isSupported()) {
+			renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		}
+
 		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
 
@@ -472,7 +475,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			//////////////////////////////
 			//BUILD HTML CONTROLS
 			//////////////////////////////
-			var iconsHTML = "<h1><a href='http://odbol.com/lsd' title='Click to take LSD'>LSD Visuals</a></h1><ul class='icons buttons ui-widget ui-helper-clearfix'>" +
+			var iconsHTML = "<h1><a href='http://lsd.odbol.com' title='Click to take LSD'>LSD Visuals</a></h1><ul class='icons buttons ui-widget ui-helper-clearfix'>" +
 				"<li id='buttonShare' title='Share Screen' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-link'></span></li>" +
 				"<li id='buttonHelp' title='Help/About' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-help'></span></li>" +		
 				"<li id='buttonFullscreen' title='Fullscreen Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-arrow-4-diag'></span></li>" +		
@@ -816,7 +819,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 								'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
 							"</div>" +
 							"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
-							'<h2>odbol.com/lsd</h2>' + 
+							'<h2>lsd.odbol.com</h2>' + 
 							"</div>")
 							.appendTo("body")
 							.click(function () {
@@ -1354,6 +1357,12 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 					}
 				});
 
+
+if (!renderer.areEffectsSupported()) {
+	// TODO: show help text saying you can't see them, but you can still control them.
+	// for now, just hide them!
+	$('#effectsTabButton').hide();
+} // END renderer.areEffectsSupported()) 
 				/***********************
 					END EFFECTS
 				***********************/	

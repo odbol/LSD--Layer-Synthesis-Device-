@@ -46,6 +46,13 @@ BaseRenderer.prototype = {
 	},
 
 	/*** 
+		Returns true if the renderer supports GLSL effects.
+	***/
+	areEffectsSupported : function areEffectsSupported() {
+		return false;
+	},
+
+	/*** 
 		OVERRIDE THIS METHOD.
 
 		Starts the animation rendering.

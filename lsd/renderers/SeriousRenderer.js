@@ -105,6 +105,10 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 		return !Seriously.incompatible();
 	},
 
+	areEffectsSupported : function areEffectsSupported() {
+		return true;
+	},
+
 	/*** 
 		Starts the animation rendering.
 
