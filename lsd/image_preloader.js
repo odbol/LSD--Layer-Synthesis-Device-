@@ -11,7 +11,8 @@
 var USE_MEDIA_OBJECT_EVENTS = true,
 
 	// firefox doesn't support animating GIFs in canvas.
-	hasGifSupport = (navigator.userAgent.indexOf('Firefox') < 0);
+	// in fact, chrome doesn't either since v23. what is the world coming to?
+	hasGifSupport = isMobile && (navigator.userAgent.indexOf('Firefox') < 0);
 
 
 
@@ -78,7 +79,7 @@ function VidClip(mediaSource, thumbnail, rating) {
 	
 	// for backwards compatibility, create a image VidSource from strings of a GIF passed in
 	if (typeof(mediaSource) === "string" ) {
-		this.src = [new VidSource(mediaSource, 'image/gif')];
+		this.src = [new VidSource(mediaSource, 'image/gif', thumbnail)];
 	}
 	else {
 		this.src = mediaSource;
@@ -117,30 +118,33 @@ ImagePreloader.prototype.isAndroidWebkit = false; //set to true if browser is An
 //ImagePreloader.prototype.imgExtensionRegEx = /\.(jpg|gif|png)$/i;
 //pass single string to load as image, pass array of VidSource objects to load as video, 
 //each array element being another fallback codec.
-ImagePreloader.prototype.preload = function(vidSource)
+ImagePreloader.prototype.preload = function(vidClip)
 {
 	//test if video or image (backwards compaitibility
 	//if (image.test(imgExtensionRegEx)) {
-	if (typeof(vidSource) == "string") {
-		this.loadGif(vidSource);
-	}	
+	if (typeof(vidClip.src) == "string") {
+		this.loadGif(vidClip.src);
+	}
 	else {
 		// load GIFs if we have them (since that usually indicates they are original source),
 		// unless its firefox. firefox doesn't support animating GIFs in canvas.
-		var gif = vidSource.getGif();
+		var gif = vidClip.getGif();
 		
-		if (gif && hasGifSupport) {
-			this.loadGif(gif.src);
+		if (gif && (hasGifSupport ||
+					// if it only has a GIF, it's probably a static image, which is ok to load in this case
+					vidClip.src.length == 1)) { 
+
+			this.loadGif(gif.src || gif.url); // WTF???
 		}
 		else {
-			this.loadVideos(vidSource.src);
+			this.loadVideos(vidClip.src);
 		}
 	}
 };
 
 ImagePreloader.prototype.loadGif = function loadGif(image) {
 	// create new Image object and add to array
-	var oImage = new Image;
+	var oImage = new Image();
 	//this.aImages.push(oImage);
 	
 	// set up event handlers for the Image object

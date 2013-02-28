@@ -31,6 +31,22 @@
 
 */  
 
+
+
+/************* TEXTUAL RESOURCES for Internationalization **********/
+// TODO: move this to separate file.
+var TEXT_CLICK_VERB = 'Click';
+if (Modernizr.touch) {
+	TEXT_CLICK_VERB = 'Touch';
+}
+var TEXT_STEP_EFFECTS_HELP = TEXT_CLICK_VERB + ' and drag anywhere on the video to control effects. Each ' +
+	(Modernizr.touch ? 'finger' : 'mouse button' ) +
+	' controls a different layer&apos;s effect.';
+
+/************* END TEXTUAL RESOURCES  **********/
+
+
+
 var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
 var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>";
 var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
@@ -82,6 +98,10 @@ var SCREEN_LIST_HOLDER_END =
 		
 var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
 					
+
+
+
+
 var DRAW_FRAMERATE = 33;
 var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
@@ -298,7 +318,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			.find("#realbody div")
 				.replaceWith($("body").children(":not(#realbody, script)"));
 		$("body")
-			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
+			.append("<div id='backgroundHolder' class='step step_effects' title='" + TEXT_STEP_EFFECTS_HELP + "'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
 		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes); // new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
 		if (renderer.isSupported()) {
@@ -1455,9 +1475,14 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 					};
 
 
-					var closeIntro = function() {
+					var closeIntro = function(ev) {
 						$("#intro").remove();
-						return false;
+						
+						$(lsd).trigger('started.lsd', ['intro']);
+
+						// do NOT return false; let it propagate so Documentationeer can have a shot at it!
+						ev && ev.preventDefault();
+						//return false;
 					};					
 					$(INTRO_HTML).appendTo('body')
 						.click(closeIntro)

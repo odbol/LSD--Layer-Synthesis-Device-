@@ -131,6 +131,8 @@ body .element {
 	
 	<!-- END iphone app icons -->	
 	
+	<!-- documentationeer -->
+	<link type="text/css" href="/_js/documentationeer/documentationeer.css" rel='stylesheet' media='all' />
     <!-- END used for LSD -->
 
 </head>
@@ -254,6 +256,11 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
     <script type="text/javascript" src="/lsd/image_preloader.js"></script>
     <script type="text/javascript" src="/lsd/imageSlider.js"></script> 
     <script type="text/javascript" src="/lsd/lsd.js"></script>
+
+	<!-- documentationeer -->
+	<!--script type="text/javascript" src="/_js/documentationeer/lib/jquery.simpletip-1.3.1.js"></script-->
+	<script src="/_js/documentationeer/lib/jquery.tools.min.js"></script>
+	<script type="text/javascript" src="/_js/documentationeer/documentationeer.js"></script>
 
 
 	<script type="text/javascript">
@@ -701,6 +708,143 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 			}
 	
 			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false, isHd ? {width: 640, height: 480} : null);
+
+
+
+			/***********************
+				INLINE TUTORIAL
+			  with Documentationeer
+			************************/
+			var doc = $().documentate([
+				// each Step object can launch a cascading help tutorial of many steps. 
+				// this one will be our root object to launch the tutorial
+				{
+					// an id to reference via the event system
+					name: 'tutorial',
+					
+					// this takes a jQuery selector of the element that will trigger this tutorial,
+					// only the first time it is clicked.
+					// we trigger this manually now.
+					//once: '#intro .buttonClose',
+					
+					// jQuery selector of all the help tooltips or dialogs to show when triggered
+					elements: '.step_1, #layerControl_0 .clipThumb',
+					
+					delay: 2000,
+					
+					cssClass: 'hideable arrow right',
+					
+					// this is passed directly to the tooltip.dynamic plugin
+					placement: { left: { direction: 'right', bounce: true } },
+					
+					// options for the underlying tooltip object
+					tooltip: { 
+						position: 'top left',
+						offset: [5, -32]
+					},
+					
+					// once the user has dismissed or completed all the tutorial elements above,
+					// the `done` event is triggered. Can either be the `name` of another Step object,
+					// or a Step object itself.
+					done: {
+						name: 'step_2point5',
+						elements: '#vidClip_3',
+						
+						// closers are elements that finish and hide the step when clicked.
+						closers: '#backgroundCanvasControls .clipThumbs .clipThumb',
+						
+						delay: 1000,
+					
+						cssClass: 'hideable arrow right',
+						
+						// this is passed directly to the tooltip.dynamic plugin
+						placement: { left: { direction: 'right', bounce: true } },
+						
+						// options for the underlying tooltip object
+						tooltip: { 
+							position: 'top left',
+							offset: [5, -32]
+						},
+					
+						done: {
+							name: 'step_effects',
+							elements: '.step_effects',
+							
+							// note the `once` event handler is optional here since it's triggered by 
+							// the parent step
+							
+							delay: 1000,
+						
+							cssClass: 'hideable arrow down',
+							
+							// this is passed directly to the tooltip.dynamic plugin
+							placement: { top: { direction: 'down', bounce: true } },
+							
+							// options for the underlying tooltip object
+							tooltip: { 
+								position: 'center center',
+								offset: [-32, 0]
+							},
+							
+							done: {
+								name: 'step_3',
+								elements: '.step_3',
+								
+								delay: 1000,
+						
+								cssClass: 'hideable arrow down',
+								
+								// this is passed directly to the tooltip.dynamic plugin
+								placement: { top: { direction: 'down', bounce: true } },
+								
+								// options for the underlying tooltip object
+								tooltip: { 
+									position: 'top center',
+									offset: [-32, 0]
+								},
+	
+								done: {
+									name: 'step_4',
+									elements: '.step_4',
+									
+									delay: 1000,
+						
+									cssClass: 'hideable arrow down',
+									
+									// this is passed directly to the tooltip.dynamic plugin
+									placement: { top: { direction: 'down', bounce: true } },
+									
+									// options for the underlying tooltip object
+									tooltip: { 
+										position: 'top center',
+										offset: [-32, 0]
+									}
+								}									
+							}	
+						}			
+					}
+				},
+				{
+					// an id to reference via the event system
+					name: 'teaser',
+					
+					cssClass: 'hideable arrow down',
+					
+					// jQuery selector of all the help tooltips or dialogs to show when triggered
+					elements: '.step_0',
+					
+					placement: { top: { direction: 'down', bounce: true } },
+					tooltip: { 
+						position: 'top center',
+						offset: [-32, 13]
+					},
+				}
+			]);
+
+			// start the tutorial when LSD says its ok (after they click close on the intro)
+			$(lsd).bind('started.lsd', function() {
+				doc.show('tutorial');
+			});
 		}
 		
 		// capabilities check
