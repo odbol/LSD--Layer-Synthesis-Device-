@@ -864,7 +864,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 		}
 		else {
 			$('#startButtons').hide()
-				.after('<p class="error">Sorry, your browser is not compatible. Please download the latest Chrome or Firefox browser for the best performance.</p>');
+				.after(HTML_ERROR_NOT_SUPPORTED);
 		}
 		
 		});

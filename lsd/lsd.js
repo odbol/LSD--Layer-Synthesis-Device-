@@ -73,6 +73,8 @@ var ERROR_MSG_HTML_END = '</p>' +
 '			</div>' +
 '		</div>	';
 
+var HTML_ERROR_NOT_SUPPORTED = '<p class="error">Sorry, your browser is not compatible. Please download the latest Chrome or Firefox browser for the best performance.</p>';
+
 var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>';
 		
 		
@@ -1603,7 +1605,8 @@ if (!renderer.areEffectsSupported()) {
 			*/
 		}
 		else { //HTML5 fail!
-			$("body").prepend(ERROR_MSG_HTML_START + "Sorry! Your browser isn't strong enough to take LSD.<br /><br />" + REQUIREMENTS_HTML + ERROR_MSG_HTML_END);
+			$("#backgroundHolder").prepend(HTML_ERROR_NOT_SUPPORTED);
+				//ERROR_MSG_HTML_START + "Sorry! Your browser isn't strong enough to take LSD.<br /><br />" + REQUIREMENTS_HTML + ERROR_MSG_HTML_END);
 
 			//return false;
 		}
