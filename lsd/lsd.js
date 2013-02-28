@@ -473,6 +473,9 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			
 
 			for (i in availableEffects) {
+				
+				if (i == 'mixer') continue;
+
 				availableEffectOptionsHTML += '<option value="' + i + '">' + i + '</option>';
 			}
 

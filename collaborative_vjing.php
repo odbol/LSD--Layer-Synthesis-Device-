@@ -215,32 +215,30 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/autowire.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/heroku.js"></script>
-    <script type="text/javascript" src="/_js/Seriouslyjs/effects/generator.interferences.js"></script>
+    <!--script type="text/javascript" src="/_js/Seriouslyjs/effects/generator.interferences.js"></script-->
     <script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.mixer.js"></script>
-
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.hue-rotate.js"></script>
 
     <script type="text/javascript" src="/_js/Seriouslyjs/seriously.js"></script>
 
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.ascii.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.bleach-bypass.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.bleach-bypass.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.blend.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.color.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.dent.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.dent.js"></script-->
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.edge.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.emboss.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.exposure.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.lumakey.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.fader.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.lumakey.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.fader.js"></script-->
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.hue-saturation.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.invert.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.nightvision.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.noise.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.noise.js"></script-->
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.ripple.js"></script>
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.sepia.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.tone.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.tone.js"></script-->
 		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.vignette.js"></script>
-		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.split.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.split.js"></script-->
 
 
 
