@@ -158,7 +158,7 @@ $.extend(SeriousRenderer.prototype, BaseRenderer.prototype, {
 
 					// do something with sources[layerIdx]
 					blenders[blenderIdx]['opacity' + blenderSide] = opacity;
-					console.log('blenders opacity: layer: ' + layerIdx + ', blender ' + blenderIdx+ ', opa: ' + 'opacity' + blenderSide);
+					//console.log('blenders opacity: layer: ' + layerIdx + ', blender ' + blenderIdx+ ', opa: ' + 'opacity' + blenderSide);
 				}; 
 			},
 

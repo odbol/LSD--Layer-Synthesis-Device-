@@ -97,6 +97,9 @@ if (!window.InputDevices) {
 				mouseTrackerOnStart = function (ev) {
 						changeInputVal(ev.which - 1, ev.clientX, ev.clientY);
 
+						ev.stopPropagation();
+						ev.preventDefault();
+						return false;
 					},
 				mouseTrackerOnDrag = function (ev) {
 						//buttonIdx = (ev.which - 1) * 2;
@@ -104,11 +107,19 @@ if (!window.InputDevices) {
 						changeInputVal(ev.which - 1, ev.clientX, ev.clientY);
 
 						//onChange(ev.which, buttonIdx);
+
+						ev.stopPropagation();
+						ev.preventDefault();
+						return false;
 					},		
 				mouseTrackerOnEnd = function (ev) {
 						//buttonIdx = (ev.which - 1) * 2;
 						
 						changeInputVal(ev.which - 1, false, false);
+						
+						ev.stopPropagation();
+						ev.preventDefault();
+						return false;
 					};
 
 			return $('#backgroundCanvas')

@@ -473,7 +473,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			
 
 			for (i in availableEffects) {
-				
+
 				if (i == 'mixer') continue;
 
 				availableEffectOptionsHTML += '<option value="' + i + '">' + i + '</option>';
@@ -1308,16 +1308,31 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 						var path = msg.getPathObj();
 //console.log('mosue moved: ', msg);
 						if (path[0] == 'mouse' && path[2] == 'xy') {
-							var button = parseInt(path[1]);
+							var arrayIdx = parseInt(path[1]) * 2;
 							
 							// only follow mouse when they clickin
-							if (button >= 0) {
-								updateInput(0 + button, msg.value[0], true);
-								updateInput(1 + button, msg.value[1], false);
+							if (arrayIdx >= 0) {
+								updateInput(0 + arrayIdx, msg.value[0], true);
+								updateInput(1 + arrayIdx, msg.value[1], false);
 							}
 						}
 					});
 
+
+				// load some initial effects. TODO: replace this with crowd sync
+				$('#effectsTab select.effectSelector').each(function (i, el) {
+
+					switch(i) {
+						case 0:
+							// fall through!
+						case 1:
+							$(el).val('hue-saturation').change();
+							break;
+						case 2:
+							$(el).val('vignette').change();
+							break;
+					}
+				});
 
 				/***********************
 					END EFFECTS
