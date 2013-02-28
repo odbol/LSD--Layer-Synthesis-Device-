@@ -91,7 +91,7 @@ var CLIP_PAGE_SIZE = 9;
 var ENABLE_BACKGROUNDING = false;
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
-var enableBlendEffectOnClick = !isMobile;
+var enableBlendEffectOnClick = false;//!isMobile;
 
 //range input sliders don't work in firefox.
 //jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN IT

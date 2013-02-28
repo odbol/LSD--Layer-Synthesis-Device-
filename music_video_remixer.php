@@ -63,6 +63,10 @@ a:hover {
 
 	<link rel="stylesheet" type="text/css" media="screen, projection" href="/lsd/fd-slider/fd-slider.min.css" />   
     <script src="/lsd/fd-slider/js/fd-slider.js"></script>
+    <script type="text/javascript">
+		// do not allow fdSlider to clobber ALL inputs on the page with its sliders. we only want on mixer, not effects!
+		fdSlider.removeOnload();
+	</script>
     
 	<!--script type="text/javascript" src="http://odbol.com/_js/jquery.js"></script-->
 	<!--script src="http://code.jquery.com/jquery-1.5.min.js"></script-->
