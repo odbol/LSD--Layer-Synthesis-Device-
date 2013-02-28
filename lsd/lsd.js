@@ -13,8 +13,7 @@
 	
 	Copyright 2010 Tyler Freeman
 	http://odbol.com
-	
-	
+
 	-- License --
 	This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +30,23 @@
 
 */  
 
-var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://odbol.com/lsd" rel="dc:source">odbol.com</a>.'
+
+
+/************* TEXTUAL RESOURCES for Internationalization **********/
+// TODO: move this to separate file.
+var TEXT_CLICK_VERB = 'Click';
+if (Modernizr.touch) {
+	TEXT_CLICK_VERB = 'Touch';
+}
+var TEXT_STEP_EFFECTS_HELP = TEXT_CLICK_VERB + ' and drag anywhere on the video to control effects. Each ' +
+	(Modernizr.touch ? 'finger' : 'mouse button' ) +
+	' controls a different layer&apos;s effect.';
+
+/************* END TEXTUAL RESOURCES  **********/
+
+
+
+var LICENSE_HTML = '<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/80x15.png" /></a>'; //<br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com" property="cc:attributionName" rel="cc:attributionURL">odbol</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://lsd.odbol.com" rel="dc:source">odbol.com</a>.'
 var REQUIREMENTS_HTML = "<p>Supported on Firefox 3.5+, Safari 4+, Chrome, iPhone, Android (no IE, what a surprise...)</p>";
 var ABOUT_HTML = "<h2>LSD (Layer Synthesis Device)</h2><h3>VJing in HTML5</h3>" +
 			"<p>Use LSD to VJ live video on the web! Choose video clips and images and blend them together using the mixer controls " +
@@ -80,8 +95,12 @@ var SCREEN_LIST_HOLDER_END =
 		'<a class="dialogButton buttonClose" href="#">Cancel</a><br />' +
 		'</div>';
 		
-var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://odbol.com/lsd">odbol.com/lsd</a></div>';
+var SHARE_LOGO_HTML = '<div id="shareLogo" class="bottom">Control This Screen: <a href="http://lsd.odbol.com">lsd.odbol.com</a></div>';
 					
+
+
+
+
 var DRAW_FRAMERATE = 33;
 var INTERACTIVE_MODE = {OFF: 0, ON: 1, TOGGLED: 2}; //enum for isInteractiveMode
 
@@ -91,7 +110,7 @@ var CLIP_PAGE_SIZE = 9;
 var ENABLE_BACKGROUNDING = false;
 
 //if true, the blending effect will change when you click anywhere on the canvas (doesn't work so well on mobile)
-var enableBlendEffectOnClick = !isMobile;
+var enableBlendEffectOnClick = false;//!isMobile;
 
 //range input sliders don't work in firefox.
 //jQuery sliders don't work in mobile. what's a dev to do? BOOLEAN IT
@@ -121,6 +140,18 @@ VidLayer.prototype.image = null; //holds an Image or Video tag source
 //loads a new VidSource object and plays as soon as it's available
 VidLayer.prototype.opacity = 1.0;
 VidLayer.prototype.id = 0;
+
+VidLayer.prototype.getOpacity = function getOpacity() {
+	return this.opacity;
+};
+VidLayer.prototype.setOpacity = function setOpacity(val) {
+	this.opacity = val;
+
+	this.$self.trigger('layerSetOpacity.lsd', [val]);
+};
+VidLayer.prototype.bind = function bind(eventName, cb) {
+	return this.$self.bind(eventName, cb);
+};
 VidLayer.prototype.load = function (clip) {
 	this.clip = clip;
 	//this.image = null; 
@@ -128,7 +159,8 @@ VidLayer.prototype.load = function (clip) {
 	clip.load(function (loadedImage) {
 		if (clip != parentLayer.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
 			return;
-	
+
+
 		if (parentLayer.image != null) { //unload (hide) last vid, for performance (don't want a billion GIFs running at once)
 			parentLayer.image.style.display = 'none';
 			
@@ -142,21 +174,29 @@ VidLayer.prototype.load = function (clip) {
 		
 		if (loadedImage.play) //if video, resume playing
 			loadedImage.play();
+
+
+		// trigger the event first???, so seriously has time before its paused???
+		$(parentLayer).trigger('clipLoaded.lsd', [parentLayer]);
 	});
-}
+};
 //draws the image on context ctx in the coordinates given.
 VidLayer.prototype.draw = function (ctx, x1, y1, x2, y2) {
 	if (this.image) { //check if not loaded yet!
-		ctx.globalAlpha = this.opacity;
+		ctx.globalAlpha = this.getOpacity();
 					
 		ctx.drawImage(this.image, x1, y1, x2, y2);
 	}
-}
+};
 function VidLayer(clip, id) {
 	if (clip)
 		this.load(clip);
 		
 	this.id = id;
+
+	// cache the jQuery ref for quicker event triggering
+	this.$self = $(this);
+	
 	return this;
 }  
 
@@ -192,6 +232,32 @@ Attribution.prototype = {
 	}
 };
 
+/***
+	Triggers a DOM event without jQuery, since Seriously uses normal events.
+***/
+function triggerEvent(eventName, input) { 
+	if (input.fireEvent) {
+		input.fireEvent("on" + eventName);
+	}
+	else {
+	    var ev = document.createEvent('HTMLEvents');
+	    ev.initEvent(eventName, true, false);
+	    input.dispatchEvent(ev);
+	}
+}
+
+//scales a number to fit within the new extrema.
+//if hardCutoff is true, it will not exceed the extrema
+var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHardCutoff) {
+  var n =  ((num - oldMin) / ((oldMax - oldMin) / (newMax - newMin))) + newMin;
+  if (isHardCutoff) {
+	if (n < newMin) 
+	  n = newMin;
+	else if (n > newMax)
+	  n = newMax;
+  }
+  return n;
+};
 
 (function( $ ){
 //$(function(){
@@ -251,10 +317,14 @@ Attribution.prototype = {
 			.find("#realbody div")
 				.replaceWith($("body").children(":not(#realbody, script)"));
 		$("body")
-			.append("<div id='backgroundHolder'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
+			.append("<div id='backgroundHolder' class='step step_effects' title='" + TEXT_STEP_EFFECTS_HELP + "'><canvas id='backgroundCanvas' width='" + resolution.width + "' height='" + resolution.height + "'></canvas></div>");
 
-		var renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
-		if (renderer.getContext()) {
+		var renderer = new SeriousRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		if (!renderer.isSupported()) {
+			renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
+		}
+
+		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
 
 			//disable scrolling on touch devices
@@ -263,6 +333,7 @@ Attribution.prototype = {
             	return false;
 			};
 
+			var availableEffects = Seriously.effects();
 
 			
 			//filter clips list by rating and mobileOnly flag:
@@ -385,9 +456,9 @@ Attribution.prototype = {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
 				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter")
-					layers[i].opacity = 0.7;
+					layers[i].setOpacity(0.7);
 				else
-					layers[i].opacity = 0.0;
+					layers[i].setOpacity(0.0);
 				
 				if (crowd) {
 					crowd.makeOnClipChange(i);
@@ -404,12 +475,12 @@ Attribution.prototype = {
 			//////////////////////////////
 			//BUILD HTML CONTROLS
 			//////////////////////////////
-			var iconsHTML = "<h1><a href='http://odbol.com/lsd' title='Click to take LSD'>LSD Visuals</a></h1><ul class='icons buttons ui-widget ui-helper-clearfix'>" +
+			var iconsHTML = "<h1><a href='http://lsd.odbol.com' title='Click to take LSD'>LSD Visuals</a></h1><ul class='icons buttons ui-widget ui-helper-clearfix'>" +
 				"<li id='buttonShare' title='Share Screen' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-link'></span></li>" +
 				"<li id='buttonHelp' title='Help/About' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-help'></span></li>" +		
 				"<li id='buttonFullscreen' title='Fullscreen Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-arrow-4-diag'></span></li>" +		
 				(ENABLE_BACKGROUNDING ? "<li id='buttonStop' title='Stop Visuals' class='button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-closethick'></span></li>" : "") +
-				"</ul>"
+				"</ul>";
 				
 			//build html control for composite
 			var compHTML = "<select id='compositionSelector'>";
@@ -418,19 +489,41 @@ Attribution.prototype = {
 			compHTML += "</select>";
 			
 			var sliderHTML = "<div class='globalOptions'>" + 
-				"<label id='interactiveToggle'><input type='checkbox' value='true' />Interactive Mouse Mode</label>" +
-				"</div>"
+				"<label id='interactiveToggle' style='display:none'><input type='checkbox' value='true' />Interactive Mouse Mode</label>" +
+				"</div>",
+				effectsTabHTML = '',
+				availableEffectOptionsHTML = '<option value="">(no effect)</option>';
 			
-			
+
+			for (i in availableEffects) {
+
+				if (i == 'mixer') continue;
+
+				availableEffectOptionsHTML += '<option value="' + i + '">' + i + '</option>';
+			}
+
+			sliderHTML += 
+				"<div id='controlTabs' class='controlTabs'><ul class='tabButtons'><li id='clipsTabButton' class='button tabButton'><a href='#clipsTab'>Clips</a></li>" +
+				"<li id='effectsTabButton' class='button tabButton'><a href='#effectsTab'>Effects</a></li>" +
+				"</ul>" + 
+				'<div class="tabPanels"><div class="tab active" id="clipsTab">';
+
 			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
-				if (enableHTML5Range)
-					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />"
-				else
+				effectsTabHTML +=  "<div class='layerEffects' id='layerEffectsControl_" + i + "'><h3>Layer " + i + "</h3>";
+
+				if (enableHTML5Range) {
+					sliderHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerSlider" + i + "' id='layerSlider" + i + "' />";
+					//effectsTabHTML += "<input type='text' class='slider' data-fd-slider-vertical='vs' name='layerEffectsSlider" + i + "' id='layerEffectsSlider" + i + "' />";
+				}
+				else {
 					sliderHTML += "<div class='slider'></div>";
-				
+					//effectsTabHTML += "<div class='slider'></div>";
+				}
+
 				sliderHTML += "<div class='clipThumb' title='Click the layer icon to change its video clip'></div></div>";
+				effectsTabHTML += '<div class="effectPanel"><div class="effectSelector"><select class="effectSelector">' + availableEffectOptionsHTML + '</select></div><div class="effectControls"></div></div></div>';
 			}
 			//sliderHTML += "</div>";
 			
@@ -459,15 +552,28 @@ Attribution.prototype = {
 		
 		
 			sliderHTML += "</div></div>"; //end sharedCOntrols, layerSliders
-			
+
+			sliderHTML += '</div><div class="tab" id="effectsTab">' + effectsTabHTML + '</div></div></div>'; // end tabPanels, #controlTabs
+
+			 
 			$("body").append("<div id='backgroundCanvasControls' class='dialogControls ui-corner-all'>" + iconsHTML +
 				"<div class='aboutBox'>" + ABOUT_HTML + "</div>" +
 				"<div class='controlPanel'>" + sliderHTML + "</div></div>");
 		
-			
+
 			//////////////////////////////
 			// EVENT BEHAVIORS
 			//////////////////////////////
+
+			// tabs
+			/*$("#effectsTabButton, #clipsTabButton").on('click', function () {
+
+				$('#clipsTab').toggleClass('active');
+				$('#effectsTab').toggleClass('active');
+			});*/
+			var controlTabs = $('#controlTabs').tabs();
+
+
 			$("#interactiveToggle input")
 				.change(function () {
 					if (isInteractiveMode != INTERACTIVE_MODE.TOGGLED) { //don't change if we're updating GUI programmatically
@@ -713,7 +819,7 @@ Attribution.prototype = {
 								'<iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>' +
 							"</div>" +
 							"<img src='http://qrcode.kaywa.com/img.php?d=" + encodeURIComponent(shareUrl) + "' />" +
-							'<h2>odbol.com/lsd</h2>' + 
+							'<h2>lsd.odbol.com</h2>' + 
 							"</div>")
 							.appendTo("body")
 							.click(function () {
@@ -809,7 +915,7 @@ Attribution.prototype = {
 					if (enableHTML5Range) {
 						var onSlide = function (data) {
 							//change local immediately, and only send final value to crowd
-							layers[i].opacity = parseFloat(data.value);
+							layers[i].setOpacity(parseFloat(data.value));
 							
 							interactiveOff(); //turn interactive off if they try to change manually
 						};
@@ -823,7 +929,7 @@ Attribution.prototype = {
 							/*.attr("min", 0.0)
 							.attr("max", 1.0)
 							.attr("step", 0.1)*/
-							.attr("value", layers[i].opacity)
+							.attr("value", layers[i].getOpacity())
 							;//.change(onSlide);
 							
 						sliders[i] = fdSlider.createSlider({
@@ -880,7 +986,7 @@ Attribution.prototype = {
 								max: 1.0,
 								step: 0.1,
 								orientation: 'vertical',
-								value: layers[i].opacity
+								value: layers[i].getOpacity()
 							};
 							
 						if (i > 0) //turn interactive off if they try to change manually
@@ -934,6 +1040,338 @@ Attribution.prototype = {
 		
 				renderer.addLayers(layers);
 				renderer.start();
+
+
+
+
+
+
+
+
+				/***********************
+					EFFECTS
+				***********************/
+
+
+				// events for effects
+				var currentInputs = [],
+					currentInputsIdx = 0,
+
+					updateInput = function updateInput(idx, value, isX) {
+						var input;			
+
+//console.log('updateInputcurrentInputs.length: ' + currentInputs.length, value);			
+						if (idx < currentInputs.length && value !== false) {
+							input = currentInputs[idx];
+
+							if (input.min !== -Infinity && input.min !== undefined &&
+								input.max !== Infinity && input.max !== undefined) {
+ 
+								value = scaleRange(value, 0, isX ? window.innerWidth : window.innerHeight, parseFloat(input.min), parseFloat(input.max));
+							}
+//console.log('updateInput: ', value);
+							input.value = value;
+							triggerEvent('change', input);
+						} 
+					},
+
+
+					/************ INPUT TAB ***************/
+					getInputsSelectHTML = function getInputsSelectHTML() {
+						var r = '<select>',
+							devs = InputDevices.getDevices();
+
+						for (var i in devs) {
+							var dev = devs[i];
+
+							for (var j = 0 ; j < dev.getNumInputs(); j++) {
+								var devName = i;
+
+								if (Modernizr.touch && devName == 'mouse') {
+									devName = 'touch';
+								}
+
+								r += '<option value="' + i + '_' + j + '">' +
+									 	devName + ' ' + j + '</option>';
+							}
+						}
+
+						return r + '</select>';
+					},
+
+					onInputConfigChange,
+					addInputToConfigTab = function addInputToConfigTab(inputEl, effectName) {
+						/*var inputConfigTab = $('#inputTab');
+
+						if (!inputConfigTab) {
+							inputConfigTab = createInputConfigTab();
+						}*/
+
+						// just swap out actual input for the input config selector, saves space. plus lazy.
+		
+						// only bind once
+						if (!onInputConfigChange) {
+							onInputConfigChange = function onInputConfigChange() {
+								var val = $(this).val()
+									inputIdx = val && val.length > 0 ? val.split('_')[1] : -1;
+
+								if (inputIdx >= 0) {
+									currentInputs[inputIdx] = $(this).data('inputEl');
+								}
+							};
+
+
+
+							var hideInputsTab = function hideInputsTab( ev, ui ) {
+									//ev.preventDefault();
+									//ev.stopPropagation();
+									//ev.stopImmediatePropogation();
+
+									$('#effectsTab')
+										.removeClass('inputsOn');
+								};
+
+							controlTabs.on( "tabsselect", hideInputsTab);
+							$('#effectsTab').on('click', hideInputsTab);
+
+
+							// disbale the Inputs tab, since it's not an actual tab!
+							//controlTabs.tabs('disable', 2);
+	
+
+							$('#effectsTab')
+								.on('change', '.inputConfig select', onInputConfigChange)
+
+								// also unhide the input tab switchy thingy here
+							$("<li id='inputsTabButton' class='button tabButton ui-state-default ui-corner-top'><a href='#inputsTab'>Inputs</a></li>")		
+								.insertAfter('#effectsTabButton')
+								.on("click", function (ev) {
+									ev.preventDefault();
+									ev.stopPropagation();
+									//ev.stopImmediatePropogation();
+
+									$('#effectsTab')
+										.toggleClass('inputsOn');
+
+									// switch to effects tab to show inputs
+									// unfortunately this makes the input tab an actual tab, which we don't want.
+									// TODO: replace all this with backbone.
+									//controlTabs.tabs( "option", "active", 1 );
+
+									return false; // don't actually switch tabs...
+								});
+
+						}
+
+						var inputConfig = $('<div class="inputConfig">' +
+												getInputsSelectHTML() + 
+											'</div>')
+							.prependTo($(inputEl).parents('.inputHolder'))
+							.find('select')
+								.data('inputEl', inputEl);
+
+						// automatically assign the input to the next available device output
+						// if (!isInputChangedManually) {
+							if (currentInputsIdx >= currentInputs.length) {
+								currentInputs.push(inputEl);
+							}
+							else {
+								currentInputs[currentInputsIdx] = inputEl;
+							}
+
+							inputConfig
+								.val('mouse_' + currentInputsIdx)
+								.change();
+
+
+							currentInputsIdx = (currentInputsIdx + 1) % InputDevices.mouse.getNumInputs();
+						// }
+
+					},
+
+					// adds an input for manipulation later, adds to Inputs tab as well
+					addInput = function addInput(inputEl, effectName) {
+
+						addInputToConfigTab.apply(this, arguments);
+					},
+
+
+
+
+					/************ EFFECTS TAB ***************/
+
+					setTabAsActive = function setTabAsActive ($effectPanel, effectName, effect, effectType) {
+						var $el = $effectPanel.find('.effectControls');
+							
+						effect = effect || $effectPanel.data('effect');
+						// need actually the effect type, not the instantiated effect, so we can parse inputs
+						effectType = effectType || Seriously.effects()[effectName];
+
+						// save these inputs for manipulation later
+						$el.find('input').each(function (el, i) { // was 'input[type="number"]', but doesn't work in FF mobile.
+							addInput(this, effectName);
+						});
+					},
+
+					refreshEffectTab = function refreshEffectTab($effectPanel, effectName) {
+						var vectorVars = ['x','y','s','t'],
+							$el = $effectPanel.find('.effectControls'),
+							effect = $effectPanel.data('effect'),
+							// need actually the effect type, not the instantiated effect, so we can parse inputs
+							effectType = Seriously.effects()[effectName],
+							el = $el.get(0),
+							holder,
+							inputElements, input;
+
+						$el.empty();
+
+						if (effect && effectType) {
+							for (var i in effectType.inputs) {
+								input = effectType.inputs[i];
+
+								if (input.type == 'image') continue;
+
+								inputElements = Seriously.util.createHTMLInput(input, i, false, false); //holder.find('.input').get(0), holder.find('.label').get(0));
+
+								// attach the form element directly to the effect's input.
+								effect[i] = inputElements;
+
+								for (var k in inputElements) {
+									name = input.title || i;
+
+									if (inputElements.length > 1) {
+										name += ' ' + vectorVars[k];
+									}
+
+									holder = $("<div class='inputHolder'></div>").appendTo($el);
+									holder.get(0).appendChild(inputElements[k]);
+
+									holder.append('<label for="' + inputElements[k].id + '">' + name + '</a>');
+
+									// ranges don't work too well with dial. turn them back to number boxes
+									if (inputElements[k].type == 'range') {
+ 										inputElements[k].type = 'number';
+ 									}
+								}
+							} 
+
+							var knobOpts = {
+									width: 50,
+									height: 50,
+									angleOffset: -125,
+									angleArc: 250,
+									bgColor: '#660000',
+									fgColor: '#cc0000',
+									allowFractions: true,
+									change: function () {
+										// trigger change handler of original input element, WITHOUT jQUERY - needs to trigger events added with addEventListener()
+										var input = this.$.get(0);
+										
+										triggerEvent('change', input);
+									}
+								};
+							$el.find('input').knob(knobOpts);
+
+							setTabAsActive($effectPanel, effectName, effect, effectType); 
+						}
+					};
+
+				$('#effectsTab')
+					.find('.layerEffects')
+						.each(function(el, i) {
+							var $this = $(this),
+								layerId = $this.attr('id').replace('layerEffectsControl_', ''),
+								// TODO: decide if we can actually display layers (i.e. not mobile)
+								layer = renderer.getSeriousLayer && renderer.getSeriousLayer(layerId);
+
+							if (!layer) return;
+
+							$this.data('layer', layer);
+
+	/*
+							$this.find('.effectPanel')
+								.each(function (el, i) {
+									refreshEffectTab($(this));
+								});
+	*/
+						})
+					.end()
+ 
+					.on('change', 'select.effectSelector', function () {
+						var $this = $(this),
+							effectName = $this.val(),
+							effectPanel = $this.parents('.effectPanel'),
+							layer = $this.parents('.layerEffects').data('layer'),
+							effect = null;
+
+						if (!layer) return;
+
+						if (effectName) {
+							effect = layer.setEffect(effectName);
+						} 
+						else {
+							effect = layer.setEffect(null);
+						}
+						effectPanel.data('effect', effect);
+						refreshEffectTab(effectPanel, effectName);
+
+						renderer.refresh();
+					})
+					.on('click', 'h3', function () {
+						$(this).toggleClass('open');
+					});
+
+
+				// this is where we init our input devices (e.g. mouse/touch, external OSC, even perhaps a LeapMotion?)
+
+				// also handles touch events if available.
+				InputDevices.mouse.start() 
+					.bind('change', function (ev, msg) {
+
+						var path = msg.getPathObj();
+//console.log('mosue moved: ', msg);
+						if (path[0] == 'mouse' && path[2] == 'xy') {
+							var arrayIdx = parseInt(path[1]) * 2;
+							
+							// only follow mouse when they clickin
+							if (arrayIdx >= 0) {
+								updateInput(0 + arrayIdx, msg.value[0], true);
+								updateInput(1 + arrayIdx, msg.value[1], false);
+							}
+						}
+					});
+
+
+				// load some initial effects. TODO: replace this with crowd sync
+				$('#effectsTab select.effectSelector').each(function (i, el) {
+
+					switch(i) {
+						case 0:
+							// fall through!
+						case 1:
+							$(el).val('hue-saturation').change();
+							break;
+						case 2:
+							$(el).val('vignette').change();
+							break;
+					}
+				});
+
+
+if (!renderer.areEffectsSupported()) {
+	// TODO: show help text saying you can't see them, but you can still control them.
+	// for now, just hide them!
+	$('#effectsTabButton').hide();
+} // END renderer.areEffectsSupported()) 
+				/***********************
+					END EFFECTS
+				***********************/	
+
+
+
+
+
+							
 				
 				
 				if (enableBlendEffectOnClick) {
@@ -1046,9 +1484,14 @@ Attribution.prototype = {
 					};
 
 
-					var closeIntro = function() {
+					var closeIntro = function(ev) {
 						$("#intro").remove();
-						return false;
+						
+						$(lsd).trigger('started.lsd', ['intro']);
+
+						// do NOT return false; let it propagate so Documentationeer can have a shot at it!
+						ev && ev.preventDefault();
+						//return false;
 					};					
 					$(INTRO_HTML).appendTo('body')
 						.click(closeIntro)

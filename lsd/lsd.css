@@ -24,7 +24,7 @@
 	background-color: #000;
 }
 
-
+ 
 body div a.poweredBy {
 	display:block !important;
 	position:relative;		
@@ -578,6 +578,119 @@ body #backgroundCanvasControls div .clipThumb {
 		font-size:28px;
 	} 
 
+/*
+.tabPanels {
+	clear:both;
+}
+
+.tab {
+	display:none;
+
+}
+	.tab.active {
+		display:block;
+	}
+
+ul.tabs {
+	margin: 0; 
+	padding: 4px 0; 
+}
+	ul.tabs li {
+		margin: 0 25px 5px;
+		position: relative; 
+		padding: 2px 5px; 
+		cursor: pointer; 
+		float: left;  
+		list-style: none;
+	}
+*/
+
+body .ui-tabs .ui-tabs-panel {
+	padding: 0;
+}
+
+body .controlTabs {
+	background-color: transparent;
+	background-image: none;
+	border:none;
+	padding:0;
+}
+body .tabButtons {
+	border: none;
+	background-color: transparent;
+	background-image: none;
+	padding:1px 0;
+}
+
+body .tabButtons .tabButton {
+	background-color: transparent;
+	background-image: none;
+
+}
+
+body .tabButtons .ui-state-default a, 
+body .tabButtons .ui-state-default a:link, 
+body .tabButtons .ui-state-default a:visited {
+	color: #666;
+}
+
+body .tabButtons .ui-state-active a, 
+body .tabButtons .ui-state-active a:link, 
+body .tabButtons .ui-state-active a:visited {
+	color: #ccc;
+}
+
+body .tabButtons .ui-state-default {
+	border: 1px solid #666;
+}
+
+body .tabButtons .ui-state-active {
+	border: 1px solid #ccc;
+}
+
+
+/** effects **/
+.layerEffects {
+	text-align: left;
+	border-bottom: 1px solid #333;
+	margin-bottom: 5px;
+	padding: 2px 0 3px;
+	clear: both;
+}
+
+	.layerEffects h3 {
+		margin: 2px 5px 2px 0;
+		float: left;
+	}
+
+	.layerEffects .inputHolder { 
+		float: left;
+		width: 50px;
+		margin: 5px 5px;
+		padding-top:5px;
+	}
+		.layerEffects .inputHolder label {
+			float: left;
+			display: block;
+			text-align: center;
+			width: 100%;
+			margin: -7px 0 0 0;
+		}
+
+		.layerEffects .inputHolder select {
+			margin-bottom: 10px;
+		}
+
+	.layerEffects .jKnob,
+	.inputsOn .layerEffects .inputConfig {
+		display: block;
+	}
+	.layerEffects .inputConfig,
+	.inputsOn .layerEffects .jKnob {
+		display: none;
+	}
+
+	
 
 /****************** Sliding Panel *******************/
 
