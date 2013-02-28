@@ -6,11 +6,13 @@
 	width: 150px;
 	height: auto;
 	background-color: black;
-	color: #CCC;
+	font-size: 10px;
+	color: #fff;
 	text-align: center;
 	padding: 10px 5px;
 	font-weight: bold;
 }
+
 
 	.docTooltip.arrow.right {
 		position: relative;
