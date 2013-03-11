@@ -92,10 +92,26 @@ if (!window.InputDevices) {
 			}
 		},
 
+		getButtonIdx = function getButtonIdx(ev) {
+			var buttonIdx = ev.which - 1;
+
+			if (buttonIdx >= 0) {
+
+				if (ev.shiftKey) {
+					buttonIdx += 1;
+				}
+				if (ev.altKey) {
+					buttonIdx += 2;
+				}
+			}
+
+			return buttonIdx;
+		},
+
 		initMouseTracker = function () {
 			var buttonIdx = 0,
 				mouseTrackerOnStart = function (ev) {
-						changeInputVal(ev.which - 1, ev.clientX, ev.clientY);
+						changeInputVal(getButtonIdx(ev), ev.clientX, ev.clientY);
 
 						ev.stopPropagation();
 						ev.preventDefault();
@@ -104,7 +120,7 @@ if (!window.InputDevices) {
 				mouseTrackerOnDrag = function (ev) {
 						//buttonIdx = (ev.which - 1) * 2;
 
-						changeInputVal(ev.which - 1, ev.clientX, ev.clientY);
+						changeInputVal(getButtonIdx(ev), ev.clientX, ev.clientY);
 
 						//onChange(ev.which, buttonIdx);
 
@@ -115,7 +131,7 @@ if (!window.InputDevices) {
 				mouseTrackerOnEnd = function (ev) {
 						//buttonIdx = (ev.which - 1) * 2;
 						
-						changeInputVal(ev.which - 1, false, false);
+						changeInputVal(getButtonIdx(ev), false, false);
 						
 						ev.stopPropagation();
 						ev.preventDefault();
