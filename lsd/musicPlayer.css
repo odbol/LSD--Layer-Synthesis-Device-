@@ -261,7 +261,7 @@ body div.intro {
 }
 
 	body .intro .musicLogo a {
-	  background: url("http://battlehooch.com/images/joke/battlehooch_logo-joke.png") no-repeat scroll 0 0 transparent;
+	  background: url("http://odbol.com/images/battlehooch/battlehooch_logo-joke.png") no-repeat scroll 0 0 transparent;
 	  display: block;
 	  height: 82px;
 	  overflow: hidden;
@@ -275,6 +275,8 @@ body div.intro {
 	
 	.intro #startButtons {
 		margin: 2em 0;
+		position:relative;
+		height: 120px;
 	}
 	
 		.intro #startButtons .button {
@@ -288,6 +290,23 @@ body div.intro {
 			.intro #startButtons .button h3 {
 				font-size: 20px;
 			}
+
+	#loadButtons, 
+	#qualityButtons {
+		position:absolute;
+		opacity:0;
+		display:none;
+
+		-webkit-transition: opacity 0.3s ease;
+		-moz-transition: opacity 0.3s ease;
+		-o-transition: opacity 0.3s ease;
+		transition: opacity  0.3s ease;
+	}
+
+	#startButtons .active {
+		display:block;
+		opacity: 1;
+	}
 			
 	
 .flowButtons {

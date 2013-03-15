@@ -487,7 +487,8 @@ var	PRELOAD_DELAY = 10;
 	//  audioType	- MIME type of the audioUrl file
 	//	lsd 		- LSD object	
 	//  songAttribution - Attribution object of the song's info
-	$.fn.musicPlayer = function (audioUrl, audioType, lsd, songAttribution) {
+	//  shouldInitClips - if true, will load specified clips and timeline
+	$.fn.musicPlayer = function (audioUrl, audioType, lsd, songAttribution, shouldInitClips) {
 		$('body').append(MUSIC_CONTROLS + '<div id="musicHolder"><audio id="music" controls="controls"><source src="' + audioUrl + '" type="' + audioType + '" /></audio></div>' + MUSIC_CONTROLS_END);
 		
 		lsd.isPaused = true; // wait until they start the vid!
@@ -711,7 +712,23 @@ var	PRELOAD_DELAY = 10;
 			.on('durationchange', function () {
 				timeline.setTotalTime(popcorn.duration());
 				
-				timeline.load();
+				if (shouldInitClips) {
+					timeline.load();
+				}
+				else {
+					// everyone starts out with at least one clip!
+					timeline.add({
+							"time":0,
+							"event": {"type":"clip",
+								"layerId":0,
+								"clipId":"/images/mixer/battlehooch/thumb/kinectRecord892012202-4AA90-cells-spinn.jpg"
+							}
+						});
+
+					toggleRecord();
+					$().documentate().show('tutorial');
+					play();
+				}
 			})		
 			.on('timeupdate', function () {
 				timeline.movePlayhead(popcorn.currentTime());
@@ -724,7 +741,7 @@ var	PRELOAD_DELAY = 10;
 
 		$('#playButton').click(function () {
 			if (popcorn.paused() ) {
-				play()
+				play();
 			}
 			else {
 				pause();
@@ -824,7 +841,14 @@ var	PRELOAD_DELAY = 10;
 				});
 			}); 
 			
+		//if (!shouldInitClips)
+			//timeline.clearPlaylist();
+
 		popcorn.preload('auto');
+
+		return {
+			timeline: timeline
+		};
 	};
    
 

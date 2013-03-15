@@ -253,6 +253,8 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
     <script type="text/javascript" src="/lsd/renderers/CanvasRenderer.js"></script>
     <script type="text/javascript" src="/lsd/renderers/SeriousRenderer.js"></script>
 
+    <!-- END EFFECTS -->
+
     <script type="text/javascript" src="/lsd/image_preloader.js"></script>
     <script type="text/javascript" src="/lsd/imageSlider.js"></script> 
     <script type="text/javascript" src="/lsd/lsd.js"></script>

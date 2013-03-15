@@ -148,11 +148,11 @@ body .element {
 		<h3><em>Joke</em> remixable music video</h3>
 		
 		<div class='flowButtons'>
-			<div class='arrow_box right button'>
+			<div class='arrow_box right button watch'>
 				<h3>Watch</h3>
 				<p>Watch the original video</p>
 			</div>
-			<div class='arrow_box right button'>
+			<div class='arrow_box right button remix'>
 				<h3>Remix</h3>
 				<p>Hit remix to add video clips and transitions</p>
 			</div>
@@ -162,15 +162,27 @@ body .element {
 			</div>
 			<br class='clear' />
 		</div>
-				
+		
 		<div id='startButtons'>
-			<div class='start button dialogButton sd'>
-				<h3>Standard Quality</h3>
-				<p>For slower computers/limited bandwidth</p>
+			<div id='loadButtons' class='active'>
+				<div class='start button dialogButton watch'>
+					<h3>Watch</h3>
+					<p>Watch the official remix</p>
+				</div>
+				<div class='start button dialogButton remix'>
+					<h3>Remix</h3>
+					<p>Create your own Battlehooch video!</p>
+				</div>
 			</div>
-			<div class='start button dialogButton hd'>
-				<h3>High Quality</h3>
-				<p>Requires a new computer and fast internet connection</p>
+			<div id='qualityButtons'>
+				<div class='start button dialogButton sd'>
+					<h3>Standard Quality</h3>
+					<p>For slower computers/limited bandwidth</p>
+				</div>
+				<div class='start button dialogButton hd'>
+					<h3>High Quality</h3>
+					<p>Requires a new computer and fast internet connection</p>
+				</div>
 			</div>
 		</div>
 		
@@ -178,7 +190,7 @@ body .element {
 		
 		<div class='waitingDesc'>
 		
-		<p>Supported on Safari 4+, Chrome. Partial support on Firefox 4+, iPhone, Android.</p>
+		<p>Supported on Chrome, Firefox 4+, Safari 4+. Partial support on iPhone, Android.</p>
 		<p><a href='https://github.com/odbol/LSD--Layer-Synthesis-Device-' target='_blank'>Code</a> and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
 		<br />Animated GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
@@ -190,6 +202,8 @@ body .element {
 	</div>
 	
 	<script type="text/javascript" src="/_js/modernizr.min.js"></script>
+	
+	<script type="text/javascript" src="/_js/jQuery-Knob/js/jquery.knob.js"></script> 
 	
 	<script type="text/javascript">
 	
@@ -228,6 +242,44 @@ if (!FIREBASE_URL) {
 	<script type='text/javascript' src='http://static.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="/lsd/crowd.js"></script>
 	
+	 <!-- EFFECTS -->
+	<script type="text/javascript" src="/lsd/InputDevices/mouse.js"></script> 
+
+    <script type="text/javascript" src="/_js/Seriouslyjs/converters/autowire.js"></script>
+    <script type="text/javascript" src="/_js/Seriouslyjs/converters/heroku.js"></script>
+    <!--script type="text/javascript" src="/_js/Seriouslyjs/effects/generator.interferences.js"></script-->
+    <script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.mixer.js"></script>
+
+    <script type="text/javascript" src="/_js/Seriouslyjs/seriously.js"></script>
+
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.ascii.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.bleach-bypass.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.blend.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.color.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.dent.js"></script-->
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.edge.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.emboss.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.exposure.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.lumakey.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.fader.js"></script-->
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.hue-saturation.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.invert.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.nightvision.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.noise.js"></script-->
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.ripple.js"></script>
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.sepia.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.tone.js"></script-->
+		<script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.vignette.js"></script>
+		<!--script type="text/javascript" src="/_js/Seriouslyjs/effects/seriously.split.js"></script-->
+
+
+
+
+    <script type="text/javascript" src="/lsd/renderers/BaseRenderer.js"></script>
+    <script type="text/javascript" src="/lsd/renderers/CanvasRenderer.js"></script>
+    <script type="text/javascript" src="/lsd/renderers/SeriousRenderer.js"></script>
+
+    <!-- END EFFECTS -->
 
     <script type="text/javascript" src="/lsd/image_preloader.js"></script>
     <script type="text/javascript" src="/lsd/imageSlider.js"></script> 
@@ -659,7 +711,8 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				]); //copy array and add more!
 	
 	
-		var init = function init(isHd) {
+		var isRemix = false,
+			init = function init(isHd) {
 	  		//this module allows collaborative VJing with other users.
    			//var crowd = new CrowdControl();
    			var crowd = false;
@@ -670,7 +723,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				musicUrl = 	Modernizr.audio.ogg ? '/music/Battlehooch%20-%20Joke.ogg' : '/music/Battlehooch%20-%20Joke.mp3',
 				musicType = Modernizr.audio.ogg ? 'audio/ogg' : 'audio/mpeg';
 				
-			$().musicPlayer(musicUrl, musicType, lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'));
+			var player = $().musicPlayer(musicUrl, musicType, lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'), !isRemix);
 
 			
 			/***********************
@@ -809,10 +862,19 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 		// capabilities check
 		// TODO: firefox disabled for now, since looping of OGVs in place of GIfs has a bit of a delay. too bad since Firefox is the only one that gets opacities correct!
 		if ( Modernizr.canvas &&
-			(Modernizr.audio.mp3 /*|| Modernizr.audio.ogg*/) &&
-			(Modernizr.video.h264 /*|| Modernizr.video.ogg || Modernizr.video.webm*/) ) {
+			(Modernizr.audio.mp3 || Modernizr.audio.ogg) &&
+			(Modernizr.video.h264 || Modernizr.video.ogg /*|| Modernizr.video.webm*/) ) {
 		
-			$('#startButtons .button').click(function () {
+			$('#loadButtons .button, .flowButtons .right').click(function () {
+				isRemix = $(this).hasClass('remix'); // TODO: disabled for now. HD is ridiculously slow to load!!!
+				
+				// move on to step 2:
+
+				$('#loadButtons').removeClass('active');
+				$('#qualityButtons').addClass('active');
+			});
+
+			$('#qualityButtons .button').click(function () {
 				var isHd = $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
 				
 				//HD/SD setting
