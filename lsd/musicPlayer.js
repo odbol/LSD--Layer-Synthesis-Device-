@@ -26,9 +26,12 @@
 ***/
 
 // number of seconds ahead of time to preload a clip before it's cued up. not really a const, may be changed for HD videos
-var	PRELOAD_DELAY = 10;
+var	PRELOAD_DELAY = 10,
+	
+	// the default firebase ID (the official remix)
+	MUSIC_DEFAULT_PLAYLIST_ID = '-IdbRBMiOXdWRUD334BS';
 
-(function( $ ){
+(function( $ , exports){
 
 	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton step_0' title='Remix the video while watching it'>Remix</li></ul>",
 		MUSIC_CONTROLS_END = '</div><div class="preloaderMsg dialogControls permanent"><img src="/lsd/blackSpinner.gif" alt="" />Loading <span class="preloaderProgress"></span> clips...</div>',
@@ -41,23 +44,33 @@ var	PRELOAD_DELAY = 10;
 	var PlaylistRepo = function() {
 		
 	};
+
+	PlaylistRepo.getPlaylistId = function getPlaylistId() {
+
+		var playlistId = null,
+			screenIdMatch = (/playlist=([^&#]+)/).exec(window.location.href);
+		
+		if (screenIdMatch && screenIdMatch.length > 1)
+			playlistId = screenIdMatch[1];
+		else {
+			// querystring didn't work, try the url rewritten version
+			screenIdMatch = (/\/\w+\/\w+\/([^?&#\/]+)/).exec(window.location.href);
+			
+			if (screenIdMatch && screenIdMatch.length > 1)
+				playlistId = screenIdMatch[1];
+		}
+
+		return playlistId;
+	};
 	
 	PlaylistRepo.prototype = {
 		fireBaseRoot : FIREBASE_ROOT_BASE,
 		
 		init : function () {
-			var screenIdMatch = (/playlist=([^&#]+)/).exec(window.location.href);
-			if (screenIdMatch && screenIdMatch.length > 1)
-				this.playlistId = screenIdMatch[1];
-			else {
-				// querystring didn't work, try the url rewritten version
-				screenIdMatch = (/\/\w+\/\w+\/([^?&#\/]+)/).exec(window.location.href);
-				
-				if (screenIdMatch && screenIdMatch.length > 1)
-					this.playlistId = screenIdMatch[1];
-			}
+			this.playlistId = PlaylistRepo.getPlaylistId();
+
 			if (!this.playlistId)
-				this.playlistId = '-IdbRBMiOXdWRUD334BS';
+				this.playlistId = MUSIC_DEFAULT_PLAYLIST_ID;
 			this.fireBaseRoot += '/' + this.playlistId;
 			
 			
@@ -87,12 +100,12 @@ var	PRELOAD_DELAY = 10;
 		setPlaylist : function (playlist, onSaved) {
 			var self = this,
 				clipRef = new Firebase(FIREBASE_ROOT_BASE),
-				playlistRef = clipRef.push( playlist, function (isSaved) {
-					if (isSaved) {
+				playlistRef = clipRef.push( playlist, function (err) {
+					if (!err) {
 						self.playlistId = playlistRef.name();
 					}
 					
-					onSaved && onSaved(isSaved ? false : 'Could not save', self.playlistId);
+					onSaved && onSaved(err ? 'Could not save.' : false, self.playlistId);
 				});
 				
 			
@@ -556,19 +569,21 @@ var	PRELOAD_DELAY = 10;
 				//lsd.isPaused = true;
 			},
 			
-			showShareScreen = function showShareScreen(playlistId) {
+			showShareScreen = function showShareScreen(playlistId, wasDirty) {
 				playlistId = playlistId || timeline._playlistRepo.playlistId;
 				
 				var shareUrl = 'http://lsd.odbol.com/battlehooch/joke/' + playlistId; //joke.php?playlist=' + playlistId;
 				
-				$('<div id="shareTrackScreen" class="dialogControls permanent" style="display:none"><h2>Share this video</h2>' +
-					 "<div class='shareButtons'>" +
+				$('<div id="shareTrackScreen" class="dialogControls permanent" style="display:none"><h2>Share ' +
+					(wasDirty ? 'your Remix' : 'this Video') +
+					 "</h2><div class='shareButtons'>" +
 					 	'<div class="shareButton tweet"><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=' + encodeURIComponent(shareUrl) + '&amp;via=ODDDevice&amp;count=none&amp;text=' + encodeURIComponent(songAttribution.toString()) + '" style="width:130px; height:21px;"></iframe></div>' +
 						'<div class="shareButton facebook"><iframe src="http://www.facebook.com/plugins/like.php?href=' + encodeURIComponent(shareUrl) + '&amp;layout=button_count&amp;show_faces=false&amp;width=220&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe></div>' +
 					"</div><br class='clear' />" +
 					'<label for="shareTrackUrl">Link: </label><input id="shareTrackUrl" type="text" value="' +
 					 shareUrl + '" />' +
-					 "<div class='dialogButton record button'>Remix your own video</div><div class='dialogButton button close'>Close</div></div>")
+					 (wasDirty ? "" : "<div class='dialogButton record button'>Remix your own video</div>") + 
+					 "<div class='dialogButton button close'>Close</div></div>")
 					
 					.appendTo('body')
 					.fadeIn('slow')
@@ -765,14 +780,16 @@ var	PRELOAD_DELAY = 10;
 		});
 		
 		$('#shareRButton').click(function () {
-			var saveAs = false;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
+			var saveAs = false,
+				wasDirty = timeline.isDirty;//prompt("Enter a name to save as: ", 'Random ' + Math.round(Math.random() * 50000));
 			
 			timeline.save(saveAs, function (error, playlistId) {
-				/*if (error) {
-					alert('Your recording could not be saved: ' + error);
-				}*/
+				if (error) {
+					console && console.log('Your recording could not be saved: ' + error);
+					//alert('Your recording could not be saved: ' + error);
+				}
 				
-				showShareScreen(playlistId);
+				showShareScreen(playlistId, wasDirty);
 			});
 		});
 		
@@ -847,9 +864,15 @@ var	PRELOAD_DELAY = 10;
 		popcorn.preload('auto');
 
 		return {
-			timeline: timeline
+			timeline: timeline,
+			getPlaylistId: PlaylistRepo.getPlaylistId
 		};
 	};
    
 
-})( jQuery );
+   // also export public classes
+   if (exports) {
+   		exports.PlaylistRepo = PlaylistRepo;
+   }
+
+})( jQuery, window );

@@ -145,7 +145,7 @@ body .element {
 <body>
 	<div class='intro element'>
 		<h2 class='musicLogo'><a href='http://battlehooch.com'>Battlehooch</a></h2>
-		<h3><em>Joke</em> remixable music video</h3>
+		<h3>Create your own music video for the Battlehooch song <em>Joke</em></h3>
 		
 		<div class='flowButtons'>
 			<div class='arrow_box right button watch'>
@@ -169,13 +169,13 @@ body .element {
 					<h3>Watch</h3>
 					<p>Watch the official remix</p>
 				</div>
-				<div class='start button dialogButton remix'>
-					<h3>Remix</h3>
+				<div class='start button dialogButton remix highlighted'>
+					<h3>Start Remixing</h3>
 					<p>Create your own Battlehooch video!</p>
 				</div>
 			</div>
 			<div id='qualityButtons'>
-				<div class='start button dialogButton sd'>
+				<div class='start button dialogButton sd highlighted'>
 					<h3>Standard Quality</h3>
 					<p>For slower computers/limited bandwidth</p>
 				</div>
@@ -852,6 +852,26 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 						position: 'top center',
 						offset: [-32, 13]
 					},
+				},
+				{
+					name: 'step_effects',
+					elements: '.step_effects',
+					
+					// note the `once` event handler is optional here since it's triggered by 
+					// the parent step
+					
+					delay: 1000,
+				
+					cssClass: 'hideable arrow down',
+					
+					// this is passed directly to the tooltip.dynamic plugin
+					placement: { top: { direction: 'down', bounce: true } },
+					
+					// options for the underlying tooltip object
+					tooltip: { 
+						position: 'center center',
+						offset: [-32, 0]
+					}
 				}
 			]);
 		}
@@ -865,17 +885,28 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 			(Modernizr.audio.mp3 || Modernizr.audio.ogg) &&
 			(Modernizr.video.h264 || Modernizr.video.ogg /*|| Modernizr.video.webm*/) ) {
 		
+			// check if they came here to watch a specific remix, or just the official one
+			if (window.PlaylistRepo.getPlaylistId() && window.PlaylistRepo.getPlaylistId() != MUSIC_DEFAULT_PLAYLIST_ID) {
+				$('#loadButtons .remix').removeClass('highlighted');
+				$('#loadButtons .watch')
+					.addClass('highlighted')
+					.find('p')
+						.html('Watch the remix'); // TODO: replace with remix author's name
+				
+			}
+
+			// step 1
 			$('#loadButtons .button, .flowButtons .right').click(function () {
-				isRemix = $(this).hasClass('remix'); // TODO: disabled for now. HD is ridiculously slow to load!!!
+				isRemix = $(this).hasClass('remix');
 				
 				// move on to step 2:
-
 				$('#loadButtons').removeClass('active');
 				$('#qualityButtons').addClass('active');
 			});
 
+			// step 2
 			$('#qualityButtons .button').click(function () {
-				var isHd = $(this).hasClass('hd'); // TODO: disabled for now. HD is ridiculously slow to load!!!
+				var isHd = $(this).hasClass('hd'); //  HD is ridiculously slow to load!!!
 				
 				//HD/SD setting
 				if (isHd) {
