@@ -61,7 +61,7 @@ CrowdControl.prototype = {
 		var presenceRef = new Firebase(this.fireBaseRoot + '/queue/' + userId + '/online');
 		
 		//Make sure if I lose my connection I am marked as offline.
-		presenceRef.setOnDisconnect(QUEUE_STATUS.OFFLINE);
+		presenceRef.onDisconnect().set(QUEUE_STATUS.OFFLINE);
 		//Now, mark myself as online.
 		presenceRef.setWithPriority(QUEUE_STATUS.WAITING, QUEUE_STATUS.WAITING);
 	
@@ -83,7 +83,7 @@ CrowdControl.prototype = {
 			//alert firebase that this screen is still active
 			var activeRef = new Firebase(this.fireBaseRoot + '/activeSince');
 			//Make sure if master loses connection the screen is marked as offline.
-			activeRef.setOnDisconnect(0); //priority is automatically set to null on disconnect
+			activeRef.onDisconnect().set(0); //priority is automatically set to null on disconnect
 			
 			var ratingRef = new Firebase(this.fireBaseRoot + '/minRating');
 			ratingRef.set(minRating);
