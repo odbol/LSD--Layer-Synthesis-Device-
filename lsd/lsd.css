@@ -380,6 +380,7 @@ body #backgroundCanvasControls div .clipThumb {
 /* layer thumb buttons */
 #backgroundCanvasControls .layerControl .clipThumb {
 	z-index: 5;
+	position:relative;
 }
 #backgroundCanvasControls .layerControl .clipThumb .button {
 	z-index: 10; 
@@ -401,6 +402,24 @@ body #backgroundCanvasControls div .clipThumb {
 #backgroundCanvasControls .layerControl .clipThumb .button .ui-icon {
 	margin: -2px auto;
 }
+
+/* loading indicators for clips */
+
+/*#backgroundCanvasControls .layerControl.isLoading .clipThumb {
+	content: "<span class='spinner' />";
+}*/
+
+
+	#backgroundCanvasControls .layerControl.isLoading .clipThumb .spinner {
+		height:34px;
+		width: 100%;
+		background: url("blackSpinner.gif") no-repeat scroll center bottom rgba(0,0,0,0.68);
+		position: absolute;
+		z-index: 3000;
+		top: 0;
+		left: 0;
+	}
+
 
 /* layer controls */
 #backgroundCanvasControls .layerControl {

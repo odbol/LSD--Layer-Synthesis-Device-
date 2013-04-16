@@ -75,7 +75,7 @@ var ERROR_MSG_HTML_END = '</p>' +
 
 var HTML_ERROR_NOT_SUPPORTED = '<p class="error">Sorry, your browser is not compatible. Please download the latest Chrome or Firefox browser for the best performance.</p>';
 
-var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div>';
+var CLIP_BUTTON_HTML = '<div class="button ui-state-default ui-corner-bottom"><span class="ui-icon ui-icon-triangle-1-s"></span></div><span class="spinner" />';
 		
 		
 var INTRO_HTML = '<div id="intro" class="dialogControls">' +
@@ -157,20 +157,29 @@ VidLayer.prototype.bind = function bind(eventName, cb) {
 VidLayer.prototype.load = function (clip) {
 	this.clip = clip;
 	//this.image = null; 
-	var parentLayer = this;
+	var self = this;
+
+
+	if (self.$el) {
+		self.$el.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
+
+		self.$el
+			.addClass('isLoading');
+	}
+
 	clip.load(function (loadedImage) {
-		if (clip != parentLayer.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
+		if (clip != self.clip) //this callback is late, the layer has already moved on to another clip so don't load the old one! (happens on startup)
 			return;
 
 
-		if (parentLayer.image != null) { //unload (hide) last vid, for performance (don't want a billion GIFs running at once)
-			parentLayer.image.style.display = 'none';
+		if (self.image) { //unload (hide) last vid, for performance (don't want a billion GIFs running at once)
+			self.image.style.display = 'none';
 			
-			if (parentLayer.image.pause) //stop last video, if it is
-				parentLayer.image.pause();
+			if (self.image.pause) //stop last video, if it is
+				self.image.pause();
 		}
 		
-		parentLayer.image = loadedImage;
+		self.image = loadedImage;
 		
 		loadedImage.style.display = 'block'; //make sure the image is now shown again if it was hidden before
 		
@@ -179,7 +188,13 @@ VidLayer.prototype.load = function (clip) {
 
 
 		// trigger the event first???, so seriously has time before its paused???
-		$(parentLayer).trigger('clipLoaded.lsd', [parentLayer]);
+		self.$self.trigger('clipLoaded.lsd', [self]);
+
+
+		if (self.$el) {
+			self.$el
+				.removeClass('isLoading');
+		}
 	});
 };
 //draws the image on context ctx in the coordinates given.
@@ -190,7 +205,7 @@ VidLayer.prototype.draw = function (ctx, x1, y1, x2, y2) {
 		ctx.drawImage(this.image, x1, y1, x2, y2);
 	}
 };
-function VidLayer(clip, id) {
+function VidLayer(clip, id, el) {
 	if (clip)
 		this.load(clip);
 		
@@ -198,6 +213,8 @@ function VidLayer(clip, id) {
 
 	// cache the jQuery ref for quicker event triggering
 	this.$self = $(this);
+
+	this.$el = $(el);
 	
 	return this;
 }  
@@ -372,8 +389,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			//changes the clip in the given layer. TODO: this could be better	
 			var changeClip = function (currentLayer, currentLayerControl, clip) {
 				if (currentLayer.clip != clip) { //avoid infinite loop
+					currentLayer.$el = currentLayerControl;
 					currentLayer.load(clip);
-					currentLayerControl.find(".clipThumb").html($(clip.element).html() + CLIP_BUTTON_HTML); //put the current clip thumb in there.
 				}
 			};
 			

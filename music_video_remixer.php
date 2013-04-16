@@ -229,13 +229,18 @@ if (!FIREBASE_URL) {
 	console.log('FIREBASE_URL is not set to a valid Firebase database. Please set the line in the index HTML file to use crowdsourced features.');
 }
 	
-		//the end-all test
-		var isMobile = (/android.+webkit/i).test(navigator.userAgent) || (/iPad|iPhone|iPod/).test(navigator.platform);
+//the end-all test
+var isMobile = (/android.+webkit/i).test(navigator.userAgent) || (/iPad|iPhone|iPod/).test(navigator.platform);
 
-		//inject jQuery mobile for vertical slider fix
-		if (isMobile) {
-		
-		}
+//inject jQuery mobile for vertical slider fix
+if (isMobile) {
+
+}
+
+// if true, the buttons will ask them if they want HD videos. which are too slow to load that no one will wait long enough.
+// TODO: add this to a "Settings" panel
+var IS_HD_ALLOWED = /hd=true/.test(window.location.href);
+
 	</script>
 	
 	<!-- collaborative support -->
@@ -900,8 +905,13 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				isRemix = $(this).hasClass('remix');
 				
 				// move on to step 2:
-				$('#loadButtons').removeClass('active');
-				$('#qualityButtons').addClass('active');
+				if (IS_HD_ALLOWED) {
+					$('#loadButtons').removeClass('active');
+					$('#qualityButtons').addClass('active');
+				}
+				else {
+					init(false);
+				}
 			});
 
 			// step 2

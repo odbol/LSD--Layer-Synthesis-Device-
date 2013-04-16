@@ -41,7 +41,7 @@ function VidSource(url, type, thumbUrl) {
 
 
 
-VidClip.prototype.src; //either a string (image) or array of VidSource objects (video)
+VidClip.prototype.src = null; //either a string (image) or array of VidSource objects (video)
 //loads a new VidSource object and plays as soon as it's available
 VidClip.prototype.thumbnail = ""; //url of a thumbnail image
 VidClip.prototype.image = null; //stores the loaded media for caching
@@ -67,6 +67,7 @@ VidClip.prototype.load = function (callback) {
 	else {
 		var preloader = new ImagePreloader([this], function (imgs, numLoaded) {
 			parentClip.image = imgs[0];
+
 			callback(parentClip.image);
 		});
 	}
