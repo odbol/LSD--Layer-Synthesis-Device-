@@ -126,6 +126,17 @@ ImagePreloader.prototype.preload = function(vidClip)
 	if (typeof(vidClip.src) == "string") {
 		this.loadGif(vidClip.src);
 	}
+	else if (vidClip.src.isRemoteCam) { // webcam support
+		var vid = $('#' + vidClip.src.tagId).find('video').get(0);
+
+		// assign pointer back to this.
+		this.oImagePreloader = this;
+
+		this.aImages.push(vid);
+	
+		//hack past it and hope it's loaded in time!
+		this.onload();
+	}
 	else {
 		// load GIFs if we have them (since that usually indicates they are original source),
 		// unless its firefox. firefox doesn't support animating GIFs in canvas.
@@ -293,7 +304,7 @@ function ImagePreloader(images, callback)
    // initialize internal state.
    this.nLoaded = 0;
    this.nProcessed = 0;
-   this.aImages = new Array;
+   this.aImages = [];
  
    // record the number of images.
    this.nImages = images.length;

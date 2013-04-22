@@ -345,7 +345,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
 		}
 
-var webcam = new RemoteCam();
+//var webcam = new RemoteCam();
 
 		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();

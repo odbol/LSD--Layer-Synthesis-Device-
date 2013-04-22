@@ -1,3 +1,8 @@
+// Replace with your own API key and session ID. See https://dashboard.tokbox.com/projects
+var TOKBOX_API_KEY = 22961042,
+	TOKBOX_SESSION_ID = '2_MX4yMjk2MTA0Mn4xMjcuMC4wLjF-TW9uIEFwciAyMiAxNDoyNDozMiBQRFQgMjAxM34wLjE0MjQwNTQ1fg',
+	TOKBOX_TOKEN = 'T1==cGFydG5lcl9pZD0yMjk2MTA0MiZzZGtfdmVyc2lvbj10YnJ1YnktdGJyYi12MC45MS4yMDExLTAyLTE3JnNpZz1mNTk0NDZiMTQ0ZDQzNzhjZjM5Y2JjMGNkYjcxOTk1YTc5NjhlZjY0OnJvbGU9cHVibGlzaGVyJnNlc3Npb25faWQ9Ml9NWDR5TWprMk1UQTBNbjR4TWpjdU1DNHdMakYtVFc5dUlFRndjaUF5TWlBeE5Eb3lORG96TWlCUVJGUWdNakF4TTM0d0xqRTBNalF3TlRRMWZnJmNyZWF0ZV90aW1lPTEzNjY2NjU4OTEmbm9uY2U9MC4wMTk5NjI1ODM5MDQ5MzQ2NiZleHBpcmVfdGltZT0xMzY5MjU3ODkwJmNvbm5lY3Rpb25fZGF0YT0=';
+
 	
 /***
 
@@ -8,7 +13,7 @@
 ***/
 var RemoteCam = function RemoteCam(onSubscribeCallback) {
 	TB.addEventListener("exception", exceptionHandler);
-			
+		
 		var $remotecams = $('<div id="remotecams" style="position:absolute;z-index:-1;width:410px;height:410px;"></div>')
 				.appendTo('body'),
 
@@ -32,7 +37,7 @@ var RemoteCam = function RemoteCam(onSubscribeCallback) {
 
 				var feedId = createClipHolder('camSource_publisher');
 				
-				var publisher = TB.initPublisher(22961042, feedId, {name: 'self', publishAudio: false});
+				var publisher = TB.initPublisher(TOKBOX_API_KEY, feedId, {name: 'self', publishAudio: false});
 				session.publish(publisher);
 			},
 			
@@ -55,12 +60,11 @@ var RemoteCam = function RemoteCam(onSubscribeCallback) {
 				console && console.log("RemoteCam Error: " + event.message);
 			},
 
-		session = TB.initSession("2_MX4yMjk2MTA0Mn4xMjcuMC4wLjF-VHVlIEZlYiAxOSAwMTowMToxMyBQU1QgMjAxM34wLjI3MDA0NDc0fg"); 
+		session = TB.initSession(TOKBOX_SESSION_ID); 
 
 
 
-// Replace with your own session ID. See https://dashboard.tokbox.com/projects
 		session.addEventListener("sessionConnected", sessionConnectedHandler);
 		session.addEventListener("streamCreated", streamCreatedHandler);
-		session.connect(22961042, "T1==cGFydG5lcl9pZD0yMjk2MTA0MiZzZGtfdmVyc2lvbj10YnJ1YnktdGJyYi12MC45MS4yMDExLTAyLTE3JnNpZz02YmJkYWQyMDIyYThiZDZjN2Q4ZmY3MGQ3NmM1YmYwOWQ5N2IwMmIxOnJvbGU9cHVibGlzaGVyJnNlc3Npb25faWQ9Ml9NWDR5TWprMk1UQTBNbjR4TWpjdU1DNHdMakYtVkhWbElFWmxZaUF4T1NBd01Ub3dNVG94TXlCUVUxUWdNakF4TTM0d0xqSTNNREEwTkRjMGZnJmNyZWF0ZV90aW1lPTEzNjEyNjQ1MTEmbm9uY2U9MC45NzUxODU1MzA2OTA0NjM4JmV4cGlyZV90aW1lPTEzNjM4NTY1MTAmY29ubmVjdGlvbl9kYXRhPQ=="); // Replace with your API key and token. See https://dashboard.tokbox.com/projects
+		session.connect(TOKBOX_API_KEY, TOKBOX_TOKEN);
 };
