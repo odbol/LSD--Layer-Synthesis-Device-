@@ -459,6 +459,25 @@ body #backgroundCanvasControls div .clipThumb {
     height: 100px;
 }
 
+.camModeButton {
+	background-color: rgb(9, 114, 173);
+}
+	.camModeButton:hover {
+		background-color: rgb(16, 150, 226);
+	}
+
+	.camModeButton.enabled {
+		background-color: rgb(200, 9, 1);
+	}
+
+		.camModeButton.enabled:before {
+			content: 'Stop ';
+		}
+
+		.camModeButton.enabled span {
+			display:none;
+		}	
+
 /*
 #backgroundCanvasControls .layerSliders input.slider::-webkit-slider-thumb {
      -webkit-appearance: none;

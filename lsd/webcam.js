@@ -9,62 +9,111 @@ var TOKBOX_API_KEY = 22961042,
 	Initializes a TokBox remote webcam connection via WebRTC.
 
 	@param Function onSubscribeCallback(videoElementHolderId) Called when a new video stream is available.
+	@param Function onUnsubscribeCallback(videoElementHolderId) Called when a video stream is removed.
 
 ***/
-var RemoteCam = function RemoteCam(onSubscribeCallback) {
+var RemoteCam = function RemoteCam(onSubscribeCallback, onUnsubscribeCallback) {
 	TB.addEventListener("exception", exceptionHandler);
 		
-		var $remotecams = $('<div id="remotecams" style="position:absolute;z-index:-1;width:410px;height:410px;"></div>')
-				.appendTo('body'),
+	var $remotecams = $('<div id="remotecams" style="position:absolute;z-index:-1;width:410px;height:410px;"></div>')
+			.appendTo('body'),
 
+		session = null, // the session
+		publisher = null, // the published stream, populated once publishSelf is called
 
-			/*** 
+		/*** 
 
-				creates a clip holder and adds the clip to LSD. 
+			creates a clip holder and adds the clip to LSD. 
 
-				@returns the ID of the element to be replaced by the <video> object from session.subscribe().
-			***/
-			createClipHolder = function (feedId) {
-				$remotecams.append('<div id="' + feedId + '"><div id="' + feedId + '_el"></div></div>');
+			@returns the ID of the element to be replaced by the <video> object from session.subscribe().
+		***/
+		createClipHolder = function (connectionId) {
+			var feedId = 'camSource_' + connectionId;
 
-				onSubscribeCallback && onSubscribeCallback(feedId);
+			$remotecams.append('<div id="' + feedId + '"><div id="' + feedId + '_el"></div></div>');
 
-				return feedId + '_el';
-			},
+			onSubscribeCallback && onSubscribeCallback(feedId);
 
-			sessionConnectedHandler = function sessionConnectedHandler(event) {
-				subscribeToStreams(event.streams);
+			return feedId + '_el';
+		},
 
-				var feedId = createClipHolder('camSource_publisher');
+		hideClipHolder = function (connectionId) {
+			var feedId = 'camSource_' + connectionId;
+
+			$remotecams.find('#' + feedId).hide();
+
+			onUnsubscribeCallback && onUnsubscribeCallback(feedId);
+		},
+
+		sessionConnectedDef = $.Deferred(),
+
+		sessionConnectedHandler = function sessionConnectedHandler(event) {
+			subscribeToStreams(event.streams);
+
+			sessionConnectedDef.resolve();
+		},
+
+		publishSelf = function publishSelf() {
+
+			sessionConnectedDef.then(function () {
+				var feedId = createClipHolder(session.connection.connectionId);
 				
-				var publisher = TB.initPublisher(TOKBOX_API_KEY, feedId, {name: 'self', publishAudio: false});
+				publisher = TB.initPublisher(TOKBOX_API_KEY, feedId, {
+					name: 'self', 
+					publishAudio: false,
+					mirror : false
+				});
 				session.publish(publisher);
-			},
-			
-			streamCreatedHandler = function streamCreatedHandler(event) {
-				subscribeToStreams(event.streams);
-			},
-			
-			subscribeToStreams = function subscribeToStreams(streams) {
-				for (i = 0; i < streams.length; i++) {
-					var stream = streams[i];
-					if (stream.connection.connectionId != session.connection.connectionId) {
-						var feedId = createClipHolder('camSource_' + stream.connection.connectionId);
+			});
+		},
 
-						session.subscribe(stream, feedId);
-					}
+		unpublishSelf = function unpublishSelf() {
+			sessionConnectedDef.then(function () {
+				if (publisher) {
+					session.unpublish(publisher);
 				}
-			},
-			
-			exceptionHandler = function exceptionHandler(event) {
-				console && console.log("RemoteCam Error: " + event.message);
-			},
+			});
+		},
+		
+		streamCreatedHandler = function streamCreatedHandler(event) {
+			subscribeToStreams(event.streams);
+		},
 
-		session = TB.initSession(TOKBOX_SESSION_ID); 
+		streamDestroyedHandler = function streamDestroyedHandler(event) {
+			var streams = event.streams;
 
+			for (i = 0; i < streams.length; i++) {
+				var stream = streams[i];
 
+				console && console.log("RemoteCam steam removed: " + stream.connection.connectionId);
 
-		session.addEventListener("sessionConnected", sessionConnectedHandler);
-		session.addEventListener("streamCreated", streamCreatedHandler);
-		session.connect(TOKBOX_API_KEY, TOKBOX_TOKEN);
+				hideClipHolder(stream.connection.connectionId);
+			}
+		},
+		
+		subscribeToStreams = function subscribeToStreams(streams) {
+			for (i = 0; i < streams.length; i++) {
+				var stream = streams[i];
+				if (stream.connection.connectionId != session.connection.connectionId) {
+					var feedId = createClipHolder(stream.connection.connectionId);
+
+					session.subscribe(stream, feedId);
+				}
+			}
+		},
+		
+		exceptionHandler = function exceptionHandler(event) {
+			console && console.log("RemoteCam Error: " + event.message);
+		};
+
+	session = TB.initSession(TOKBOX_SESSION_ID); 
+	session.addEventListener("sessionConnected", sessionConnectedHandler);
+	session.addEventListener("streamCreated", streamCreatedHandler);
+	session.addEventListener("streamDestroyed", streamDestroyedHandler);
+	session.connect(TOKBOX_API_KEY, TOKBOX_TOKEN);
+
+	return {
+		publish : publishSelf,
+		unpublish : unpublishSelf
+	};
 };

@@ -541,6 +541,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			
 			var sliderHTML = "<div class='globalOptions'>" + 
 				"<label id='interactiveToggle' style='display:none'><input type='checkbox' value='true' />Interactive Mouse Mode</label>" +
+				'<div class="camModeButton dialogButton"><span>Start</span> Live Cam Feed</div>' +
 				"</div>",
 				effectsTabHTML = '',
 				availableEffectOptionsHTML = '<option value="">(no effect)</option>';
@@ -1625,11 +1626,39 @@ if (!renderer.areEffectsSupported()) {
 							}, 
 							// add the ID to the end of the generic image because this is how Crowd finds the clip!
 							"/lsd/icons/stamp-lsd-72.png?id=" + videoElementHolderId))
-					}, 
+					},
+					onWebcamUnsubscribeCallback = function onWebcamUnsubscribeCallback(videoElementHolderId) {
+						// we can do this because the videoElementHolderId is appended to the end of the thumbnail URL
+						$('#clipThumbLists ul').find('img[src$="' + videoElementHolderId + '"]').parent()
+							.hide();
+					},
 
-					webcam = new RemoteCam(onWebcamSubscribeCallback);
+					webcam = new RemoteCam(onWebcamSubscribeCallback, onWebcamUnsubscribeCallback);
 
-				
+				$('.camModeButton').click(function () {
+					var $this = $(this);
+					
+					if ($this.hasClass('enabled')) {
+						webcam.unpublish();
+
+						$this.removeClass('enabled');
+
+						$this.hide() // since TokBox can't really republish easily.
+					}
+					else {
+					
+						if (confirm('This will send live video from your ' +
+									(isMobile ? 'phone camera' : 'webcam') +
+									' to be remixed in LSD. Please click "Allow" when prompted.')) {
+
+							webcam.publish();
+
+							$this.addClass('enabled');
+						}
+					}
+
+					return false;
+				})
 
 				//*********** END REMOTE WEBCAMS **********
 
