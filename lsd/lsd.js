@@ -1635,30 +1635,33 @@ if (!renderer.areEffectsSupported()) {
 
 					webcam = new RemoteCam(onWebcamSubscribeCallback, onWebcamUnsubscribeCallback);
 
-				$('.camModeButton').click(function () {
-					var $this = $(this);
-					
-					if ($this.hasClass('enabled')) {
-						webcam.unpublish();
+				if (webcam.canPublish) {
+					$('.camModeButton').click(function () {
+						var $this = $(this);
+						
+						if ($this.hasClass('enabled')) {
+							webcam.unpublish();
 
-						$this.removeClass('enabled');
+							$this.removeClass('enabled');
 
-						$this.hide() // since TokBox can't really republish easily.
-					}
-					else {
-					
-						if (confirm('This will send live video from your ' +
-									(isMobile ? 'phone camera' : 'webcam') +
-									' to be remixed in LSD. Please click "Allow" when prompted.')) {
-
-							webcam.publish();
-
-							$this.addClass('enabled');
+							$this.hide() // since TokBox can't really republish easily.
 						}
-					}
+						else {
+						
+							if (confirm('This will send live video from your ' +
+										(isMobile ? 'phone camera' : 'webcam') +
+										' to be remixed in LSD. Please click "Allow" when prompted.')) {
 
-					return false;
-				})
+								webcam.publish();
+
+								$this.addClass('enabled');
+							}
+						}
+
+						return false;
+					})
+						.css('display', 'block'); // unhide!
+				}
 
 				//*********** END REMOTE WEBCAMS **********
 

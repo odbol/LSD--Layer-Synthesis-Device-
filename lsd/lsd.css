@@ -461,6 +461,7 @@ body #backgroundCanvasControls div .clipThumb {
 
 .camModeButton {
 	background-color: rgb(9, 114, 173);
+	display: none; /* this is unhidden if they have camera capabilities */
 }
 	.camModeButton:hover {
 		background-color: rgb(16, 150, 226);
