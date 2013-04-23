@@ -87,14 +87,15 @@ function VidClip(mediaSource, thumbnail, rating) {
 	}
 	
 	//mobile can't handle videos, so find image version
-	if ( isMobile ) {
+	if ( isMobile && hasGifSupport) {
 		var gifSrc = this.getGif(); // fallback to thumb as placeholder
 
 		if (!gifSrc) {
-			gifSrc = thumbnail;
+			this.src = thumbnail;
 		}
-		
-		this.src = gifSrc;
+		else {
+			this.src = [gifSrc];
+		}
 	}
 
 	
@@ -201,6 +202,10 @@ ImagePreloader.prototype.loadVideos = function loadVideos(image) {
 	
 	vidTag += " id='" + tagId + "' autoplay='true' loop='true'>"
 	
+	if (!image.length) { // make sure its an array!
+		image = [image];
+	}
+
 	for (i in image) {
 		if (image[i].isVideo()) {
 			vidTag += "<source src='" + image[i].url + "'";
