@@ -463,6 +463,14 @@ body #backgroundCanvasControls div .clipThumb {
 	background-color: rgb(9, 114, 173);
 	display: none; /* this is unhidden if they have camera capabilities */
 }
+	.camModeButton .icon { 
+		display:block;
+		width:16px;
+		height:16px;
+		float:left;
+		/*background: url("lsd/icons/icon-live_feed.png") no-repeat center center */
+	}
+
 	.camModeButton:hover {
 		background-color: rgb(16, 150, 226);
 	}
@@ -475,7 +483,7 @@ body #backgroundCanvasControls div .clipThumb {
 			content: 'Stop ';
 		}
 
-		.camModeButton.enabled span {
+		.camModeButton.enabled .action {
 			display:none;
 		}	
 
