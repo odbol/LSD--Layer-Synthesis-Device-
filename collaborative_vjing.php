@@ -219,9 +219,15 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 	<script type='text/javascript' src='http://static.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="/lsd/crowd.js"></script>
 	
+    <!-- INPUT DEVICES (mouse should always be first) -->
+	<script type="text/javascript" src="/lsd/InputDevices/mouse.js"></script> 
+
+	<!-- leap motion -->
+	<script type="text/javascript" src="/_js/leap/leap.min.js"></script>
+	<script type="text/javascript" src="/lsd/InputDevices/leap.js"></script>
+
 
     <!-- EFFECTS -->
-	<script type="text/javascript" src="/lsd/InputDevices/mouse.js"></script> 
 
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/autowire.js"></script>
     <script type="text/javascript" src="/_js/Seriouslyjs/converters/heroku.js"></script>

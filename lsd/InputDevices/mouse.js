@@ -84,8 +84,8 @@ if (!window.InputDevices) {
 			if (arrayIdx < 0) return;
 
 //console.log('changeInputVal: ' + buttonIdx, arrayIdx, x, y);	
-			inputValues[arrayIdx + 0] = x;
-			inputValues[arrayIdx + 1] = y;
+			inputValues[arrayIdx + 0] = x / window.innerWidth;
+			inputValues[arrayIdx + 1] = y / window.innerHeight;
 
 			if (x !== false && y !== false) {
 				onChange(buttonIdx, arrayIdx);

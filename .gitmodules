@@ -4,3 +4,6 @@
 [submodule "_js/jQuery-Knob"]
 	path = _js/jQuery-Knob
 	url = https://github.com/odbol/jQuery-Knob
+[submodule "_js/leap"]
+	path = _js/leap
+	url = https://github.com/leapmotion/leapjs.git

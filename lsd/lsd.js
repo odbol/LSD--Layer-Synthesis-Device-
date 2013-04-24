@@ -1119,7 +1119,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 							if (input.min !== -Infinity && input.min !== undefined &&
 								input.max !== Infinity && input.max !== undefined) {
  
-								value = scaleRange(value, 0, isX ? window.innerWidth : window.innerHeight, parseFloat(input.min), parseFloat(input.max));
+ 								// assumes inputs are always normalized between 0-1
+								value = scaleRange(value, 0, 1, parseFloat(input.min), parseFloat(input.max));
 							}
 //console.log('updateInput: ', value);
 							input.value = value;
