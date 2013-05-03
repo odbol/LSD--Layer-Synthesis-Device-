@@ -83,7 +83,7 @@
 			$(InputDevices).bind(eventName + '.mouse', func);
 		};
 
-	InputDevices.registerDevice('mouse', 
+	InputDevices.registerDevice('LeapMotion', 
 		{
 			attachToInput: attachToInput,
 			getNumInputs : function () {
