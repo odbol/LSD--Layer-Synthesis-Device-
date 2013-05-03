@@ -1619,52 +1619,53 @@ if (!renderer.areEffectsSupported()) {
 
 
 				//*********** START REMOTE WEBCAMS **********
+				if (window.RemoteCam) {
+					var iconIdx = 0,
+						onWebcamSubscribeCallback = function onWebcamSubscribeCallback(videoElementHolderId) {
+							iconIdx = (iconIdx % 4) + 1; // 4 is maximum number of feeds.
 
-				var iconIdx = 0,
-					onWebcamSubscribeCallback = function onWebcamSubscribeCallback(videoElementHolderId) {
-						iconIdx = (iconIdx % 4) + 1; // 4 is maximum number of feeds.
+							lsd.addClip(new VidClip({
+									isRemoteCam:true, 
+									tagId: videoElementHolderId
+								}, 
+								// add the ID to the end of the generic image because this is how Crowd finds the clip!
+								"/lsd/icons/icon-live_feed-" + iconIdx + ".png?id=" + videoElementHolderId))
+						},
+						onWebcamUnsubscribeCallback = function onWebcamUnsubscribeCallback(videoElementHolderId) {
+							// we can do this because the videoElementHolderId is appended to the end of the thumbnail URL
+							$('#clipThumbLists ul').find('img[src$="' + videoElementHolderId + '"]').parent()
+								.hide();
+						},
 
-						lsd.addClip(new VidClip({
-								isRemoteCam:true, 
-								tagId: videoElementHolderId
-							}, 
-							// add the ID to the end of the generic image because this is how Crowd finds the clip!
-							"/lsd/icons/icon-live_feed-" + iconIdx + ".png?id=" + videoElementHolderId))
-					},
-					onWebcamUnsubscribeCallback = function onWebcamUnsubscribeCallback(videoElementHolderId) {
-						// we can do this because the videoElementHolderId is appended to the end of the thumbnail URL
-						$('#clipThumbLists ul').find('img[src$="' + videoElementHolderId + '"]').parent()
-							.hide();
-					},
+						webcam = new RemoteCam(onWebcamSubscribeCallback, onWebcamUnsubscribeCallback);
 
-					webcam = new RemoteCam(onWebcamSubscribeCallback, onWebcamUnsubscribeCallback);
+					if (webcam.canPublish) {
+						$('.camModeButton').click(function () {
+							var $this = $(this);
+							
+							if ($this.hasClass('enabled')) {
+								webcam.unpublish();
 
-				if (webcam.canPublish) {
-					$('.camModeButton').click(function () {
-						var $this = $(this);
-						
-						if ($this.hasClass('enabled')) {
-							webcam.unpublish();
+								$this.removeClass('enabled');
 
-							$this.removeClass('enabled');
-
-							$this.hide() // since TokBox can't really republish easily.
-						}
-						else {
-						
-							if (confirm('This will send live video from your ' +
-										(isMobile ? 'phone camera' : 'webcam') +
-										' to be remixed in LSD. Please click "Allow" when prompted.')) {
-
-								webcam.publish();
-
-								$this.addClass('enabled');
+								$this.hide() // since TokBox can't really republish easily.
 							}
-						}
+							else {
+							
+								if (confirm('This will send live video from your ' +
+											(isMobile ? 'phone camera' : 'webcam') +
+											' to be remixed in LSD. Please click "Allow" when prompted.')) {
 
-						return false;
-					})
-						.css('display', 'block'); // unhide!
+									webcam.publish();
+
+									$this.addClass('enabled');
+								}
+							}
+
+							return false;
+						})
+							.css('display', 'block'); // unhide!
+					}
 				}
 
 				//*********** END REMOTE WEBCAMS **********
