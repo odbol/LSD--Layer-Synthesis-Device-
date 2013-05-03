@@ -780,3 +780,9 @@ body .tabButtons .ui-state-active {
   	top:0;
   }
 }
+
+
+/* hide blending selector, since it's not used in WebGL */
+#compositionSelector {
+	visibility: hidden;
+}
