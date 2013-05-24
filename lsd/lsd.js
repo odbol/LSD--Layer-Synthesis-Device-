@@ -345,8 +345,6 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			renderer = new CanvasRenderer(lsd, null, 'backgroundCanvas', compositeTypes);
 		}
 
-//var webcam = new RemoteCam();
-
 		if (renderer.isSupported()) {
 			var canvas = renderer.getCanvas();
 
@@ -683,7 +681,8 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 	//		var delaySlideIntId = 0;
 	
 			//slide the clips down when they click layer clip
-			var isSharedControlsShown = false;
+			var ALWAYS_SHOW_SHARED_CONTROLS = window.innerHeight > 460,
+				isSharedControlsShown = false;
 			var showSharedControls = function (e) {
 					$("#backgroundCanvasControls").addClass("sharedOpen")
 						.find(".sharedControls")
@@ -692,6 +691,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 					isSharedControlsShown = e.target; //holds the object that triggered the showing
 				};
 			var hideSharedControls = function (e) {
+				if (!ALWAYS_SHOW_SHARED_CONTROLS) {
 						// if (delaySlideIntId != 0) {
 	// 						delaySlideIntId = setInterval(
 	// 							function () {
@@ -707,6 +707,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 	// 								}
 	// 							}, 500);
 	//					}
+				}
 			}
 			var toggleSharedControls = function (e) {
 					if (isSharedControlsShown) {
@@ -718,6 +719,10 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 					else
 						showSharedControls(e);
 				};
+
+			if (ALWAYS_SHOW_SHARED_CONTROLS) {
+				showSharedControls({target:true}); // fake out the event.
+			}
 			
 			//layer preview thumb
 			$("#backgroundCanvasControls .layerControl")
