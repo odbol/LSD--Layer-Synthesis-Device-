@@ -317,33 +317,72 @@ echo "var userId = 'VJ " . str_replace('.', '', $_SERVER['REMOTE_ADDR']) . "';";
 			//images to be rendered
 			var bgs = [
 
+/* first screen! */
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-AJ4.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-AJ4.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ben.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Fadeout.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Grant3.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Grant3.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Grant3.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Pat.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Pat.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Pat.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ryan.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ryan.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ryan.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snake.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snake.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Snake.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snakefast3.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snakefast3.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Snakefast3.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Tombo.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo2.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo2.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Tombo2.jpg', 1111),
-
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA90-cells-spinn.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA90-cells-spinn.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012202-4AA90-cells-spinn.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA92-backbendloop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA92-backbendloop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012202-4AA92-backbendloop.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AA96-static-sweetkick-suckyloop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AA96-static-sweetkick-suckyloop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AA96-static-sweetkick-suckyloop.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AA9A-CA-sweep-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AA9A-CA-sweep-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AA9A-CA-sweep-loop.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-cells-long-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-cells-long-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA0-cells-long-loop.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-rgb-long-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-rgb-long-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA0-rgb-long-loop.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA8-rays_kick.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA8-rays_kick.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA8-rays_kick.jpg', 1111),
-new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220325.oni-static_spin.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220325.oni-static_spin.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord89201220325.oni-static_spin.jpg', 1111),
+new VidClip([new VidSource("/images/mixer/240p/fish_jelly_orange.mp4", "video/mp4"), 
+					new VidSource("/images/mixer/240p/fish_jelly_orange.ogg", "video/ogg")], "/images/mixer/thumbs/fish_jelly_orange.jpg"),
+				
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo2.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo2.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Tombo2.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220356.oni-shitty_loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220356.oni-shitty_loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord89201220356.oni-shitty_loop.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/gif_sorted/Icky/adam_harms.gif', "image/gif"), 
+	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/Icky/adam_harms.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/Icky/thumb/adam_harms.jpg'),
+
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snakefast3.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snakefast3.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Snakefast3.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AA9A-CA-sweep-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AA9A-CA-sweep-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AA9A-CA-sweep-loop.jpg', 1111),
+new VidClip([new VidSource("/images/mixer/240p/tz_firedance3full-6fps.mp4", "video/mp4"), 
+					new VidSource("/images/mixer/240p/tz_firedance3full-6fps.ogg", "video/ogg")], "/images/mixer/thumbs/tz_firedance3full-6fps.jpg"),
+	
+
+
+/* second screen! */
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Grant3.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Grant3.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Grant3.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA92-backbendloop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012202-4AA92-backbendloop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012202-4AA92-backbendloop.jpg', 1111),
+new VidClip([new VidSource("/images/mixer/240p/clouds_happy_sunset_SHORTLOOP.mp4", "video/mp4"), 
+					new VidSource("/images/mixer/240p/clouds_happy_sunset_SHORTLOOP.ogg", "video/ogg")], "/images/mixer/thumbs/clouds_happy_sunset_SHORTLOOP.jpg"),
+				
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Fadeout.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Fadeout.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-cells-long-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-cells-long-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA0-cells-long-loop.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/gif_sorted/_pixel/cardioid_fractal.gif', "image/gif"), 
+	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/_pixel/cardioid_fractal.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/_pixel/thumb/cardioid_fractal.jpg'),
+
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ryan.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ryan.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ryan.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA8-rays_kick.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA8-rays_kick.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA8-rays_kick.jpg', 1111),
+new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/platonik_in_cube.gif', "image/gif"), 
+	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/surrogate_self/platonik_in_cube.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/surrogate_self/thumb/platonik_in_cube.jpg', 530),
+
+
+/* the rest! */
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Ben.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Ben.jpg', 1111),
+
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Pat.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Pat.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Pat.jpg', 1111),
+
+
+//new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snake.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Snake.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Snake.jpg', 1111),
+//new VidClip([new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/Battlehooch-Joke-Tombo.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/Battlehooch-Joke-Tombo.jpg', 1111),
+
+
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AA96-static-sweetkick-suckyloop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AA96-static-sweetkick-suckyloop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AA96-static-sweetkick-suckyloop.jpg', 1111),
+
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-rgb-long-loop.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinect4AAA0-rgb-long-loop.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinect4AAA0-rgb-long-loop.jpg', 1111),
+
+new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220325.oni-static_spin.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord89201220325.oni-static_spin.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord89201220325.oni-static_spin.jpg', 1111),
+
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012204-4AAAE.jpg', 1111),
 new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE_cells.mov', "video/mp4"), new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204-4AAAE_cells.mov.ogv', 'video/ogg')], '/images/mixer/battlehooch/thumb/kinectRecord892012204-4AAAE_cells.jpg', 1111),
 
 
 					new VidClip([new VidSource("/images/mixer/240p/fish_jelly_purple.mp4", "video/mp4"), 
 						new VidSource("/images/mixer/240p/fish_jelly_purple.ogg", "video/ogg")], "/images/mixer/thumbs/fish_jelly_purple.jpg"),
-					new VidClip("/images/mixer/red_spiderweb.png","/images/mixer/thumbs/red_spiderweb.jpg"), 
+new VidClip("/images/mixer/red_spiderweb.png","/images/mixer/thumbs/red_spiderweb.jpg"), 
 					new VidClip("/images/mixer/dark_clouds.png","/images/mixer/thumbs/dark_clouds.jpg")
 				];	
 			
@@ -352,17 +391,11 @@ new VidClip([new VidSource('/images/mixer/battlehooch/240p/kinectRecord892012204
 				new VidClip([new VidSource("/images/mixer/240p/redbuggy_trim.mp4", "video/mp4"), 
 								new VidSource("/images/mixer/240p/redbuggy_trim.ogg", "video/ogg")],
 								"/images/mixer/thumbs/redbuggy.jpg"),
-				new VidClip([new VidSource("/images/mixer/240p/fish_jelly_orange.mp4", "video/mp4"), 
-					new VidSource("/images/mixer/240p/fish_jelly_orange.ogg", "video/ogg")], "/images/mixer/thumbs/fish_jelly_orange.jpg"),
 				new VidClip([new VidSource("/images/mixer/240p/chess_dance.mp4", "video/mp4"), 
 					new VidSource("/images/mixer/240p/chess_dance.ogg", "video/ogg")], "/images/mixer/thumbs/chess_dance.jpg"),
-				new VidClip([new VidSource("/images/mixer/240p/clouds_happy_sunset_SHORTLOOP.mp4", "video/mp4"), 
-					new VidSource("/images/mixer/240p/clouds_happy_sunset_SHORTLOOP.ogg", "video/ogg")], "/images/mixer/thumbs/clouds_happy_sunset_SHORTLOOP.jpg"),
 				new VidClip([new VidSource("/images/mixer/240p/fence_moma_LOOP.mp4", "video/mp4"), 
 					new VidSource("/images/mixer/240p/fence_moma_LOOP.ogg", "video/ogg")], "/images/mixer/thumbs/fence_moma_LOOP.jpg"),
-				new VidClip([new VidSource("/images/mixer/240p/tz_firedance3full-6fps.mp4", "video/mp4"), 
-					new VidSource("/images/mixer/240p/tz_firedance3full-6fps.ogg", "video/ogg")], "/images/mixer/thumbs/tz_firedance3full-6fps.jpg"),
-	
+				
 	
 	
 	
@@ -454,8 +487,6 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_dark/xray_body-mri.gif', "
 
 new VidClip([new VidSource('/images/mixer/gif_sorted/_pixel/can-i-helllp-yazxmcn.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/_pixel/can-i-helllp-yazxmcn.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/_pixel/thumb/can-i-helllp-yazxmcn.jpg', 200),
-new VidClip([new VidSource('/images/mixer/gif_sorted/_pixel/cardioid_fractal.gif', "image/gif"), 
-	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/_pixel/cardioid_fractal.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/_pixel/thumb/cardioid_fractal.jpg'),
 new VidClip([new VidSource('/images/mixer/gif_sorted/_pixel/cubes.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/_pixel/cubes.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/_pixel/thumb/cubes.jpg',600),
 new VidClip([new VidSource('/images/mixer/gif_sorted/_pixel/glitchy.gif', "image/gif"), 
@@ -599,8 +630,6 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/Francoise_Gamma/walking_wir
 /*new VidClip([new VidSource('/images/mixer/gif_sorted/Francoise_Gamma/walking_wireframe.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/Francoise_Gamma/walking_wireframe.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/Francoise_Gamma/thumb/walking_wireframe.jpg', 450),
 */
-new VidClip([new VidSource('/images/mixer/gif_sorted/Icky/adam_harms.gif', "image/gif"), 
-	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/Icky/adam_harms.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/Icky/thumb/adam_harms.jpg'),
 new VidClip([new VidSource('/images/mixer/gif_sorted/Icky/doggy_dog_world-lcky.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/Icky/doggy_dog_world-lcky.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/Icky/thumb/doggy_dog_world-lcky.jpg', 400),
 
@@ -624,8 +653,6 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/iGlooXPLD.gi
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/surrogate_self/iGlooXPLD.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/surrogate_self/thumb/iGlooXPLD.jpg', 730),
 new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/mushrooms.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/surrogate_self/mushrooms.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/surrogate_self/thumb/mushrooms.jpg', 330),
-new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/platonik_in_cube.gif', "image/gif"), 
-	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/surrogate_self/platonik_in_cube.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/surrogate_self/thumb/platonik_in_cube.jpg', 530),
 new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/PLN.Rise.gif', "image/gif"), 
 	new VidSource('/images/mixer/_gifs_to_mov/gif_sorted/surrogate_self/PLN.Rise.gif.mov.ogv', 'video/ogg')], '/images/mixer/gif_sorted/surrogate_self/thumb/PLN.Rise.jpg', 200),
 new VidClip([new VidSource('/images/mixer/gif_sorted/surrogate_self/RECYCLE.BOX.gif', "image/gif"), 
