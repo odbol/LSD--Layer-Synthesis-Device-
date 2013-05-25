@@ -528,6 +528,12 @@ var	PRELOAD_DELAY = 10,
 			pause = function() {
 				popcorn.pause();
 			},
+			showTimeline = function () {
+				$('#musicControls').addClass('timelineOpen');
+			},
+			hideTimeline = function () {
+				$('#musicControls').removeClass('timelineOpen');
+			},
 			toggleRecord = function () {//isRecordOn) {
 				isRecording = !isRecording; //(isRecordOn !== false && isRecordOn === true) || !isRecording;
 				if (isRecording) {
@@ -539,6 +545,7 @@ var	PRELOAD_DELAY = 10,
 					$('#musicControls').removeClass('recording');
 					
 					lsd.hideControls();
+					hideTimeline();
 					
 					// delete the previous recording, if it's the original from the page?
 					/*
@@ -741,6 +748,7 @@ var	PRELOAD_DELAY = 10,
 						});
 
 					toggleRecord();
+					hideTimeline();
 					$().documentate().show('tutorial');
 					play();
 				}
@@ -768,9 +776,17 @@ var	PRELOAD_DELAY = 10,
 				if (popcorn.paused() ) {
 					play();
 				}
+
+				showTimeline();
 			}
-			
-			toggleRecord();
+
+			// special case: on first click, unminimize timeline instead of stopping recording
+			if (isRecording && !$('#musicControls').hasClass('timelineOpen')) {
+				showTimeline();
+			}
+			else {		
+				toggleRecord();
+			}
 		});
 		
 		$('#saveButton').click(function () {

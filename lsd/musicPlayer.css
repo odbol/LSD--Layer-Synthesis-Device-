@@ -14,7 +14,7 @@
 	transition: all  0.3s ease;
 }
 
-#musicControls.recording {
+#musicControls.timelineOpen {
 	height: 200px;
 	width: 90% !important;
 	min-width: 410px;
