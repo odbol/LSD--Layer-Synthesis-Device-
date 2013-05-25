@@ -743,7 +743,10 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				]); //copy array and add more!
 	
 	
-		var isRemix = false,
+		var // denotes if they are watching something prerecorded or recording their own from scratch
+			isRemix = false,
+
+			// starts the remixer
 			init = function init(isHd) {
 	  		//this module allows collaborative VJing with other users.
    			//var crowd = new CrowdControl();
@@ -757,6 +760,10 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				
 			var player = $().musicPlayer(musicUrl, musicType, lsd, new Attribution("Battlehooch", "Joke", 'http://battlehooch.com'), !isRemix);
 
+			if (isRemix) {
+				// BEGINNER MODE - hide effects and inputs. only let them mess with effects when watching something prerecorded
+				$('body').addClass('beginnerMode');
+			}
 			
 			/***********************
 				INLINE TUTORIAL
