@@ -735,7 +735,10 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				INLINE TUTORIAL
 			  with Documentationeer
 			************************/
-			var doc = $().documentate([
+			var // this will hide second tutorial popup since the drawer is already expanded in non-mobile contexts
+				IS_CLIP_DRAWER_MINIMIZED = window.innerHeight <= 460, // check window size!
+
+				doc = $().documentate([
 				// each Step object can launch a cascading help tutorial of many steps. 
 				// this one will be our root object to launch the tutorial
 				{
@@ -744,10 +747,10 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 					
 					// this takes a jQuery selector of the element that will trigger this tutorial,
 					// only the first time it is clicked.
-					once: '.record.button, .helpButton',
+					once: '.helpButton' + (!isRemix ? ', .record.button' : ''), // don't show teaser if they're remixing, since drawers are already open.
 					
 					// jQuery selector of all the help tooltips or dialogs to show when triggered
-					elements: '.step_1, #layerControl_0 .clipThumb',
+					elements: '.step_1' + (IS_CLIP_DRAWER_MINIMIZED ? ', #layerControl_0 .clipThumb' : ''),
 					
 					delay: 2000,
 					
@@ -770,7 +773,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 						elements: '#vidClip_3',
 						
 						// closers are elements that finish and hide the step when clicked.
-						closers: '#backgroundCanvasControls .clipThumbs .clipThumb',
+						closers:  (IS_CLIP_DRAWER_MINIMIZED ? '.step_1' : '#backgroundCanvasControls .clipThumbs .clipThumb'),
 						
 						delay: 1000,
 					
@@ -788,11 +791,13 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 						done: {
 							name: 'step_2',
 							elements: '.step_2',
+
+							closers: '.step_2:parent', // since step 2 is actully a hacked span inside step_0
 							
 							// note the `once` event handler is optional here since it's triggered by 
 							// the parent step
 							
-							delay: 1000,
+							delay: 20000,
 						
 							cssClass: 'hideable arrow down',
 							
@@ -802,7 +807,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 							// options for the underlying tooltip object
 							tooltip: { 
 								position: 'top center',
-								offset: [-32, 0]
+								offset: [-32, 20]
 							},
 							
 							done: {
@@ -850,7 +855,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 					cssClass: 'hideable arrow down',
 					
 					// jQuery selector of all the help tooltips or dialogs to show when triggered
-					elements: '.step_0',
+					elements: !isRemix ? '.step_0' : null, // don't show teaser if they're remixing, since drawers are already open.
 					
 					placement: { top: { direction: 'down', bounce: true } },
 					tooltip: { 

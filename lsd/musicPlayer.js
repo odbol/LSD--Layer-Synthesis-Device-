@@ -33,7 +33,7 @@ var	PRELOAD_DELAY = 10,
 
 (function( $ , exports){
 
-	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton step_0' title='Remix the video while watching it'>Remix</li></ul>",
+	var MUSIC_CONTROLS = "<div id='musicControls' class='dialogControls'><ul class='icons buttons ui-widget ui-helper-clearfix'><li id='playButton' class='play button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-play'>Play</span></li><li id='recordButton' class='record button dialogButton step_0' title='Remix the video while watching it'><span class='step_2' title='The timeline records your actions: hit Remix to open'>Remix</span></li></ul>",
 		MUSIC_CONTROLS_END = '</div><div class="preloaderMsg dialogControls permanent"><img src="/lsd/blackSpinner.gif" alt="" />Loading <span class="preloaderProgress"></span> clips...</div>',
 
 		FIREBASE_ROOT_BASE = FIREBASE_URL + '/_playlists';
@@ -206,7 +206,7 @@ var	PRELOAD_DELAY = 10,
 			layersHTML += '<div id="timelineLayer_' + i + '" class="timelineLayer"></div>';
 		}
 	
-		$('#musicControls').append('<div id="timeline" class="step_2" title="The timeline tracks your actions and records them">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all step_4' title='Click here to start fresh'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" + //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
+		$('#musicControls').append('<div id="timeline">' + "<ul class='icons buttons ui-widget ui-helper-clearfix'><li id='deleteButton' class='delete button ui-state-default ui-corner-all step_4' title='Click here to start fresh'><span class='deleteMsg'>Drag here to delete</span><span class='ui-icon ui-icon-trash'>Delete</span></li>" + //<li id='saveButton' class='save button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-disk'>Save</span></li>" 
 			"<li id='zoomInButton' class='zoomIn button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomin'>Zoom In</span></li><li id='zoomOutButton' class='zoomOut button ui-state-default ui-corner-all'><span class='ui-icon ui-icon-zoomout'>Zoom Out</span></li>" + 
 			'</ul><div class="scrollHolder"><div id="timelineHolder" class="step_3" title="Drag and drop clips and transitions you&apos;ve recorded"><div id="playhead"></div><div id="timelineLayers">' + layersHTML + '</div></div></div></div>')
 			.children('.buttons')
