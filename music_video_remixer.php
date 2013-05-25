@@ -98,11 +98,6 @@ body {
 	padding: 0;
 }
 
-body .element {
-	width: 90%;
-	max-width: 600px;
-	min-width: 300px;
-}
 
 
 .content {
@@ -143,38 +138,64 @@ body .element {
 </head>
 
 <body>
-	<div class='intro element'>
-		<h2 class='musicLogo'><a href='http://battlehooch.com'>Battlehooch</a></h2>
-		<h3>Create your own music video for the Battlehooch song <em>Joke</em></h3>
-		
-		<div class='flowButtons'>
-			<div class='arrow_box right button watch'>
-				<h3>Watch</h3>
-				<p>Watch the original video</p>
-			</div>
-			<div class='arrow_box right button remix'>
-				<h3>Remix</h3>
-				<p>Hit remix to add video clips and transitions</p>
-			</div>
-			<div class='arrow_box down button'>
-				<h3>Share</h3>
-				<p>Share your remix with your friends</p>
-			</div>
-			<br class='clear' />
-		</div>
+	<h2 class='musicLogo'><a href='http://battlehooch.com'>Battlehooch</a></h2>
+	<h3 class='songLogo'><a href='http://battlehooch.com'>Joke</a></h3>
+	
+	<div class='intro'>
+
+		<p class='motto'>an interactive music video</p>
+
+
+
 		
 		<div id='startButtons'>
 			<div id='loadButtons' class='active'>
-				<div class='start button dialogButton watch'>
-					<h3>Watch</h3>
-					<p>Watch the official remix</p>
-				</div>
 				<div class='start button dialogButton remix highlighted'>
-					<h3>Start Remixing</h3>
+					<h3>Start</h3>
 					<p>Create your own Battlehooch video!</p>
 				</div>
 			</div>
-			<div id='qualityButtons'>
+			
+		</div>
+		
+		<div class='footer'>
+			<ul class='footerNav'>
+				<li><a href='#watch' class='start watch' title='Watch the official remix'>Watch</a></li>
+				<li><a href='#about' class='aboutLink'>About</a></li>
+				<li id='qualitySelectors'><a class='sd selected' href='#sd'>SD</a>&nbsp;|&nbsp;<a class='hd' href='#hd'>HD</a></li>
+			</ul>
+
+			<div id='about' class='aboutBox dialogButton closed'>
+				<h3 class='gist'>Create your own music video for the Battlehooch song <em>Joke</em></h3>
+				<div class='flowButtons'>
+					<div class='arrow_box right button watch'>
+						<h3>Watch</h3>
+						<p>Watch the original video</p>
+					</div>
+					<div class='arrow_box right button remix'>
+						<h3>Remix</h3>
+						<p>Hit remix to add video clips and transitions</p>
+					</div>
+					<div class='arrow_box button'>
+						<h3>Share</h3>
+						<p>Share your remix with your friends</p>
+					</div>
+					<br class='clear' />
+				</div>
+
+				<a href='http://odbol.com/' class='poweredBy'><span class='power'>Powered by</span> <span class='name'>LSD</span></a>
+		
+
+				<div class='waitingDesc'>
+				
+					<p>Supported on Chrome, Firefox 4+, Safari 4+. Partial support on iPhone, Android.</p>
+					<p><a href='https://github.com/odbol/LSD--Layer-Synthesis-Device-' target='_blank'>Code</a> and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
+					<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
+					<br />Animated GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
+				</div>
+			</div>
+
+			<div id='qualityButtons' style='display:none'>
 				<div class='start button dialogButton sd highlighted'>
 					<h3>Standard Quality</h3>
 					<p>For slower computers/limited bandwidth</p>
@@ -185,16 +206,9 @@ body .element {
 				</div>
 			</div>
 		</div>
+
 		
-		<a href='http://odbol.com/' class='poweredBy'><span class='power'>Powered by</span> <span class='name'>LSD</span></a>
 		
-		<div class='waitingDesc'>
-		
-		<p>Supported on Chrome, Firefox 4+, Safari 4+. Partial support on iPhone, Android.</p>
-		<p><a href='https://github.com/odbol/LSD--Layer-Synthesis-Device-' target='_blank'>Code</a> and video content copyright <a href="http://odbol.com">odbol</a>, 2010 - <?php echo date('Y');?><br />
-		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span class='licenseText'><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/MovingImage" property="dc:title" rel="dc:type">LSD (Layer Synthesis Device)</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/lsd" property="cc:attributionName" rel="cc:attributionURL">Tyler Freeman</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.<br />Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="http://odbol.com/" rel="cc:morePermissions">http://odbol.com/</a>.</span></p>
-		<br />Animated GIFs by <a href='http://lcky.tumblr.com/' target='_blank'>Adam Harms</a>, <a href='http://dvdp.tumblr.com/' target='_blank'>David Ope</a>, and unknown sources.
-		</div>
 		
 		<noscript>
 			<p>Please enable Javascript for LSD to take effect.</p>
@@ -752,6 +766,20 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
    			//var crowd = new CrowdControl();
    			var crowd = false;
 	
+   			//HD/SD setting
+			if (isHd) {
+				PRELOAD_DELAY = 120; // this guarantees we'll load a ton of videos before starting, which hopefully will help.
+			
+				for (var i = 0; i < vidClips.length; i++) {
+					if (vidClips[i].isVideo()) {
+						var srcs = vidClips[i].src;
+						for (var j = 0; j < srcs.length; j++) { 
+							srcs[j].url = srcs[j].url.replace('/240p/', '/480p/');
+						}
+					}
+				}
+			}
+
 			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false, isHd ? {width: 640, height: 480} : null),				
 
 				// PLEASE CONSIDER SUPPORTING THE ARTIST by buying their song on their website! Thanks!
@@ -929,6 +957,8 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 			(Modernizr.audio.mp3 || Modernizr.audio.ogg) &&
 			(Modernizr.video.h264 || Modernizr.video.ogg /*|| Modernizr.video.webm*/) ) {
 		
+			var isHd = false;
+
 			// check if they came here to watch a specific remix, or just the official one
 			if (window.PlaylistRepo.getPlaylistId() && window.PlaylistRepo.getPlaylistId() != MUSIC_DEFAULT_PLAYLIST_ID) {
 				$('#loadButtons .remix').removeClass('highlighted');
@@ -940,38 +970,36 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 			}
 
 			// step 1
-			$('#loadButtons .button, .flowButtons .right').click(function () {
+			$('.start, .flowButtons .right').click(function () {
 				isRemix = $(this).hasClass('remix');
 				
 				// move on to step 2:
-				if (IS_HD_ALLOWED) {
-					$('#loadButtons').removeClass('active');
-					$('#qualityButtons').addClass('active');
-				}
-				else {
-					init(false);
-				}
+				init(isHd);
+
+				return false;
 			});
 
-			// step 2
-			$('#qualityButtons .button').click(function () {
-				var isHd = $(this).hasClass('hd'); //  HD is ridiculously slow to load!!!
-				
-				//HD/SD setting
-				if (isHd) {
-					PRELOAD_DELAY = 120; // this guarantees we'll load a ton of videos before starting, which hopefully will help.
-				
-					for (var i = 0; i < vidClips.length; i++) {
-						if (vidClips[i].isVideo()) {
-							var srcs = vidClips[i].src;
-							for (var j = 0; j < srcs.length; j++) { 
-								srcs[j].url = srcs[j].url.replace('/240p/', '/480p/');
-							}
-						}
-					}
-				}
-				
-				init(isHd);
+			// not a step, just a tiny hidden option
+			$('#qualitySelectors').on('click', 'a', function () {
+				var $this = $(this);
+
+				isHd = $this.hasClass('hd'); //  HD is ridiculously slow to load!!!
+
+				$this
+					.siblings('a')
+						.removeClass('selected')
+						.end()
+					.addClass('selected');
+
+				return false;
+			});
+
+			$('.footerNav .aboutLink').click(function() {
+				$('#about')
+					.toggleClass('open')
+					.toggleClass('closed');
+
+				return false;
 			});
 		}
 		else {

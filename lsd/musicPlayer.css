@@ -252,36 +252,65 @@ body #musicControls .dialogButton:hover
 	padding: 2em;
 }
 
-body div.intro {
-	width: 650px;
-	margin: 30px auto;
-	float:none;
-	text-align:center;
-	white-space: normal;
+html body {
+	background-color: #000;
+	min-height: 670px;
 }
 
-	body .intro .musicLogo a {
-	  background: url("http://odbol.com/images/battlehooch/battlehooch_logo-joke.png") no-repeat scroll 0 0 transparent;
+body div.intro {
+	width: 100%;
+	min-width: 1000px;
+}
+
+	body .musicLogo,
+	body .songLogo {
+		display:block;
+		width: 100%;
+		height: 75px;
+		position:relative;
+		padding:0;
+		margin:0;
+	}
+
+	body .musicLogo {
+		height:250px;
+		min-height:100px;
+		background-color: #c00;
+	}
+
+	body .musicLogo a,
+	body .songLogo a {
+	  background: url("/lsd/images/battlehooch-joke-bg-1000_02.png") no-repeat scroll 0 0 transparent;
 	  display: block;
-	  height: 82px;
+	  height: 75px;
 	  overflow: hidden;
-	  padding: 2px;
-	  width: 418px;
+	  width: 1000px;
 	  text-indent: -9999px;
 	  font-size: 0;
-	  margin: 0 auto;
+	  margin-left: -500px;
+	  left:50%;
+	  bottom:0;
+	  position:absolute;
+	}
+
+	body .songLogo a {
+		background-image: url("/lsd/images/battlehooch-joke-bg-1000_03.png");
+		top:0;
 	}
 	
 	
 	.intro #startButtons {
-		margin: 2em 0;
-		position:relative;
 		height: 120px;
+
+		position: absolute;
+		top: 475px;
+		right: 200px;
 	}
 	
 		.intro #startButtons .button {
 			height: auto;
 			width: 270px;
+			text-align: center;
 		}
 			.intro #startButtons .button:hover {
 				background-color: #a00;
@@ -293,7 +322,6 @@ body div.intro {
 
 	#loadButtons, 
 	#qualityButtons {
-		position:absolute;
 		opacity:0;
 		z-index: 5;
 
@@ -311,7 +339,95 @@ body div.intro {
 	#startButtons .highlighted {
 		background-color: rgb(9, 114, 173);
 	}
-			
+
+
+	/* FOOTER */
+	.intro .footer {
+		position:absolute;
+		bottom:20px;
+		left: 5%;
+	}	
+
+		.intro .footerNav,
+		.intro .footerNav li {
+			list-style: none;
+			padding:0;
+			margin:0;
+		}
+
+			.intro .footerNav li {
+				margin-right: 1em;
+				display: inline;
+				font-size: 12px;
+				padding: 0;
+			}
+
+			.intro .footerNav li,
+			.intro .footerNav li a,
+			.intro .footerNav li a:hover,
+			.intro .footerNav li a:visited,
+			.intro .footerNav li a:active,
+			.intro .footerNav li a:link,
+			.intro .motto {
+				font-size: 12px;
+				color: #dddddd;
+				text-transform: lowercase;
+				font-family: Futura, Helvetica, sans-serif;
+			}
+
+
+			.intro .footerNav li .selected,
+			.intro .footerNav li a:hover {
+				color: #fff;
+				text-shadow: 0px 0px 5px rgba(255, 255, 255, 1);
+			}
+
+	.intro .aboutBox {
+		position:absolute;
+		bottom: 20px;
+		height:0px;
+		width: 600px;
+		overflow:hidden;
+
+		cursor: auto;
+		font-weight: normal;
+		text-align: center;
+		padding:2em;
+
+		background-color: #200;		
+		padding: 0;
+
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		-o-transition: all 0.3s ease;
+		transition: all  0.3s ease;
+	}
+	
+	.intro .aboutBox.closed {
+		border:none;
+		margin: 0 2px 2px 2px;
+	}
+
+	.intro .aboutBox.open {
+		display:block;
+		height:430px;
+	}
+
+		.intro .aboutBox .gist {
+			color: #900;
+			font-size:16px;
+			text-shadow: 1px 1px 4px rgba(0,0,0,0.24)
+		}
+
+
+	.intro .motto {
+		position:absolute;
+		top: 390px;
+		left: 15%;
+		font-size:18px;
+	}
+
+
 	
 .flowButtons {
 	width: 480px;
