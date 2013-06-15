@@ -333,8 +333,10 @@ var	PRELOAD_DELAY = 10,
 			switch (event.type) {
 				case 'clip':	
 					var clip = this.lsd.getVidClipById(event.clipId);
-						
-					item$el = $('<div id="timelineItem_' + item.idx + '" class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
+					
+					if (clip) {
+						item$el = $('<div id="timelineItem_' + item.idx + '" class="clipThumb"><img src="' + clip.thumbnail + '" /></div>');
+					}
 				break;
 				case 'layer':
 					opacityItem	= new OpacityItem(timeline, item);
