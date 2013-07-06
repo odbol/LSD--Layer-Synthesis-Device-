@@ -97,7 +97,7 @@ var _ = {};
 								tooltip: "none,click.tooltip"
 							},
 							predelay: 30,
-							layout: "<div></div>",
+							layout: "<div><span class='docClose button ui-state-error ui-corner-all'><span class='ui-icon ui-icon-close'></span></span></div>",
 							onHide: self.onHide,
 							effect: 'fade',
 							

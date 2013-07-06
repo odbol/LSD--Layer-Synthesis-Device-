@@ -75,6 +75,21 @@
 		margin-left: -26px;
 	}
 
+
+
+	/*** close button ****/
+	.docTooltip .docClose {
+		display: block;
+		width: 17px;
+		height: 16px;
+		position: absolute;
+		top: -11px;
+		right: -9px;
+		z-index: 20000;
+
+		border-radius: 8px; /* make it a circle */
+	}
+
 .doc {
 	display:none;
 }
