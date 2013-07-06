@@ -780,7 +780,7 @@ new VidClip([new VidSource('/images/mixer/gif_sorted/_pop/zoidberg.gif', "image/
 				}
 			}
 
-			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, false, isHd ? {width: 640, height: 480} : null),				
+			var lsd = $().takeLSD(vidClips, compositeTypes, null, userId, crowd, true, isHd ? {width: 640, height: 480} : null),				
 
 				// PLEASE CONSIDER SUPPORTING THE ARTIST by buying their song on their website! Thanks!
 				musicUrl = 	Modernizr.audio.ogg ? '/music/Battlehooch%20-%20Joke.ogg' : '/music/Battlehooch%20-%20Joke.mp3',

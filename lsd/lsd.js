@@ -305,7 +305,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 	//	numLayers		-	optional number of layers to initalize (default 3 recommended)
 	//  userId			-	optional id of user - alphanumeric only.
 	//  crowd			-	optional CrowdControl object if you want collaborative features.
-	//  shouldInitClips -   optional bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs)
+	//  shouldInitClips -   optional bool indicating if initial 3 clips should be loaded, or wait for load event from something else. (basically should it start at black or with the first GIFs). Pass "show" to init clips and start them with a default opacity 0f 0.7), any other true value simply loads them at 0 opacity.
 	//  resolution		-	optional Object giving dimensions of canvas. default {width: 320, height: 240}
 	//  minRating		- 	optional int of minimum rating to filter vidClips by
    init : function init(vidClips, compositeTypes, numLayers, userId, crowd, shouldInitClips, resolution, minRating) {
@@ -502,7 +502,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 			for (var i = 0; i < numLayers; i++) {
 				layers[i] = new VidLayer(shouldInitClips ? lsd.vidClips[i] : null, i); //the clip thumbs will be added to GUI later, during clip initialization
 			
-				if (shouldInitClips && compositeTypes[compositeIndex] == "lighter"
+				if (shouldInitClips == "show" //&& compositeTypes[compositeIndex] == "lighter"
 						// only show the first two images
 						&& i < 2)
 					layers[i].setOpacity(0.7);

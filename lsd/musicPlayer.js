@@ -745,7 +745,7 @@ var	PRELOAD_DELAY = 10,
 							"time":0,
 							"event": {"type":"clip",
 								"layerId":0,
-								"clipId":"/images/mixer/battlehooch/thumb/kinectRecord892012202-4AA90-cells-spinn.jpg"
+								"clipId":"/images/mixer/battlehooch/thumb/Battlehooch-Joke-AJ4.jpg"
 							}
 						});
 
