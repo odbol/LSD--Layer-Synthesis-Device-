@@ -1381,10 +1381,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 
 
 				// this is where we init our input devices (e.g. mouse/touch, external OSC, even perhaps a LeapMotion?)
-
-				// also handles touch events if available.
-				InputDevices.mouse.start() 
-					.bind('change', function (ev, msg) {
+				var onInputDeviceChange = function (ev, msg) {
 
 						var path = msg.getPathObj();
 //console.log('mosue moved: ', msg);
@@ -1397,7 +1394,18 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 								updateInput(1 + arrayIdx, msg.value[1], false);
 							}
 						}
-					});
+					},
+					initInputDevices = function () {
+
+						// mouse also handles touch events if available.
+						$.each(InputDevices.getDevices(), function (i, dev) {						
+							dev.start() 
+								.bind('change', onInputDeviceChange);
+						});
+
+					};
+
+				initInputDevices();
 
 
 				// load some initial effects. TODO: replace this with crowd sync
