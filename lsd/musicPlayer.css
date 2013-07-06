@@ -20,6 +20,15 @@
 	min-width: 410px;
 }
 
+
+/* keep clips selector from trampling timeline */
+@media all and (max-height: 720px) {
+
+	#musicControls.timelineOpen {
+		width: 70% !important;
+	}
+}
+
 	#musicHolder {
 		position:absolute;
 		left:120px; /*hide the play button so we use our own. yes this is very sketchy*/
