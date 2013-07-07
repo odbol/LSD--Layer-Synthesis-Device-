@@ -558,7 +558,7 @@ var scaleRange = function scaleRange(num, oldMin, oldMax, newMin, newMax, isHard
 				"</ul>" + 
 				'<div class="tabPanels"><div class="tab active" id="clipsTab">';
 
-			sliderHTML += "<div class='layerSliders step_1' title='Drag the sliders up and down to crossfade layers'>";
+			sliderHTML += "<div class='layerSliders step_1' title='Drag sliders up and down to mix layers'>";
 			for (i in layers) {
 				sliderHTML += "<div class='layerControl' id='layerControl_" + i + "'>";
 				effectsTabHTML +=  "<div class='layerEffects' id='layerEffectsControl_" + i + "'><h3>Layer " + i + "</h3>";
